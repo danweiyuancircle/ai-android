@@ -1,0 +1,24 @@
+# 系统 / 编辑器
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# 依赖
+node_modules/
+.pnpm-store/
+
+# 构建产物
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# 日志 / 环境
+*.log
+.env
+.env.local
+.env.*.local
+
+# Claude Code 本地配置 / 测试目录（不入版本控制，按用户偏好整个排除）
+.claude/
