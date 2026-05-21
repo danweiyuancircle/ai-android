@@ -1,6 +1,4 @@
 ---
-
-## description: Android (Java + Kotlin + XML + Gradle) 代码注释与基础风格规范
 paths:
   - "**/*.java"
   - "**/*.kt"
@@ -8,6 +6,9 @@ paths:
   - "**/*.gradle"
   - "**/AndroidManifest.xml"
   - "**/res/**/*.xml"
+---
+
+<!-- Android (Java + Kotlin + XML + Gradle) 代码注释与基础风格规范 -->
 
 # Android 代码注释与基础风格规范
 
