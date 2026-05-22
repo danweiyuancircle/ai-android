@@ -14,7 +14,7 @@ description: >-
 
 # chances-sdk：IPTV 封装库接入与版本锁定
 
-> **适用版本：core 2.0.x / tvms 1.0.x / wslog 1.0.x / player-ijk 1.0.x / iptv2ex 1.0.x / core-compiler 1.0.x**
+> **适用版本：core 2.0.x / core-compiler 2.0.x / tvms 1.1.x / wslog 1.0.x / player-ijk 1.0.x / iptv2ex 1.0.x**
 > 本指南内容以仓库 head 实际代码为准，与历史 `doc/接入手册.md`、注释里提到的入口若有出入，以本指南为准。
 
 成思 IPTV Android 组件化基础库，各 module 打成 AAR 发布到私有 Nexus（`com.chances.sdk:*`），供 IPTV 主工程依赖。本 skill 让你在下游主工程里：① 用对的版本和编译约束开发；② 用真实存在的 API（不调用文档里写过但代码里没有的入口）。
@@ -68,13 +68,13 @@ AAR 发布端点：Release `http://222.66.77.226:8081/repository/chances-release
 | 坐标 | 版本 | 说明 |
 | --- | --- | --- |
 | `com.chances.sdk:core` | `2.0.0` | 必需基础库。2.0.0 起不再内置 IJK |
-| `com.chances.sdk:core-compiler` | `1.0.2` | core 的注解处理器(APT)，处理 http 缓存注解 |
-| `com.chances.sdk:tvms` | `1.0.0` | TVMS 长连接(socket.io)+鉴权 |
+| `com.chances.sdk:core-compiler` | `2.0.0` | core 的注解处理器(APT)，处理 http 缓存注解 |
+| `com.chances.sdk:tvms` | `1.1.0` | TVMS 长连接(socket.io)+鉴权 |
 | `com.chances.sdk:wslog` | `1.0.0` | 无 ADB 远程拉 logcat / 重启 / 装 APK（DEBUG 阶段） |
 | `com.chances.sdk:player-ijk` | `1.0.0` | IJK 播放引擎；额外约 38MB so（三套 ABI） |
 | `com.chances.sdk:iptv2ex` | `1.0.0` | IPTV2 浏览器壳 + JS Bridge + 内嵌播放器 |
 
-> 注：仓库约定 `core` 与 `core-compiler` 版本应成对一致，但当前 head 实际是 `core 2.0.0` + `core-compiler 1.0.2`。接入时**以你实际拉到的坐标版本为准**，并核对两者 CHANGELOG。
+> 注：`core` 与 `core-compiler` 版本必须成对一致，当前均为 `2.0.0`。接入时两者版本号必须相同，不能错版本搭配。
 
 ## 四、Gradle 依赖声明（主工程 module `build.gradle`）
 
@@ -83,10 +83,10 @@ dependencies {
     // 必需：基础库（传递带出 support / okhttp / retrofit / rxjava / glide 等整套栈）
     implementation 'com.chances.sdk:core:2.0.0'
     // 需要 http 缓存注解(@HttpStaticalCache/@HttpDynamicCache)时才加，版本随 core
-    kapt 'com.chances.sdk:core-compiler:1.0.2'          // 纯 Java 工程用 annotationProcessor
+    kapt 'com.chances.sdk:core-compiler:2.0.0'          // 纯 Java 工程用 annotationProcessor
 
     // 按需引入（不引入即不占体积）
-    implementation 'com.chances.sdk:tvms:1.0.0'         // 长连接
+    implementation 'com.chances.sdk:tvms:1.1.0'         // 长连接
     implementation 'com.chances.sdk:wslog:1.0.0'        // 远程日志（一般只 DEBUG 引）
     implementation 'com.chances.sdk:player-ijk:1.0.0'   // IJK 引擎，+~38MB so
     implementation 'com.chances.sdk:iptv2ex:1.0.0'      // IPTV2 业务壳
@@ -150,4 +150,6 @@ class OttApplication : Application() {       // 组件化主工程改继承 com.
 
 ## §版本差异（按版本倒序，记录对调用方可观察的接入差异）
 
+- **core-compiler 2.0.x**：跟随 core 2.0.0 成对发布，注解处理逻辑无变更；坐标版本号须与 core 严格一致。
+- **tvms 1.1.x**：删除 `client/ClientHelper.md5(String)` / `SignUtils.encodeHexString`/`encodeHex` 等重复实现的 public 方法（改用 core `MD5Utils.md5` / `StringUtils.toHexString1`），内部日志改走 `Logger`。均为无外部使用方的内部清理，常规接入无感。
 - **core 2.0.x**：拆出 IJK 为独立模块 `player-ijk`，core 不再内置 IJK；装配统一走 `SdkCore.init(...)` 门面（取代历史 `SdkSetup` / `Installer` SPI / `CoreInitializer`）。`http` 参数始终强制装配。

@@ -1,0 +1,140 @@
+/* 可聚焦元素的统一样式 */
+
+/* CSS 变量定义 */
+:root {
+  /* 焦点颜色 - 统一使用渐变色 */
+  --focus-primary-color: #667eea;
+  --focus-secondary-color: #764ba2;
+  --focus-border-color: #e9982b;
+  --focus-border-width: 3px;
+  
+  /* 圆角 - 统一圆角大小 */
+  --focus-border-radius: 12px;
+  
+  /* 焦点效果 */
+  --focus-scale-default: 1.05;
+  --focus-scale-small: 1.03;
+  --focus-scale-large: 1.08;
+  
+  /* 阴影效果 - 统一阴影 */
+  --focus-shadow-default: 0 8px 24px rgba(102, 126, 234, 0.5);
+  --focus-shadow-small: 0 4px 16px rgba(102, 126, 234, 0.4);
+  --focus-shadow-large: 0 12px 32px rgba(102, 126, 234, 0.6);
+  
+  /* 过渡动画 */
+  --focus-transition: all 0.3s ease-out;
+  --focus-transition-fast: all 0.2s ease;
+  
+  /* 背景效果 */
+  --focus-bg-overlay: rgba(102, 126, 234, 0.15);
+  --focus-bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* 边框偏移 */
+  --focus-border-offset: -4px;
+}
+
+/* 基础可聚焦样式 */
+.focusable-base {
+  cursor: pointer;
+  /* transition: var(--focus-transition); */
+  outline: none;
+}
+
+.focusable-base:active {
+  /* transform: scale(0.98); */
+}
+
+/* 聚焦状态 - 默认（统一样式） */
+.focused-default {
+  border-color: var(--focus-border-color) !important;
+  transform: scale(var(--focus-scale-default));
+  box-shadow: var(--focus-shadow-default);
+  z-index: 10;
+}
+
+/* 聚焦状态 - 小缩放 */
+.focused-small {
+  transform: scale(var(--focus-scale-small));
+  box-shadow: var(--focus-shadow-small);
+  z-index: 10;
+}
+
+/* 聚焦状态 - 大缩放 */
+.focused-large {
+  transform: scale(var(--focus-scale-large));
+  box-shadow: var(--focus-shadow-large);
+  z-index: 10;
+}
+
+/* 聚焦状态 - 带背景渐变 */
+.focused-gradient {
+  background: var(--focus-bg-gradient) !important;
+  transform: scale(var(--focus-scale-default));
+  box-shadow: var(--focus-shadow-default);
+  z-index: 10;
+}
+
+/* 聚焦状态 - 带背景叠加 */
+.focused-overlay {
+  background: var(--focus-bg-overlay) !important;
+  transform: scale(var(--focus-scale-small));
+  box-shadow: var(--focus-shadow-small);
+  z-index: 10;
+}
+
+/* 聚焦边框动画效果 - 统一样式 */
+.focus-border-animated {
+  position: relative;
+  border-radius: var(--focus-border-radius);
+}
+
+.focus-border-animated::after {
+  content: '';
+  position: absolute;
+  top: var(--focus-border-offset);
+  left: var(--focus-border-offset);
+  right: var(--focus-border-offset);
+  bottom: var(--focus-border-offset);
+  border-radius: var(--focus-border-radius);
+  border: var(--focus-border-width) solid transparent;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.focus-border-animated.focused-default::after,
+.focus-border-animated.focused-small::after,
+.focus-border-animated.focused-large::after,
+.focus-border-animated.focused::after {
+  border-color: var(--focus-border-color);
+  opacity: 1;
+  animation: pulse-border 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+/* 内部元素缩放（用于图片等） */
+.focused-inner-scale .inner-element {
+  transition: transform 0.3s ease;
+}
+
+.focused-inner-scale.focused-default .inner-element,
+.focused-inner-scale.focused .inner-element {
+  transform: scale(1.05);
+}
+
+/* 工具类：禁用焦点效果 */
+.no-focus-effect.focused {
+  transform: none !important;
+  box-shadow: none !important;
+}
+

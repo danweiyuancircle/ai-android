@@ -10,6 +10,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `claude/rules/` — 按目标 Android 版本分档的 WebView H5 兼容规则，**可直接拷贝到下游项目 `.claude/rules/`**
   - `claude/skills/` — 可直接拷贝到下游项目的 skill
 - `template/` — 脚手架工程，存放可运行的模板代码
+  - `template/bridge-contract.md` — 壳↔H5 的 `window.ottService` JSBridge 契约（壳与各 H5 模板共同实现）
+  - `template/android-shell/` — 通用 Android WebView 壳（chances-sdk 基线：Support 27.1.1 / 非 AndroidX / AGP 3.6.0 / compileSdk 28 / minSdk 19）
+  - `template/h5-vue/` — Vue3 + Vite H5 壳骨架（Chromium 53 兼容 + TV 焦点框架），后续可加 `template/h5-react/`
+  - `template/README.md` — 组合矩阵（Vue/React + 壳）与 rules/skill 绑定表
+
+起项目时按 `template/README.md` 的绑定表，从 `claude/` 拷贝对应 rules/skill 到目标工程 `.claude/`（单一来源在 `claude/`，模板不冗余携带）。
 
 `claude/` 无需 build / lint / test 工具链。"测试"即把 rules 投放到目标项目里跑 Claude Code 验证效果。
 
