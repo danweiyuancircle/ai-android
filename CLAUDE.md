@@ -4,16 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库定位
 
-本仓库**没有可运行的代码**，全部内容服务于 Claude Code AI：
+本仓库分两部分：
 
-- `rules/` — 按目标 Android 版本分档的 WebView H5 兼容规则，**可直接拷贝到下游项目 `.claude/rules/`**
+- `claude/` — 服务于 Claude Code AI 的资产，无可运行代码
+  - `claude/rules/` — 按目标 Android 版本分档的 WebView H5 兼容规则，**可直接拷贝到下游项目 `.claude/rules/`**
+  - `claude/skills/` — 可直接拷贝到下游项目的 skill
+- `template/` — 脚手架工程，存放可运行的模板代码
 
-无需 build / lint / test 工具链。"测试"即把 rules 投放到目标项目里跑 Claude Code 验证效果。
+`claude/` 无需 build / lint / test 工具链。"测试"即把 rules 投放到目标项目里跑 Claude Code 验证效果。
 
-## `rules/` 约定
+## `claude/rules/` 约定
 
 ```
-rules/
+claude/rules/
 ├── android-webview-5.md     # Chromium 53 档
 └── android-webview-9.md     # Chrome 66 档
 ```
@@ -36,6 +39,6 @@ rules/
 
 ### 不做的事
 
-- 不写业务代码、构建脚本、CI 配置
-- 不在 `rules/` 写库版本锁
+- 不在 `claude/` 写业务代码、构建脚本、CI 配置（业务代码归 `template/`）
+- 不在 `claude/rules/` 写库版本锁
 - 不创建仓库根 `README.md`（本仓库面向 AI，不面向人工阅读）
