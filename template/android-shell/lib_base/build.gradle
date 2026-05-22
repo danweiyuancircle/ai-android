@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    // AGP 3.6.0 不支持 namespace DSL，包名写在 AndroidManifest.xml 的 package 属性
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // 必需基础库：传递带出 support / okhttp / retrofit / rxjava / glide 整套栈
+    api 'com.chances.sdk:core:2.0.0'
+    // http 缓存注解处理器(@HttpStaticalCache/@HttpDynamicCache)，http 必用故默认启用
+    // 版本与 core 配对（仓库实际为 2.0.0）
+    kapt 'com.chances.sdk:core-compiler:2.0.0'
+
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.android.support:multidex:1.0.3'
+}

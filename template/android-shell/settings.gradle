@@ -1,0 +1,3 @@
+// 模块分层（命名前缀即层级，Studio 视图按字母序天然呈现 app→业务→base）：
+// app（壳应用）→ feature_*（业务层）→ lib_*（基础库）
+include ':app', ':feature_voice', ':lib_base'

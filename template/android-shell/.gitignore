@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+app/build/
+feature_voice/build/
+lib_base/build/
+# 真实签名不入库（用 signing.properties 注入，见 app/build.gradle）
+*.jks
+*.keystore
+signing.properties

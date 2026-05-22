@@ -1,0 +1,44 @@
+// 顶层构建脚本。工具链与仓库遵 chances-sdk skill（claude/skills/chances-sdk/SKILL.md）。
+buildscript {
+    ext.kotlin_version = '1.8.0'
+
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://jitpack.io' }
+        // 公司内网（com.chances.sdk:* 发布端点，需公司网络）
+        maven { url 'http://222.66.77.226:8081/repository/chances-release/' }
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // AGP 3.6.0：旧 Gradle，禁用 AGP 8.x / 现代 Kotlin DSL 语法
+        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://jitpack.io' }
+        maven { url 'http://222.66.77.226:8081/repository/chances-release/' }
+        google()
+        mavenCentral()
+    }
+
+    // 强制所有 support 库统一 27.1.1（multidex 除外），防传递依赖拖入版本冲突
+    configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support' && !requested.name.startsWith('multidex')) {
+                details.useVersion '27.1.1'
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
