@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 网页地址设置弹框 -->
+    <dimen name="web_dialog_width">600dp</dimen>
+    <dimen name="web_dialog_padding">24dp</dimen>
+    <dimen name="web_dialog_section_margin">16dp</dimen>
+    <dimen name="web_dialog_item_margin">8dp</dimen>
+    <dimen name="web_dialog_button_margin">12dp</dimen>
+    <dimen name="web_dialog_title_text_size">20sp</dimen>
+    <dimen name="web_dialog_label_text_size">14sp</dimen>
+    <dimen name="web_dialog_value_text_size">16sp</dimen>
+</resources>

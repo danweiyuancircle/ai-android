@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 通用 -->
     <!-- TODO: 改成项目名 -->
     <string name="app_name">Shell Template</string>
+
+    <!-- WebActivity / 网页地址设置弹框 -->
+    <string name="web_dialog_title">网页地址设置</string>
+    <string name="web_dialog_current_label">当前加载地址</string>
+    <string name="web_dialog_current_empty">(尚未加载)</string>
+    <string name="web_dialog_edit_label">修改为</string>
+    <string name="web_dialog_edit_hint">请输入完整 url，例如 https://example.com</string>
+    <string name="web_dialog_save">保存并加载</string>
+    <string name="web_dialog_cancel">取消</string>
+    <string name="web_dialog_save_failed">保存失败，请检查存储权限</string>
+    <string name="web_dialog_url_invalid">url 不能为空</string>
+
+    <!-- WebUrlDialog / sdcard 配置说明 -->
+    <string name="web_dialog_sdcard_path_label">sdcard 配置文件路径</string>
+    <string name="web_dialog_sdcard_format_label">配置文件格式</string>
+    <string name="web_dialog_sdcard_format_value">UTF-8 纯文本，首行直接写完整 url（例如 https://example.com）</string>
+    <string name="web_dialog_source_label">当前来源</string>
+    <string name="web_dialog_source_sdcard">已使用 sdcard 配置地址</string>
+    <string name="web_dialog_source_intent">未使用 sdcard 配置（来自 Intent 启动参数）</string>
+    <string name="web_dialog_source_session">未使用 sdcard 配置（本次会话临时输入，未持久化）</string>
+    <string name="web_dialog_source_default">未使用 sdcard 配置（使用内置默认地址）</string>
+
+    <!-- WebActivity / 存储权限提示 -->
+    <string name="web_storage_denied_toast">未授予存储权限，无法持久化网页地址，本次会话仍可临时设置</string>
 </resources>

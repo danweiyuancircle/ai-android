@@ -14,3 +14,6 @@ lib_base/build/
 *.jks
 *.keystore
 signing.properties
+# 例外：模板 demo 签名随仓库入库，clone 即可出签名包（非生产密钥，正式项目删此两行并替换为自有 keystore）
+!signing.properties
+!app/shell.jks

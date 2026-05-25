@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 网页地址设置弹框：展示当前加载地址 + 修改入口，保存后由 WebActivity 重新 loadUrl 并落盘 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/web_dialog_width"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/web_dialog_padding">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/web_dialog_title"
+        android:textSize="@dimen/web_dialog_title_text_size"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:text="@string/web_dialog_current_label"
+        android:textColor="@color/web_dialog_label_color"
+        android:textSize="@dimen/web_dialog_label_text_size" />
+
+    <!-- 当前正在加载的 url：只读展示。不设 textIsSelectable，避免 TV d-pad 下抢走输入框焦点 -->
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_web_dialog_current_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_item_margin"
+        android:textColor="@color/web_dialog_url_color"
+        android:textSize="@dimen/web_dialog_value_text_size" />
+
+    <!-- 当前来源：用文字 + 颜色提示是否命中 sdcard 配置 -->
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:text="@string/web_dialog_source_label"
+        android:textColor="@color/web_dialog_label_color"
+        android:textSize="@dimen/web_dialog_label_text_size" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_web_dialog_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_item_margin"
+        android:textSize="@dimen/web_dialog_value_text_size"
+        android:textStyle="bold" />
+
+    <!-- sdcard 配置文件路径：展示绝对路径，便于用户用文件管理器 / adb pull 直接定位 -->
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:text="@string/web_dialog_sdcard_path_label"
+        android:textColor="@color/web_dialog_label_color"
+        android:textSize="@dimen/web_dialog_label_text_size" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_web_dialog_sdcard_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_item_margin"
+        android:textColor="@color/web_dialog_url_color"
+        android:textSize="@dimen/web_dialog_value_text_size" />
+
+    <!-- 文件格式说明：静态文案，告知调试人员怎么手动写这个文件 -->
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:text="@string/web_dialog_sdcard_format_label"
+        android:textColor="@color/web_dialog_label_color"
+        android:textSize="@dimen/web_dialog_label_text_size" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_item_margin"
+        android:text="@string/web_dialog_sdcard_format_value"
+        android:textSize="@dimen/web_dialog_value_text_size" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:text="@string/web_dialog_edit_label"
+        android:textColor="@color/web_dialog_label_color"
+        android:textSize="@dimen/web_dialog_label_text_size" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_web_dialog_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_item_margin"
+        android:hint="@string/web_dialog_edit_hint"
+        android:inputType="textUri"
+        android:maxLength="2048"
+        android:textSize="@dimen/web_dialog_value_text_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/web_dialog_section_margin"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_web_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/web_dialog_cancel" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_web_dialog_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/web_dialog_button_margin"
+            android:layout_marginLeft="@dimen/web_dialog_button_margin"
+            android:text="@string/web_dialog_save" />
+    </LinearLayout>
+</LinearLayout>

@@ -28,7 +28,7 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 - AGP 3.6.0 / Gradle 6.8.3 / JDK 8 / Kotlin 1.8.0
 - minSdk 19 / compileSdk 28 / targetSdk 28，Support 27.1.1，**禁止 AndroidX**
 三模块（命名前缀即层级，Studio 视图按字母序呈现 app→业务→base）：
-- `app` — 壳应用：MainActivity + OttApplication + flavor staging/prod
+- `app` — 壳应用：LauncherActivity（统一入口，申请权限后跳转）+ WebActivity（WebView 宿主，含 ottService/语音/地址设置弹框）+ OttApplication + flavor staging/prod
 - `feature_voice` — 业务层·语音抽象独立模块：`VoiceController` / `OnVoiceListener` 接口 + `NoopVoiceController` 空实现（未接真实语音 SDK）
 - `lib_base` — 基础层·壳专属逻辑：`OttServiceBridge`（ottService 契约实现）+ `WebViewJsHelper`（原生→H5）
 
@@ -37,9 +37,13 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 - WebView 用 `chances.core.web.TvWebView`（自带 WebSettings / 进度 / 页面回调）
 - 退出走 `ActivityLifeManager.getInstance().quitApp()`
 
-语音接线：语音双向桥接内聚在 `feature_voice` 的 `VoiceBridge`——构造时注册 `OnVoiceListener` 把识别/TTS 事件转发到 H5（`onBeginSpeech/onFinalResult` 等），并提供 `playTts/stopTts/isTtsPlaying/releaseVoice`。`MainActivity` 只需 `VoiceBridge(webView, NoopVoiceController())` 再交给 `OttServiceBridge` 门面（门面对语音方法薄委派，`@JavascriptInterface` 因 `addJavascriptInterface` 单对象约束保留在门面）。接真实语音 SDK 时只需实现 `VoiceController` 替换 `NoopVoiceController`，其余不动。
+语音接线：语音双向桥接内聚在 `feature_voice` 的 `VoiceBridge`——构造时注册 `OnVoiceListener` 把识别/TTS 事件转发到 H5（`onBeginSpeech/onFinalResult` 等），并提供 `playTts/stopTts/isTtsPlaying/releaseVoice`。`WebActivity` 只需 `VoiceBridge(webView, NoopVoiceController())` 再交给 `OttServiceBridge` 门面（门面对语音方法薄委派，`@JavascriptInterface` 因 `addJavascriptInterface` 单对象约束保留在门面）。接真实语音 SDK 时只需实现 `VoiceController` 替换 `NoopVoiceController`，其余不动。
 
-起项目改动点（搜 `TODO`）：`applicationId`、`H5_URL`（flavor）、签名（`signing.properties.example` → `signing.properties`）、`app_name`、接入真实语音 SDK（替换 `NoopVoiceController`）。
+地址管理：`WebActivity` 加载地址优先级 **Intent `EXTRA_URL` > sdcard `/sdcard/web_url.txt` > `BuildConfig.H5_URL`**；运行时连按 5 次菜单键弹 `WebUrlDialog` 查看 / 修改地址，保存后落盘 sdcard（存储权限由 `LauncherActivity` 统一申请）。
+
+签名：随仓库附带 demo keystore（`app/shell.jks` + `signing.properties`，密码 `shelltemplate`，**非生产密钥**），clone 即可出 release 签名包；正式项目替换为自有 keystore 并恢复 `.gitignore` 默认排除。
+
+起项目改动点（搜 `TODO`）：`applicationId`、`H5_URL`（flavor）、签名（替换 demo keystore）、`app_name`、`WebUrlStorage.FILE_NAME`（sdcard 文件名）、接入真实语音 SDK（替换 `NoopVoiceController`）。
 
 > ⚠️ 编译前置：`com.chances.sdk:*` 在公司内网仓库（`http://222.66.77.226:8081`），需公司网络 + Android SDK 28 + **JDK 8**（AGP 3.6.0 要求）。
 > 验证（已实测通过，可装到盒子运行）：

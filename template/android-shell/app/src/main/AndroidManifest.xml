@@ -5,6 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!--
+        WebActivity 把用户在设置弹框输入的 webUrl 持久化到 /sdcard/web_url.txt，需外部存储读写权限。
+        入口 LauncherActivity 通过 chances.core.permission.PermissionHelper 统一申请，Android 6.0+ 即拿即用；
+        权限被拒时降级为不读写 sdcard，仅 Intent / 默认地址通道，不影响页面运行。
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- TV 设备：声明非触摸屏与 leanback -->
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -21,8 +29,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <!-- 统一入口（管理中心）：申请权限后跳 WebActivity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".launcher.LauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
@@ -32,5 +41,12 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- WebView 业务页：url 优先取 Intent EXTRA_URL，缺失回退 sdcard，再回退 BuildConfig.H5_URL；连按 5 次菜单键弹设置 -->
+        <activity
+            android:name=".web.WebActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape" />
     </application>
 </manifest>
