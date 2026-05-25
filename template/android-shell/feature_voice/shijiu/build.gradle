@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    // AGP 3.6.0：包名写在 AndroidManifest.xml 的 package 属性
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+// 视九语音 SDK 以本地 aar 形式随模块入库
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    // 依赖语音抽象层，拿到 VoiceController / VoiceControllerProvider 等接口
+    api project(':feature_voice:core')
+    // 视九 SDK 本地 aar（com.qcode.tvvoicehelp.*）
+    implementation fileTree(include: ['*.aar'], dir: 'libs')
+
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

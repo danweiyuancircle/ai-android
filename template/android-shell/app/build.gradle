@@ -75,8 +75,11 @@ android {
 }
 
 dependencies {
-    // app → feature_voice → lib_base（透传 lib_base 与 chances-sdk core）
-    implementation project(':feature_voice')
+    // app → feature_voice:core → lib_base（透传 lib_base 与 chances-sdk core）
+    implementation project(':feature_voice:core')
+    // 视九语音实现：仅运行期/打包依赖，app 编译期不引用其类，纯靠 ServiceLoader 发现（VoiceControllerFactory）。
+    // 热插拔——不用视九时删本行 + settings.gradle 的 include，模块整体不打包，自动回退 NoopVoiceController。
+    runtimeOnly project(':feature_voice:shijiu')
     // 仅 DEBUG 引入远程日志（无 ADB 拉 logcat / 重启 / 装 APK）
     // debugImplementation 'com.chances.sdk:wslog:1.0.0'
 }

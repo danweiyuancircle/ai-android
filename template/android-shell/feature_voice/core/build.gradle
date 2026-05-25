@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+// 模块名为 core，会与依赖 com.chances.sdk:core 的 META-INF/core_release.kotlin_module 同名冲突
+// （mergeJavaResource 报 duplicate）。改唯一 archivesBaseName，使 kotlin_module 文件名错开。
+archivesBaseName = 'feature_voice_core'
+
 android {
     // AGP 3.6.0：包名写在 AndroidManifest.xml 的 package 属性
     compileSdkVersion 28

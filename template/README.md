@@ -27,9 +27,11 @@ template/
 chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chances-sdk/SKILL.md`）：
 - AGP 3.6.0 / Gradle 6.8.3 / JDK 8 / Kotlin 1.8.0
 - minSdk 19 / compileSdk 28 / targetSdk 28，Support 27.1.1，**禁止 AndroidX**
-三模块（命名前缀即层级，Studio 视图按字母序呈现 app→业务→base）：
+模块（命名前缀即层级，Studio 视图按字母序呈现 app→业务→base）：
 - `app` — 壳应用：LauncherActivity（统一入口，申请权限后跳转）+ WebActivity（WebView 宿主，含 ottService/语音/地址设置弹框）+ OttApplication + flavor staging/prod
-- `feature_voice` — 业务层·语音抽象独立模块：`VoiceController` / `OnVoiceListener` 接口 + `NoopVoiceController` 空实现（未接真实语音 SDK）
+- `feature_voice/`（语音聚合目录）
+  - `feature_voice/core`（`:feature_voice:core`）— 业务层·语音抽象（稳定层）：`VoiceController` / `OnVoiceListener` 接口 + `NoopVoiceController` 兜底 + `VoiceControllerProvider`（SPI）/ `VoiceControllerFactory`（ServiceLoader 发现）
+  - `feature_voice/shijiu`（`:feature_voice:shijiu`）— 可热插拔的视九（`com.qcode.tvvoicehelp`）语音实现，删依赖即整模块不打包、自动回退 Noop（见其 `README.md`）；新增实现照此放 `feature_voice/<vendor>`
 - `lib_base` — 基础层·壳专属逻辑：`OttServiceBridge`（ottService 契约实现）+ `WebViewJsHelper`（原生→H5）
 
 壳直接复用 chances-sdk 现成能力，不自写：
@@ -37,7 +39,9 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 - WebView 用 `chances.core.web.TvWebView`（自带 WebSettings / 进度 / 页面回调）
 - 退出走 `ActivityLifeManager.getInstance().quitApp()`
 
-语音接线：语音双向桥接内聚在 `feature_voice` 的 `VoiceBridge`——构造时注册 `OnVoiceListener` 把识别/TTS 事件转发到 H5（`onBeginSpeech/onFinalResult` 等），并提供 `playTts/stopTts/isTtsPlaying/releaseVoice`。`WebActivity` 只需 `VoiceBridge(webView, NoopVoiceController())` 再交给 `OttServiceBridge` 门面（门面对语音方法薄委派，`@JavascriptInterface` 因 `addJavascriptInterface` 单对象约束保留在门面）。接真实语音 SDK 时只需实现 `VoiceController` 替换 `NoopVoiceController`，其余不动。
+语音接线：语音双向桥接内聚在 `feature_voice:core` 的 `VoiceBridge`——构造时注册 `OnVoiceListener` 把识别/TTS 事件转发到 H5（`onBeginSpeech/onFinalResult` 等，回调统一主线程），并提供 `playTts/stopTts/isTtsPlaying/releaseVoice`。`WebActivity` 用 `VoiceControllerFactory.create(...)` 经 `OttServiceBridge` 门面装配（门面对语音方法薄委派，`@JavascriptInterface` 因 `addJavascriptInterface` 单对象约束保留在门面）。
+
+语音热插拔：实现按 SDK 拆成 `feature_voice/<vendor>` 独立模块（如 `feature_voice/shijiu`），各自经 `META-INF/services` 注册 `VoiceControllerProvider`；`VoiceControllerFactory` 用 `ServiceLoader` 发现，未打包任何实现则回退 `NoopVoiceController`，**JS 对接层与 `WebActivity` 零改动**。增删实现 = 改 `settings.gradle` include + app `runtimeOnly` 一行。新增实现照 `feature_voice/shijiu/README.md`。
 
 地址管理：`WebActivity` 加载地址优先级 **Intent `EXTRA_URL` > sdcard `/sdcard/web_url.txt` > `BuildConfig.H5_URL`**；运行时连按 5 次菜单键弹 `WebUrlDialog` 查看 / 修改地址，保存后落盘 sdcard（存储权限由 `LauncherActivity` 统一申请）。
 

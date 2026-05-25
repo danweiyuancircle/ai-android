@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    视九语音实现模块。视九通过绑定 TV 系统语音服务工作，录音在系统服务侧，
+    本应用无需 RECORD_AUDIO（aar 自身 manifest 亦不声明权限）。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shell.voice.shijiu">
+</manifest>

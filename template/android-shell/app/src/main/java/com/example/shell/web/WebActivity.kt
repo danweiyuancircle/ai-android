@@ -19,9 +19,9 @@ import com.example.shell.BuildConfig
 import com.example.shell.R
 import com.example.shell.base.bridge.ShellHost
 import com.example.shell.bridge.OttServiceBridge
-import com.example.shell.voice.NoopVoiceController
 import com.example.shell.voice.VoiceBridge
 import com.example.shell.voice.VoiceController
+import com.example.shell.voice.VoiceControllerFactory
 
 /**
  * 壳 WebView 宿主页：承载 H5 入口，转发遥控器按键到 H5，并内聚语音双向桥接（ottService）。
@@ -157,8 +157,8 @@ class WebActivity : BaseActivity(), ShellHost {
      * 装配 Bridge 并按优先级解析加载入口页。
      */
     override fun initData() {
-        // TODO(template): 接入真实语音 SDK 时把 NoopVoiceController 换成真实实现
-        voiceController = NoopVoiceController()
+        // 语音实现由 ServiceLoader 热插拔发现：打包了实现模块（如 feature_voice_shijiu）则用之，否则回退 Noop
+        voiceController = VoiceControllerFactory.create(applicationContext)
         voiceController.init(applicationContext)
         // VoiceBridge 内聚语音双向桥接：构造时即注册 OnVoiceListener，把识别/TTS 事件转发到 H5
         val voiceBridge = VoiceBridge(webView, voiceController)
