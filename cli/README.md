@@ -16,7 +16,19 @@ npm create android-shell@latest -- --parent ./myapp --app-id com.chances.tour --
 # 或全局安装：npm i -g create-android-shell && create-android-shell ...
 ```
 
-flag：`--parent` 工程根目录｜`--app-id` applicationId｜`--name` 应用名｜`--icon` 图标 PNG｜`--stack` 技术栈（默认 android-support-vue）。
+flag / 默认值：
+
+| flag | 含义 | 必填 | 默认 |
+| --- | --- | --- | --- |
+| `--parent` | 工程根目录 | 是 | — |
+| `--app-id` | applicationId | 否 | `com.chances.shell` |
+| `--name` | 应用名 | 否 | `Shell Template` |
+| `--icon` | 应用图标 PNG | 否 | 保留模板占位图标 `ic_launcher_shell` |
+| `--stack` | 技术栈 | 否 | `android-support-vue` |
+
+- 交互模式下每个可选项会展示默认值，回车留空即取默认。
+- **图标尺寸要求**：`144×144` PNG（`mipmap-xxhdpi` 密度的标准启动图标）；提供自定义图标时按 applicationId 末段命名为唯一资源 `ic_launcher_<key>`，不提供则沿用模板占位图。
+- 非交互环境（无 TTY，如 CI/管道）不弹提示：可选项直接取默认，`--parent` 缺失则报错退出。
 
 > 镜像源注意：包发在官方 registry.npmjs.org。默认源是国内镜像（npmmirror / 公司 Nexus）时，刚发布的新版本可能尚未同步而报 404 —— 加 `--registry https://registry.npmjs.org/` 或等镜像同步。
 

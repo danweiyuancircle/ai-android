@@ -5,7 +5,7 @@ const readline = require('node:readline/promises');
 const { stdin, stdout } = require('node:process');
 const { parseArgs } = require('node:util');
 const stacks = require('./stacks');
-const { generate } = require('./lib/generate');
+const { generate, DEFAULTS } = require('./lib/generate');
 
 // 发布到 npm 时模板随包内置在 ./template（见 package.json 的 prepack）；
 // 仓库内本地开发（npm link）时回退到同仓库的 ../template。
@@ -14,16 +14,31 @@ const TEMPLATE_ROOT = fs.existsSync(BUNDLED_TEMPLATE)
   ? BUNDLED_TEMPLATE
   : path.join(__dirname, '..', 'template');
 
-/** 交互式询问一个必填项，为空则重复询问；已有 preset 直接返回。 */
-async function ask(rl, label, preset) {
+/** 询问一个必填项，为空则重复询问；已有 preset 直接返回；非交互环境（无 TTY）缺值则报错（无法提示）。 */
+async function ask(rl, label, preset, interactive) {
   if (preset) {
     return preset;
+  }
+  if (!interactive) {
+    throw new Error(`缺少必填项「${label}」，且当前非交互环境（无 TTY），请用对应 flag 传入`);
   }
   let v = '';
   while (!v) {
     v = (await rl.question(`${label}: `)).trim();
   }
   return v;
+}
+
+/** 询问可选项：展示默认值，回车留空取默认；已有 preset（flag 传入）直接返回；非交互环境直接取默认，不提示。 */
+async function askDefault(rl, label, def, defLabel, preset, interactive) {
+  if (preset !== undefined) {
+    return preset;
+  }
+  if (!interactive) {
+    return def;
+  }
+  const v = (await rl.question(`${label}（默认：${defLabel ?? def}）: `)).trim();
+  return v || def;
 }
 
 /** CLI 主流程：解析 flag → 交互补齐缺项 → 生成工程 → 打印后续步骤。 */
@@ -38,19 +53,28 @@ async function main() {
     },
   });
 
-  const rl = readline.createInterface({ input: stdin, output: stdout });
+  const interactive = Boolean(stdin.isTTY);
+  const rl = interactive ? readline.createInterface({ input: stdin, output: stdout }) : null;
   try {
-    const parentName = await ask(rl, '父目录名（工程根）', values.parent);
-    const appId = await ask(rl, 'applicationId（如 com.chances.tour）', values['app-id']);
-    const appName = await ask(rl, '应用名', values.name);
-    const iconPath = await ask(rl, '图标 PNG 路径', values.icon);
+    // 父目录必填；applicationId / 应用名 / 图标可选，留空用默认
+    const parentName = await ask(rl, '父目录名（工程根）', values.parent, interactive);
+    const appId = await askDefault(rl, 'applicationId（如 com.chances.tour）', DEFAULTS.appId, undefined, values['app-id'], interactive);
+    const appName = await askDefault(rl, '应用名', DEFAULTS.appName, undefined, values.name, interactive);
+    const iconPath = await askDefault(
+      rl,
+      `图标 PNG 路径（尺寸要求 ${DEFAULTS.iconSizeHint}）`,
+      '',
+      DEFAULTS.iconDesc,
+      values.icon,
+      interactive,
+    );
 
     const res = generate({
       templateRoot: TEMPLATE_ROOT,
       parentDir: path.resolve(parentName),
       appId,
       appName,
-      iconPath: path.resolve(iconPath),
+      iconPath: iconPath ? path.resolve(iconPath) : undefined,
       stack: values.stack,
       registry: stacks,
     });
@@ -70,7 +94,9 @@ async function main() {
       '',
     ].join('\n'));
   } finally {
-    rl.close();
+    if (rl) {
+      rl.close();
+    }
   }
 }
 

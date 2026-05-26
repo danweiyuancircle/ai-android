@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const stacks = require('../stacks');
-const { generate } = require('../lib/generate');
+const { generate, DEFAULTS } = require('../lib/generate');
 
 const TEMPLATE_ROOT = path.join(__dirname, '..', '..', 'template');
 
@@ -76,4 +76,50 @@ test('generate 生成壳+H5、改写 app 包/applicationId/名称/图标，保�
   // 库包引用必须原样保留（lib_base / feature_voice 仍是 com.chances.shell）——证明未过度替换
   assert.ok(anyKtContains(appJava, 'com.chances.shell.base'), '库包 .base 引用应保留');
   assert.ok(anyKtContains(appJava, 'com.chances.shell.voice'), '库包 .voice 引用应保留');
+});
+
+test('未给图标时保留模板内置占位图标 ic_launcher_shell，不创建新图标', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gen-'));
+  const parent = path.join(tmp, 'noicon');
+
+  const res = generate({
+    templateRoot: TEMPLATE_ROOT,
+    parentDir: parent,
+    appId: 'com.chances.tour',
+    // 不传 appName / iconPath
+    stack: 'android-support-vue',
+    registry: stacks,
+  });
+
+  const shell = path.join(parent, 'android-shell');
+  const mipmap = path.join(shell, 'app/src/main/res/mipmap-xxhdpi');
+  const manifest = fs.readFileSync(path.join(shell, 'app/src/main/AndroidManifest.xml'), 'utf8');
+  // 图标资源沿用占位名，占位 PNG 仍在，未生成 ic_launcher_tour.png
+  assert.strictEqual(res.iconKey, 'shell');
+  assert.match(manifest, /android:icon="@mipmap\/ic_launcher_shell"/);
+  assert.ok(fs.existsSync(path.join(mipmap, 'ic_launcher_shell.png')));
+  assert.ok(!fs.existsSync(path.join(mipmap, 'ic_launcher_tour.png')));
+  // appId 仍按传入重写；appName 缺省回退默认值
+  assert.match(manifest, /package="com\.chances\.tour"/);
+  const strings = fs.readFileSync(path.join(shell, 'app/src/main/res/values/strings.xml'), 'utf8');
+  assert.match(strings, new RegExp(`<string name="app_name">${DEFAULTS.appName}</string>`));
+});
+
+test('appId 缺省回退 com.chances.shell（包重写为同名，无残留 example）', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gen-'));
+  const parent = path.join(tmp, 'defid');
+
+  generate({
+    templateRoot: TEMPLATE_ROOT,
+    parentDir: parent,
+    // 不传 appId / appName / iconPath
+    stack: 'android-support-vue',
+    registry: stacks,
+  });
+
+  const shell = path.join(parent, 'android-shell');
+  const gradle = fs.readFileSync(path.join(shell, 'app/build.gradle'), 'utf8');
+  assert.match(gradle, new RegExp(`applicationId '${DEFAULTS.appId.replace(/\./g, '\\.')}'`));
+  // app 自有包仍在默认包路径
+  assert.ok(fs.existsSync(path.join(shell, 'app/src/main/java/com/chances/shell/OttApplication.kt')));
 });

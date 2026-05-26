@@ -7,9 +7,12 @@
 ### Added
 - `publishConfig` 锁定发布到官方源 `registry.npmjs.org`（`npm publish` 免带 `--registry`）。
 - 本 CHANGELOG。
+- 非交互环境（无 TTY）支持：可选项取默认、`--parent` 缺失报错退出，不再因管道输入挂起。
 
 ### Changed
-- README 安装命令改为 `npm create android-shell` / `npx`（发布后正确用法），`npm link` 降为仓库内本地开发说明。
+- applicationId / 应用名 / 图标改为**可选**，交互时展示默认值（`com.chances.shell` / `Shell Template` / 保留占位图标），回车留空取默认。
+- 图标提示展示尺寸要求（`144×144` PNG，mipmap-xxhdpi）；未提供图标时保留模板占位图 `ic_launcher_shell`，不再强制要求。
+- README 安装命令改为 `npm create android-shell` / `npx`（发布后正确用法），`npm link` 降为仓库内本地开发说明；补充 flag 默认值表。
 
 ## [0.1.0] - 2026-05-26
 
