@@ -47,7 +47,7 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 
 签名：随仓库附带 demo keystore（`app/shell.jks` + `signing.properties`，密码 `shelltemplate`，**非生产密钥**），clone 即可出 release 签名包；正式项目替换为自有 keystore 并恢复 `.gitignore` 默认排除。
 
-起项目改动点（搜 `TODO`）：`applicationId`、`H5_URL`（flavor）、签名（替换 demo keystore）、`app_name`、`WebUrlStorage.FILE_NAME`（sdcard 文件名）、接入真实语音 SDK（替换 `NoopVoiceController`）。
+起项目改动点（搜 `TODO`）：`applicationId`、`H5_URL`（flavor）、签名（替换 demo keystore）、`app_name`、`WebUrlStorage.FILE_NAME`（sdcard 文件名）、接入真实语音 SDK（替换 `NoopVoiceController`）、应用图标（`app/src/main/res/mipmap-xxhdpi/ic_launcher_<key>.png`，用唯一名防被盒子应用同步按 `ic_launcher` 通用名覆盖）。
 
 > ⚠️ 编译前置：`com.chances.sdk:*` 在公司内网仓库（`http://222.66.77.226:8081`），需公司网络 + Android SDK 28 + **JDK 8**（AGP 3.6.0 要求）。
 > 验证（已实测通过，可装到盒子运行）：
