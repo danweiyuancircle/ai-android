@@ -65,6 +65,14 @@ test('generate 生成壳+H5、改写 app 包/applicationId/名称/图标，保�
   // 库包保留 com.chances.shell
   assert.ok(fs.existsSync(path.join(shell, 'lib_base/src/main/java/com/chances/shell/base')),
     'lib_base 包路径应保持 com.chances.shell.base');
-  // app 源码不应残留 com.chances.shell
-  assert.strictEqual(anyKtContains(path.join(shell, 'app/src/main/java'), 'com.chances.shell'), false);
+  // app 源码：自有包（.web/.bridge/.launcher/R/BuildConfig/根包）已改写为新包
+  const appJava = path.join(shell, 'app/src/main/java');
+  assert.ok(anyKtContains(appJava, 'com.chances.tour'), 'app 自有包应已改写为新包');
+  assert.strictEqual(anyKtContains(appJava, 'com.chances.shell.web'), false, '自有子包 .web 不应残留');
+  assert.strictEqual(anyKtContains(appJava, 'com.chances.shell.bridge'), false, '自有子包 .bridge 不应残留');
+  assert.strictEqual(anyKtContains(appJava, 'com.chances.shell.R'), false, 'R 引用应改写为新包');
+  assert.strictEqual(anyKtContains(appJava, 'com.chances.shell.BuildConfig'), false, 'BuildConfig 引用应改写为新包');
+  // 库包引用必须原样保留（lib_base / feature_voice 仍是 com.chances.shell）——证明未过度替换
+  assert.ok(anyKtContains(appJava, 'com.chances.shell.base'), '库包 .base 引用应保留');
+  assert.ok(anyKtContains(appJava, 'com.chances.shell.voice'), '库包 .voice 引用应保留');
 });

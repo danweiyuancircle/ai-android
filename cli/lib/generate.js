@@ -36,11 +36,7 @@ function generate(o) {
   copyTree(path.join(o.templateRoot, def.shell), shellDir, DEFAULT_EXCLUDES);
   copyTree(path.join(o.templateRoot, def.h5), h5Dir, DEFAULT_EXCLUDES);
 
-  const appJavaDir = path.join(shellDir, 'app/src/main/java');
-  renameAppPackage(appJavaDir, BASE_PKG, o.appId);
-  // renameAppPackage 精准替换自有包；这里再全量扫一遍，确保 app 模块中对库包的
-  // 引用（如 import com.chances.shell.base.*）也改为新 appId 前缀，保证生成目录自洽。
-  sweepPkgInKtFiles(appJavaDir, BASE_PKG, o.appId);
+  renameAppPackage(path.join(shellDir, 'app/src/main/java'), BASE_PKG, o.appId);
 
   edit(path.join(shellDir, 'app/build.gradle'), (t) => setApplicationId(t, o.appId));
   edit(path.join(shellDir, 'app/src/main/res/values/strings.xml'), (t) => setAppName(t, o.appName));
@@ -59,21 +55,6 @@ function generate(o) {
 /** 读文件、应用纯文本变换 fn、写回。 */
 function edit(file, fn) {
   fs.writeFileSync(file, fn(fs.readFileSync(file, 'utf8')));
-}
-
-/** 递归扫描目录下所有 .kt 文件，全量替换字符串 oldPkg → newPkg。 */
-function sweepPkgInKtFiles(dir, oldPkg, newPkg) {
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) {
-      sweepPkgInKtFiles(full, oldPkg, newPkg);
-    } else if (e.name.endsWith('.kt')) {
-      const src = fs.readFileSync(full, 'utf8');
-      if (src.includes(oldPkg)) {
-        fs.writeFileSync(full, src.split(oldPkg).join(newPkg));
-      }
-    }
-  }
 }
 
 module.exports = { generate };
