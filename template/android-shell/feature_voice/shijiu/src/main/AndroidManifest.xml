@@ -4,5 +4,5 @@
     本应用无需 RECORD_AUDIO（aar 自身 manifest 亦不声明权限）。
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shell.voice.shijiu">
+    package="com.chances.shell.voice.shijiu">
 </manifest>

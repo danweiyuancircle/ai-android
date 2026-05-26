@@ -17,3 +17,5 @@ signing.properties
 # 例外：模板 demo 签名随仓库入库，clone 即可出签名包（非生产密钥，正式项目删此两行并替换为自有 keystore）
 !signing.properties
 !app/shell.jks
+# 互联网语音引擎密钥不入库（见 feature_voice/internet/README.md，用 voice.properties.example 为模板）
+feature_voice/internet/voice.properties

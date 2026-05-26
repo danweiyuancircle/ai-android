@@ -1,0 +1,63 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+// 模块内移植了 voice-remote-sdk 源码（chances.android.voice.sdk.*），archivesBaseName 错开
+// kotlin_module 文件名，避免与其它模块 META-INF/*.kotlin_module 合并冲突
+archivesBaseName = 'feature_voice_internet'
+
+// 引擎与密钥从 voice.properties（不入库，见 .gitignore）读取，缺失回退空串/默认，
+// 便于本地无密钥也能过编译；填了哪家引擎的密钥就生效哪家，见 README
+def voicePropsFile = project.file('voice.properties')
+def voiceProps = new Properties()
+if (voicePropsFile.exists()) {
+    voiceProps.load(new FileInputStream(voicePropsFile))
+}
+def voiceProp = { String key, String fallback -> voiceProps.getProperty(key, fallback) }
+
+android {
+    // AGP 3.6.0：包名写在 AndroidManifest.xml 的 package 属性
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        consumerProguardFiles 'consumer-rules.pro'
+
+        // 引擎选择 + 各家密钥注入 BuildConfig，由 VoiceConfigFactory 读取构造 VoiceRemoteConfig
+        buildConfigField 'String', 'VOICE_ASR_MODE', "\"${voiceProp('asrMode', 'SYSTEM')}\""
+        buildConfigField 'String', 'VOICE_TTS_MODE', "\"${voiceProp('ttsMode', 'SYSTEM')}\""
+        buildConfigField 'int', 'VOICE_NETWORK_PORT', voiceProp('networkPort', '9527')
+        buildConfigField 'String', 'IFLY_APP_ID', "\"${voiceProp('ifly.appId', '')}\""
+        buildConfigField 'String', 'IFLY_API_KEY', "\"${voiceProp('ifly.apiKey', '')}\""
+        buildConfigField 'String', 'IFLY_API_SECRET', "\"${voiceProp('ifly.apiSecret', '')}\""
+        buildConfigField 'String', 'TENCENT_SECRET_ID', "\"${voiceProp('tencent.secretId', '')}\""
+        buildConfigField 'String', 'TENCENT_SECRET_KEY', "\"${voiceProp('tencent.secretKey', '')}\""
+        buildConfigField 'String', 'TENCENT_APP_ID', "\"${voiceProp('tencent.appId', '')}\""
+        buildConfigField 'String', 'VOLC_APP_ID', "\"${voiceProp('volc.appId', '')}\""
+        buildConfigField 'String', 'VOLC_TOKEN', "\"${voiceProp('volc.token', '')}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // 语音抽象层（透出 VoiceController / VoiceControllerProvider 与 lib_base/Logger）
+    api project(':feature_voice:core')
+
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

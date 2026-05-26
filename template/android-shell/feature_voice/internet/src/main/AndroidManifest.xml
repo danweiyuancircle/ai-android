@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    互联网语音实现模块。盒子作 WebSocket Server（默认 9527），手机客户端连上发 PCM，
+    盒子做云端 ASR。仅需 INTERNET；本地麦克风 / 蓝牙输入未启用（NETWORK_ONLY 模式），
+    如改走 startListening 的设备麦克风或 BLE 遥控器，再补 RECORD_AUDIO / BLUETOOTH 权限。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.chances.shell.voice.internet">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

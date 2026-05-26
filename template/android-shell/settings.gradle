@@ -1,4 +1,5 @@
 // 模块分层（命名前缀即层级，Studio 视图按字母序天然呈现 app→业务→base）：
 // app（壳应用）→ feature_*（业务层）→ lib_*（基础库）
-// 语音聚合在 feature_voice/ 下：core=抽象稳定层，shijiu=可热插拔视九实现（不用时删 :feature_voice:shijiu 这项 + app runtimeOnly，见其 README）
-include ':app', ':feature_voice:core', ':feature_voice:shijiu', ':lib_base'
+// 语音聚合在 feature_voice/ 下：core=抽象稳定层，shijiu=视九实现，internet=互联网语音实现(voice-remote-sdk)。
+// shijiu/internet 为可热插拔实现，二选一（见各自 README 与 app/build.gradle 的 runtimeOnly）。
+include ':app', ':feature_voice:core', ':feature_voice:shijiu', ':feature_voice:internet', ':lib_base'

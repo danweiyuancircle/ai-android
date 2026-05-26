@@ -26,7 +26,7 @@ SDK 以本地 aar 入库：`libs/VoiceConnectSDK-release.aar`。
 1. `build.gradle`：`api project(':feature_voice:core')` + 引入该 SDK 依赖（aar 走 `flatDir`，或 maven 坐标）。
 2. 写 `XxxVoiceController : VoiceController`：把该 SDK 事件适配到 `OnVoiceListener`，**回调切主线程**（见 `OnVoiceListener` 线程契约）。
 3. 写 `XxxVoiceControllerProvider : VoiceControllerProvider`（公开无参构造），`create()` 返回上面的 controller。
-4. 新建 `src/main/resources/META-INF/services/com.example.shell.voice.VoiceControllerProvider`，单行写 Provider 全类名。
+4. 新建 `src/main/resources/META-INF/services/com.chances.shell.voice.VoiceControllerProvider`，单行写 Provider 全类名。
 5. `consumer-rules.pro` keep 住 SDK 包、Provider 无参构造（R8 release 防裁剪）。
 6. `settings.gradle` 加 `include ':feature_voice:<vendor>'` + `app/build.gradle` `runtimeOnly project(':feature_voice:<vendor>')` 启用。
 

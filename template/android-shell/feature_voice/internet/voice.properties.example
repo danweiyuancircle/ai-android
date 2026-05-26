@@ -1,0 +1,27 @@
+# 互联网语音引擎与密钥配置模板。
+# 复制为同目录 voice.properties 后填写；voice.properties 不入库（见仓库 .gitignore）。
+#
+# 网络输入模式下 ASR 必须用云引擎（IFLY / TENCENT / VOLC）：
+# SYSTEM 走设备 SpeechRecognizer、OFFLINE 为占位，二者都不吃手机发来的网络 PCM。
+# 配了哪家就只填哪家：asrMode / ttsMode 选定引擎，填上对应密钥即可，其余留空。
+
+# 引擎选择：SYSTEM / IFLY / TENCENT / VOLC（ASR 另有 OFFLINE 占位）
+asrMode=IFLY
+ttsMode=IFLY
+
+# 盒子 WebSocket Server 端口（手机客户端连接此端口）
+networkPort=9527
+
+# 讯飞（asrMode / ttsMode = IFLY 时填）
+ifly.appId=
+ifly.apiKey=
+ifly.apiSecret=
+
+# 腾讯（asrMode / ttsMode = TENCENT 时填）
+tencent.secretId=
+tencent.secretKey=
+tencent.appId=
+
+# 火山（asrMode / ttsMode = VOLC 时填）
+volc.appId=
+volc.token=
