@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-26
+
 ### Added
 - `publishConfig` 锁定发布到官方源 `registry.npmjs.org`（`npm publish` 免带 `--registry`）。
 - 本 CHANGELOG。
@@ -26,5 +28,6 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...HEAD
+[0.2.0]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...v0.2.0
 [0.1.0]: https://gitee.com/sh_chances/ai-android/releases/tag/v0.1.0
