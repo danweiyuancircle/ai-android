@@ -1,0 +1,9 @@
+{
+  "name": "create-android-shell",
+  "version": "0.1.0",
+  "description": "脚手架：生成 Android WebView 套壳 + H5 模板工程",
+  "bin": { "create-android-shell": "index.js" },
+  "type": "commonjs",
+  "scripts": { "test": "node --test" },
+  "engines": { "node": ">=18" }
+}
