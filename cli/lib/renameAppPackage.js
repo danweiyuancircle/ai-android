@@ -83,7 +83,7 @@ function moveDir(root, oldPkg, newPkg) {
 /** 从 dir 向上删空目录，直到非空或到达 root（不删 root）。 */
 function pruneEmptyUp(dir, root) {
   let cur = dir;
-  while (cur.startsWith(root) && cur !== root) {
+  while (cur !== root && cur.startsWith(root + path.sep)) {
     if (!fs.existsSync(cur) || fs.readdirSync(cur).length > 0) {
       break;
     }

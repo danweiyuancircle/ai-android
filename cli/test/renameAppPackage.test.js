@@ -34,6 +34,7 @@ test('只改写 app 自有包，保留 .base/.voice 库包', () => {
   // 目录已移动
   assert.ok(fs.existsSync(path.join(root, 'com/foo/bar/web/WebActivity.kt')), 'app 目录应移到新包路径');
   assert.ok(!fs.existsSync(path.join(root, 'com/chances/shell')), '旧 app 目录应清空');
+  assert.ok(!fs.existsSync(path.join(root, 'com/chances')), '空中间目录 com/chances 应被裁剪');
 
   const web = fs.readFileSync(path.join(root, 'com/foo/bar/web/WebActivity.kt'), 'utf8');
   assert.match(web, /^package com\.foo\.bar\.web$/m);
