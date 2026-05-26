@@ -4,7 +4,7 @@
   "description": "脚手架：生成 Android WebView 套壳 + H5 模板工程",
   "bin": { "create-android-shell": "index.js" },
   "type": "commonjs",
-  "files": ["index.js", "stacks.js", "lib/", "template/"],
+  "files": ["index.js", "stacks.js", "lib/", "template/", "CHANGELOG.md"],
   "scripts": {
     "test": "node --test",
     "prepack": "node -e \"const{copyTree,DEFAULT_EXCLUDES}=require('./lib/copyTree');require('fs').rmSync('template',{recursive:true,force:true});copyTree('../template','template',DEFAULT_EXCLUDES)\"",
@@ -12,5 +12,6 @@
   },
   "engines": { "node": ">=18" },
   "repository": { "type": "git", "url": "https://gitee.com/sh_chances/ai-android.git", "directory": "cli" },
-  "keywords": ["android", "webview", "scaffold", "cli", "template", "vue", "tv"]
+  "keywords": ["android", "webview", "scaffold", "cli", "template", "vue", "tv"],
+  "publishConfig": { "registry": "https://registry.npmjs.org/", "access": "public" }
 }
