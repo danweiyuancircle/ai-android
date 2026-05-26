@@ -20,6 +20,8 @@ const BASE_PKG = 'com.chances.shell';
  * @param o.registry 技术栈注册表
  * @return { shellDir, h5Dir, iconKey }
  * @throws Error 任一输入校验失败
+ *
+ * 已知约束：BASE_PKG 绑定模板基线包名 com.chances.shell（单模板假设）；图标仅替换 mipmap-xxhdpi 单密度。
  */
 function generate(o) {
   const err = validateStack(o.stack, o.registry)

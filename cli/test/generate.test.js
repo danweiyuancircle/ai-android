@@ -28,8 +28,9 @@ function anyKtContains(dir, needle) {
 }
 
 test('generate 生成壳+H5、改写 app 包/applicationId/名称/图标，保留库包', () => {
-  const parent = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'gen-')), 'tourapp');
-  const icon = path.join(os.tmpdir(), `icon-${Date.now()}.png`);
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gen-'));
+  const parent = path.join(tmp, 'tourapp');
+  const icon = path.join(tmp, 'icon.png');
   makePng(icon);
 
   generate({

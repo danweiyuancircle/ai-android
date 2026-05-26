@@ -8,7 +8,7 @@ const path = require('node:path');
  * 再逐文件重写 package 声明与「包部分精确命中自有集合」的 import，最后把目录从 oldPkg 路径移到 newPkg 路径。
  * 库包（com.chances.shell.base / .voice）不在 app 模块目录内，不入自有集合，故 import 它们时原样保留。
  *
- * 约束：不处理 app 自有类的「嵌套类/成员」式 import（本模板无此用法）。
+ * 约束：只处理 package/import 行，不重写注释/KDoc 内的 FQN 引用（如 WebActivity KDoc 的 [..launcher.LauncherActivity]，纯文档不影响编译）；亦不处理嵌套类/成员式 import（本模板无此用法）。
  *
  * @param appJavaRoot app 模块 java 源码根（其下为 com/...）
  * @param oldPkg 旧 app 包名，如 com.chances.shell
