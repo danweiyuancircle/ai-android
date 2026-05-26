@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('node:fs');
 const path = require('node:path');
 const readline = require('node:readline/promises');
 const { stdin, stdout } = require('node:process');
@@ -6,7 +7,12 @@ const { parseArgs } = require('node:util');
 const stacks = require('./stacks');
 const { generate } = require('./lib/generate');
 
-const TEMPLATE_ROOT = path.join(__dirname, '..', 'template');
+// 发布到 npm 时模板随包内置在 ./template（见 package.json 的 prepack）；
+// 仓库内本地开发（npm link）时回退到同仓库的 ../template。
+const BUNDLED_TEMPLATE = path.join(__dirname, 'template');
+const TEMPLATE_ROOT = fs.existsSync(BUNDLED_TEMPLATE)
+  ? BUNDLED_TEMPLATE
+  : path.join(__dirname, '..', 'template');
 
 /** 交互式询问一个必填项，为空则重复询问；已有 preset 直接返回。 */
 async function ask(rl, label, preset) {

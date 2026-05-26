@@ -1,0 +1,4 @@
+node_modules/
+# prepack 在打包时临时内置的模板副本，不入库（postpack 会清理）
+template/
+*.tgz
