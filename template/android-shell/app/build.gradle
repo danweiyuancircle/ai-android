@@ -15,7 +15,6 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        // TODO: 改成项目包名
         applicationId 'com.chances.shell'
         minSdkVersion 19
         targetSdkVersion 28
