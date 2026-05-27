@@ -10,12 +10,7 @@
 app/build/
 feature_voice/build/
 lib_base/build/
-# 真实签名不入库（用 signing.properties 注入，见 app/build.gradle）
+# keystore 不入库；例外：模板 demo 签名 app/shell.jks 随仓库入库（非生产密钥，已写死在 app/build.gradle，正式项目替换为自有 keystore）
 *.jks
 *.keystore
-signing.properties
-# 例外：模板 demo 签名随仓库入库，clone 即可出签名包（非生产密钥，正式项目删此两行并替换为自有 keystore）
-!signing.properties
 !app/shell.jks
-# 互联网语音引擎密钥不入库（见 feature_voice/internet/README.md，用 voice.properties.example 为模板）
-feature_voice/internet/voice.properties

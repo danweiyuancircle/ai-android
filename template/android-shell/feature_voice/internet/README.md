@@ -21,27 +21,26 @@
 
 网络输入模式下 **ASR 必须用云引擎**（讯飞 / 腾讯 / 火山）：`SYSTEM` 走设备 `SpeechRecognizer`、`OFFLINE` 为占位，都不吃手机发来的网络 PCM。
 
-1. 复制 `voice.properties.example` 为 `voice.properties`（不入库）。
-2. 设 `asrMode` / `ttsMode`（如 `IFLY`），填对应一家的密钥，其余留空。
-3. `build.gradle` 读取 `voice.properties` 注入 `BuildConfig`，`VoiceConfigFactory.build()` 据此构造 `VoiceRemoteConfig`：配了哪家 appId 非空就生效哪家。缺密钥时回退空串，模块仍可编译。
+全部配置集中在根 `gradle.properties` 的 `voice.internet.*` 段（全局单一来源）：
 
-| 引擎 | asrMode/ttsMode | 需填 |
+1. 设 `voice.internet.asrMode` / `voice.internet.ttsMode`（如 `IFLY`），填对应一家的密钥，其余留空。
+2. 本模块 `build.gradle` 经 `project.findProperty` 读取 `voice.internet.*` 注入 `BuildConfig`，`VoiceConfigFactory.build()` 据此构造 `VoiceRemoteConfig`：配了哪家 appId 非空就生效哪家。缺密钥时回退空串，模块仍可编译。
+3. ⚠️ `gradle.properties` 入库，**真实密钥勿提交**，放 `~/.gradle/gradle.properties` 用同名 key 覆盖即可。
+
+| 引擎 | asrMode/ttsMode | 需填（gradle.properties key） |
 |---|---|---|
-| 讯飞 | `IFLY` | `ifly.appId` / `ifly.apiKey` / `ifly.apiSecret` |
-| 腾讯 | `TENCENT` | `tencent.secretId` / `tencent.secretKey` / `tencent.appId` |
-| 火山 | `VOLC` | `volc.appId` / `volc.token` |
+| 讯飞 | `IFLY` | `voice.internet.ifly.appId` / `voice.internet.ifly.apiKey` / `voice.internet.ifly.apiSecret` |
+| 腾讯 | `TENCENT` | `voice.internet.tencent.secretId` / `voice.internet.tencent.secretKey` / `voice.internet.tencent.appId` |
+| 火山 | `VOLC` | `voice.internet.volc.appId` / `voice.internet.volc.token` |
 
-## 插拔开关
+## 插拔开关与视九二选一
 
-- **启用**：
-  1. `settings.gradle` 加 `include ':feature_voice:internet'`
-  2. `app/build.gradle` 的 `dependencies` 加 `runtimeOnly project(':feature_voice:internet')`
-- **停用**：删上面两行。模块源码不再编译/打包，`VoiceControllerFactory` 经 ServiceLoader 找不到实现 → 自动回退 `NoopVoiceController`。**上层（WebActivity/VoiceBridge）零改动。**
+切换由根 `gradle.properties` 的 `voice.engine` 决定（编译期），`app/build.gradle` 据此只 `runtimeOnly` 选中的实现模块：
 
-## 与视九二选一
-
-`ServiceLoader` 取发现到的第一个实现（顺序不定）。`internet` 与 `shijiu` 同时启用时只命中其一，**需确定性时只启用一个**：用 `internet` 就注释/删除 `shijiu` 的 `include` 与 `runtimeOnly`（反之亦然）。
+- **启用本模块**：`voice.engine=internet`（命令行临时覆盖：`./gradlew assembleStagingDebug -Pvoice.engine=internet`）。
+- **切视九**：改 `voice.engine=shijiu`。
+- 选中谁就只打包谁，未选中者不进 classpath，`VoiceControllerFactory` 经 ServiceLoader 命中确定；非法值构建报错。**上层（WebActivity/VoiceBridge）零改动。**
 
 ## 端到端验证
 
-盒子起后监听 `networkPort`（默认 9527）；用 voice-remote-sdk 仓库的 `web-remote/index.html` 或 `remote/` 手机 App 连 `盒子IP:9527` 发音频 → 验证 H5 端 `window.onFinalResult` 收到识别结果、`ottService.playTts` 能播报（需先在 `voice.properties` 配好一家云引擎密钥）。
+盒子起后监听 `networkPort`（默认 9527）；用 voice-remote-sdk 仓库的 `web-remote/index.html` 或 `remote/` 手机 App 连 `盒子IP:9527` 发音频 → 验证 H5 端 `window.onFinalResult` 收到识别结果、`ottService.playTts` 能播报（需先在 `gradle.properties` 的 `voice.internet.*` 配好一家云引擎密钥）。

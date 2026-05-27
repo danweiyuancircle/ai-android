@@ -1,15 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-// 可选：从 signing.properties 读取真实签名（该文件不入库，见 .gitignore）。
-// 复制 signing.properties.example 为 signing.properties 并填写。
-def signingPropsFile = rootProject.file('signing.properties')
-def hasSigning = signingPropsFile.exists()
-def signingProps = new Properties()
-if (hasSigning) {
-    signingProps.load(new FileInputStream(signingPropsFile))
-}
-
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -24,13 +15,13 @@ android {
     }
 
     signingConfigs {
-        if (hasSigning) {
-            release {
-                keyAlias signingProps['keyAlias']
-                keyPassword signingProps['keyPassword']
-                storeFile rootProject.file(signingProps['storeFile'])
-                storePassword signingProps['storePassword']
-            }
+        // 模板 demo 签名（非生产密钥）：keystore app/shell.jks 随仓库入库，clone 即可出 release 签名包。
+        // 正式项目替换为自有 keystore，并把 *.jks 移出版本控制、密钥改从 CI 凭据或 ~/.gradle 注入。
+        release {
+            keyAlias 'shell'
+            keyPassword 'shelltemplate'
+            storeFile rootProject.file('app/shell.jks')
+            storePassword 'shelltemplate'
         }
     }
 
@@ -39,9 +30,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (hasSigning) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig signingConfigs.release
         }
         debug {
             debuggable true
@@ -76,12 +65,19 @@ android {
 dependencies {
     // app → feature_voice:core → lib_base（透传 lib_base 与 chances-sdk core）
     implementation project(':feature_voice:core')
-    // 语音实现热插拔：仅运行期/打包依赖，app 编译期不引用其类，纯靠 ServiceLoader 发现（VoiceControllerFactory）。
-    // shijiu/internet 二选一（ServiceLoader 取首个发现，同时打包命中不确定）。删全部实现则回退 NoopVoiceController。
-    // 当前启用「互联网语音」(voice-remote-sdk)：需在 feature_voice/internet/voice.properties 配引擎密钥。
-    runtimeOnly project(':feature_voice:internet')
-    // 视九实现（遥控器语音键）：切回时启用本行并注释上面的 internet。
-    // runtimeOnly project(':feature_voice:shijiu')
+
+    // 语音实现编译期二选一：由根 gradle.properties 的 voice.engine 决定，只打包选中的实现，
+    // 另一个不进 classpath，ServiceLoader 命中确定（VoiceControllerFactory）。app 不引用其具体类。
+    def voiceEngine = (project.findProperty('voice.engine') ?: '').toString().trim()
+    if (voiceEngine == 'shijiu') {
+        runtimeOnly project(':feature_voice:shijiu')
+    } else if (voiceEngine == 'internet') {
+        // 互联网语音(voice-remote-sdk)：云引擎与密钥见 gradle.properties 的 voice.internet.* 段
+        runtimeOnly project(':feature_voice:internet')
+    } else {
+        throw new GradleException("voice.engine 配置非法：'${voiceEngine}'，可选 shijiu|internet（见根 gradle.properties）")
+    }
+
     // 仅 DEBUG 引入远程日志（无 ADB 拉 logcat / 重启 / 装 APK）
     // debugImplementation 'com.chances.sdk:wslog:1.0.0'
 }

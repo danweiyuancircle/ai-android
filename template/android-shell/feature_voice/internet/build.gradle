@@ -5,14 +5,10 @@ apply plugin: 'kotlin-android'
 // kotlin_module 文件名，避免与其它模块 META-INF/*.kotlin_module 合并冲突
 archivesBaseName = 'feature_voice_internet'
 
-// 引擎与密钥从 voice.properties（不入库，见 .gitignore）读取，缺失回退空串/默认，
-// 便于本地无密钥也能过编译；填了哪家引擎的密钥就生效哪家，见 README
-def voicePropsFile = project.file('voice.properties')
-def voiceProps = new Properties()
-if (voicePropsFile.exists()) {
-    voiceProps.load(new FileInputStream(voicePropsFile))
-}
-def voiceProp = { String key, String fallback -> voiceProps.getProperty(key, fallback) }
+// 引擎与密钥从根 gradle.properties 的 voice.internet.* 读取（全局单一来源），缺失回退空串/默认，
+// 便于本地无密钥也能过编译；填了哪家引擎的密钥就生效哪家，见 README。
+// ⚠️ 真实密钥勿提交 gradle.properties，放 ~/.gradle/gradle.properties 同名 key 覆盖。
+def voiceProp = { String key, String fallback -> (project.findProperty(key) ?: fallback).toString() }
 
 android {
     // AGP 3.6.0：包名写在 AndroidManifest.xml 的 package 属性
@@ -25,17 +21,17 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
 
         // 引擎选择 + 各家密钥注入 BuildConfig，由 VoiceConfigFactory 读取构造 VoiceRemoteConfig
-        buildConfigField 'String', 'VOICE_ASR_MODE', "\"${voiceProp('asrMode', 'SYSTEM')}\""
-        buildConfigField 'String', 'VOICE_TTS_MODE', "\"${voiceProp('ttsMode', 'SYSTEM')}\""
-        buildConfigField 'int', 'VOICE_NETWORK_PORT', voiceProp('networkPort', '9527')
-        buildConfigField 'String', 'IFLY_APP_ID', "\"${voiceProp('ifly.appId', '')}\""
-        buildConfigField 'String', 'IFLY_API_KEY', "\"${voiceProp('ifly.apiKey', '')}\""
-        buildConfigField 'String', 'IFLY_API_SECRET', "\"${voiceProp('ifly.apiSecret', '')}\""
-        buildConfigField 'String', 'TENCENT_SECRET_ID', "\"${voiceProp('tencent.secretId', '')}\""
-        buildConfigField 'String', 'TENCENT_SECRET_KEY', "\"${voiceProp('tencent.secretKey', '')}\""
-        buildConfigField 'String', 'TENCENT_APP_ID', "\"${voiceProp('tencent.appId', '')}\""
-        buildConfigField 'String', 'VOLC_APP_ID', "\"${voiceProp('volc.appId', '')}\""
-        buildConfigField 'String', 'VOLC_TOKEN', "\"${voiceProp('volc.token', '')}\""
+        buildConfigField 'String', 'VOICE_ASR_MODE', "\"${voiceProp('voice.internet.asrMode', 'SYSTEM')}\""
+        buildConfigField 'String', 'VOICE_TTS_MODE', "\"${voiceProp('voice.internet.ttsMode', 'SYSTEM')}\""
+        buildConfigField 'int', 'VOICE_NETWORK_PORT', voiceProp('voice.internet.networkPort', '9527')
+        buildConfigField 'String', 'IFLY_APP_ID', "\"${voiceProp('voice.internet.ifly.appId', '')}\""
+        buildConfigField 'String', 'IFLY_API_KEY', "\"${voiceProp('voice.internet.ifly.apiKey', '')}\""
+        buildConfigField 'String', 'IFLY_API_SECRET', "\"${voiceProp('voice.internet.ifly.apiSecret', '')}\""
+        buildConfigField 'String', 'TENCENT_SECRET_ID', "\"${voiceProp('voice.internet.tencent.secretId', '')}\""
+        buildConfigField 'String', 'TENCENT_SECRET_KEY', "\"${voiceProp('voice.internet.tencent.secretKey', '')}\""
+        buildConfigField 'String', 'TENCENT_APP_ID', "\"${voiceProp('voice.internet.tencent.appId', '')}\""
+        buildConfigField 'String', 'VOLC_APP_ID', "\"${voiceProp('voice.internet.volc.appId', '')}\""
+        buildConfigField 'String', 'VOLC_TOKEN', "\"${voiceProp('voice.internet.volc.token', '')}\""
     }
 
     buildTypes {
