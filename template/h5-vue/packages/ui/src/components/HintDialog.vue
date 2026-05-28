@@ -44,8 +44,9 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick, watch } from 'vue'
 import Text from './Text.vue'
-import { Focusable, FocusLayer, FocusSection } from '@dwy/focus-vue3'
+import { Focusable, FocusLayer, FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
 
 interface Props {
   modelValue: boolean
@@ -61,7 +62,7 @@ interface Emits {
   (e: 'cancel'): void
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   showConfirm: true,
   showCancel: true,
   confirmText: '确定',
@@ -77,6 +78,21 @@ const handleCancel = () => {
   emit('cancel')
   emit('update:modelValue', false)
 }
+
+// 弹框打开时显式聚焦：优先确定按钮，无则取消按钮
+// （FocusLayer 只做隔离与复焦，初始焦点需调用方显式指定 —— dwy-focus 的契约）
+watch(
+  () => props.modelValue,
+  async (open) => {
+    if (!open) return
+    await nextTick()
+    if (props.showConfirm) {
+      SpatialNavigation.focus('[data-focus-key="hint-confirm-btn"]')
+    } else if (props.showCancel) {
+      SpatialNavigation.focus('[data-focus-key="hint-cancel-btn"]')
+    }
+  },
+)
 </script>
 
 <style scoped>
