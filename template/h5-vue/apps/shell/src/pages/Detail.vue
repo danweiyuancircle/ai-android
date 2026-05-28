@@ -1,5 +1,5 @@
 <template>
-  <FocusSection id="detail" class="page detail">
+  <FocusSection id="detail" :enter-to="'last-focused'" class="page detail">
     <h1 class="title">详情页占位</h1>
     <div class="actions">
       <EButton focus-key="detail-back" label="返回首页" @enter="goBack" />
@@ -8,18 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { FocusSection } from '@dwy/focus-vue3'
 import { EButton } from '@dwy/tv-ui'
+import { useFocusPage } from '@shell/core'
+
+useFocusPage('detail', 'detail-back')
 
 const router = useRouter()
 const goBack = () => router.back()
-
-onMounted(async () => {
-  await nextTick()
-  SpatialNavigation.focus('[data-focus-key="detail-back"]')
-})
 </script>
 
 <style scoped>

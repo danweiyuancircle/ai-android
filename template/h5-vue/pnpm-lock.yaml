@@ -128,6 +128,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@dwy/focus-vue3':
+        specifier: workspace:*
+        version: link:../focus-vue3
       vue:
         specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)

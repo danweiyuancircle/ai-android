@@ -10,30 +10,17 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusSection, SpatialNavigation, useKeepAliveFocus } from '@dwy/focus-vue3'
+import { FocusSection } from '@dwy/focus-vue3'
 import { EButton } from '@dwy/tv-ui'
-import { ottService } from '@shell/core'
+import { ottService, useFocusPage } from '@shell/core'
 
-// KeepAlive 契约：被切走时暂停 SN，被切回时恢复
-useKeepAliveFocus()
+useFocusPage('home', 'home-detail')
 
 const router = useRouter()
-
 const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
 const speak = () => ottService.playTts('这是一个壳模板首页')
-
-// 进入页面时设焦点：优先按 section 的 enter-to=last-focused 恢复，
-// 首次或无记忆时兜底到第一个按钮
-async function ensureFocus() {
-  await nextTick()
-  const ok = SpatialNavigation.focus('home')
-  if (!ok) SpatialNavigation.focus('[data-focus-key="home-detail"]')
-}
-onMounted(ensureFocus)
-onActivated(ensureFocus)
 </script>
 
 <style scoped>
@@ -49,10 +36,6 @@ onActivated(ensureFocus)
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 60px;
 }
-.actions {
-  display: flex;
-}
-.actions > *:not(:first-child) {
-  margin-left: 40px;
-}
+.actions { display: flex; }
+.actions > *:not(:first-child) { margin-left: 40px; }
 </style>

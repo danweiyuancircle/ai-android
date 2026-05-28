@@ -1,5 +1,5 @@
 <template>
-  <FocusSection id="coming-soon" class="page coming-soon">
+  <FocusSection id="coming-soon" :enter-to="'last-focused'" class="page coming-soon">
     <h1 class="title">敬请期待</h1>
     <div class="actions">
       <EButton focus-key="soon-back" label="返回" @enter="goBack" />
@@ -8,18 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { FocusSection } from '@dwy/focus-vue3'
 import { EButton } from '@dwy/tv-ui'
+import { useFocusPage } from '@shell/core'
+
+useFocusPage('coming-soon', 'soon-back')
 
 const router = useRouter()
 const goBack = () => router.back()
-
-onMounted(async () => {
-  await nextTick()
-  SpatialNavigation.focus('[data-focus-key="soon-back"]')
-})
 </script>
 
 <style scoped>
