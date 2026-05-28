@@ -1,18 +1,25 @@
 <template>
-  <div class="page coming-soon">
+  <FocusSection id="coming-soon" class="page coming-soon">
     <h1 class="title">敬请期待</h1>
     <div class="actions">
-      <FocusableButton focus-key="soon-back" @click="goBack">返回</FocusableButton>
+      <EButton focus-key="soon-back" label="返回" @enter="goBack" />
     </div>
-  </div>
+  </FocusSection>
 </template>
 
 <script setup lang="ts">
+import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusableButton } from '@shell/ui'
+import { FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { EButton } from '@dwy/tv-ui'
 
 const router = useRouter()
 const goBack = () => router.back()
+
+onMounted(async () => {
+  await nextTick()
+  SpatialNavigation.focus('[data-focus-key="soon-back"]')
+})
 </script>
 
 <style scoped>

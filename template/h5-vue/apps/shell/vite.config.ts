@@ -50,6 +50,11 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": resolve(__dirname, "src"),
         // workspace 包以源码参与构建，统一走 app 的 legacy 降级链
+        // 更长前缀放前面，避免被短前缀提前匹配
+        "@dwy/focus-vue3/native": resolve(__dirname, "../../packages/focus-vue3/src/key-source/native-event.ts"),
+        "@dwy/focus-vue3": resolve(__dirname, "../../packages/focus-vue3/src"),
+        "@dwy/tv-ui/style.css": resolve(__dirname, "../../packages/tv-ui/src/styles/tokens.css"),
+        "@dwy/tv-ui": resolve(__dirname, "../../packages/tv-ui/src"),
         "@shell/core": resolve(__dirname, "../../packages/core/src"),
         "@shell/ui": resolve(__dirname, "../../packages/ui/src"),
         "@shell/feature-aichat": resolve(__dirname, "../../packages/features/aichat/src"),

@@ -1,0 +1,32 @@
+{
+  "name": "@dwy/focus-core",
+  "version": "0.1.0",
+  "description": "框架无关的 TV 空间导航核心。fork 自 luke-chang/js-spatial-navigation (MIT)，TS 化 + Chromium 53 兼容。",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "ATTRIBUTION.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0"
+  }
+}

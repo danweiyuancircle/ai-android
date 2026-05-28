@@ -20,6 +20,13 @@
 
     "baseUrl": ".",
     "paths": {
+      "@dwy/focus-core": ["packages/focus-core/src/index.ts"],
+      "@dwy/focus-vue3/native": ["packages/focus-vue3/src/key-source/native-event.ts"],
+      "@dwy/focus-vue3": ["packages/focus-vue3/src/index.ts"],
+      "@dwy/focus-vue3/*": ["packages/focus-vue3/src/*"],
+      "@dwy/tv-ui/style.css": ["packages/tv-ui/src/styles/tokens.css"],
+      "@dwy/tv-ui": ["packages/tv-ui/src/index.ts"],
+      "@dwy/tv-ui/*": ["packages/tv-ui/src/*"],
       "@shell/core": ["packages/core/src/index.ts"],
       "@shell/core/*": ["packages/core/src/*"],
       "@shell/ui": ["packages/ui/src/index.ts"],

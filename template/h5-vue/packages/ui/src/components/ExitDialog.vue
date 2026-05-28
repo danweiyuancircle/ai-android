@@ -1,30 +1,46 @@
 <template>
-  <Teleport to="body">
-    <Transition name="dialog-fade">
-      <div v-if="modelValue" class="exit-dialog-overlay" @click.self="handleCancel">
-        <div class="exit-dialog">
-          <div class="dialog-title">{{ title }}</div>
-          <div class="dialog-buttons">
+  <FocusLayer
+    v-if="modelValue"
+    id="exit-dialog"
+    class="exit-dialog-overlay"
+    @click.self="handleCancel"
+  >
+    <div class="exit-dialog">
+      <div class="dialog-title">{{ title }}</div>
+      <FocusSection id="exit-dialog-btns" :restrict="'self-only'">
+        <div class="dialog-buttons">
+          <Focusable
+            focus-key="exit-confirm-btn"
+            v-slot="{ focused }"
+            class="dialog-btn-wrap"
+            @enter="handleConfirm"
+          >
             <button
-              :class="['dialog-btn', 'dialog-btn-primary', { 'is-focused': confirmFocused }]"
-              :data-focus-key="confirmKey"
+              class="dialog-btn dialog-btn-primary"
+              :class="{ 'is-focused': focused }"
               @click="handleConfirm"
             >{{ confirmText }}</button>
+          </Focusable>
+          <Focusable
+            focus-key="exit-cancel-btn"
+            v-slot="{ focused }"
+            class="dialog-btn-wrap"
+            @enter="handleCancel"
+          >
             <button
-              :class="['dialog-btn', 'dialog-btn-secondary', { 'is-focused': cancelFocused }]"
-              :data-focus-key="cancelKey"
+              class="dialog-btn dialog-btn-secondary"
+              :class="{ 'is-focused': focused }"
               @click="handleCancel"
             >{{ cancelText }}</button>
-          </div>
+          </Focusable>
         </div>
-      </div>
-    </Transition>
-  </Teleport>
+      </FocusSection>
+    </div>
+  </FocusLayer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
-import { useFocusable } from '@shell/core'
+import { Focusable, FocusLayer, FocusSection } from '@dwy/focus-vue3'
 
 interface Props {
   modelValue: boolean
@@ -32,29 +48,18 @@ interface Props {
   confirmText?: string
   cancelText?: string
 }
-
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
   (e: 'confirm'): void
   (e: 'cancel'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   title: '确认退出？',
   confirmText: '确定',
   cancelText: '取消',
 })
 const emit = defineEmits<Emits>()
-
-const confirmKey = 'exit-confirm-btn'
-const cancelKey = 'exit-cancel-btn'
-const confirmFocused = ref(false)
-const cancelFocused = ref(false)
-
-const { register, unregister, setFocus } = useFocusable()
-
-// 边缘拦截：焦点不离开弹框
-const blockEdge = (): boolean => true
 
 const handleConfirm = () => {
   emit('confirm')
@@ -64,35 +69,6 @@ const handleCancel = () => {
   emit('cancel')
   emit('update:modelValue', false)
 }
-
-onMounted(() => {
-  register(confirmKey, {
-    groupId: 'exit-dialog',
-    onFocus: () => (confirmFocused.value = true),
-    onBlur: () => (confirmFocused.value = false),
-    onEnter: handleConfirm,
-    onEdgeLeft: blockEdge, onEdgeRight: blockEdge, onEdgeUp: blockEdge, onEdgeDown: blockEdge,
-  })
-  register(cancelKey, {
-    groupId: 'exit-dialog',
-    onFocus: () => (cancelFocused.value = true),
-    onBlur: () => (cancelFocused.value = false),
-    onEnter: handleCancel,
-    onEdgeLeft: blockEdge, onEdgeRight: blockEdge, onEdgeUp: blockEdge, onEdgeDown: blockEdge,
-  })
-})
-onUnmounted(() => {
-  unregister(confirmKey)
-  unregister(cancelKey)
-})
-
-// 弹框打开自动聚焦确定按钮
-watch(() => props.modelValue, async (newVal) => {
-  if (newVal) {
-    await nextTick()
-    setTimeout(() => setFocus(confirmKey), 100)
-  }
-})
 </script>
 
 <style scoped>
@@ -112,13 +88,10 @@ watch(() => props.modelValue, async (newVal) => {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   display: flex; flex-direction: column; align-items: center;
 }
-.dialog-title {
-  font-size: 24px; color: #fff;
-  margin-bottom: 28px;
-}
-.dialog-buttons {
-  display: flex; gap: 24px;
-}
+.dialog-title { font-size: 24px; color: #fff; margin-bottom: 28px; }
+.dialog-buttons { display: flex; gap: 24px; }
+.dialog-btn-wrap { display: inline-block; outline: none; }
+.dialog-btn-wrap:focus { outline: none; }
 .dialog-btn {
   min-width: 120px;
   padding: 12px 28px;
@@ -135,11 +108,4 @@ watch(() => props.modelValue, async (newVal) => {
   border-color: #4a9eff;
   background: rgba(74, 158, 255, 0.22);
 }
-
-.dialog-fade-enter-active, .dialog-fade-leave-active { transition: opacity 0.3s ease; }
-.dialog-fade-enter-active .exit-dialog, .dialog-fade-leave-active .exit-dialog {
-  transition: transform 0.3s ease;
-}
-.dialog-fade-enter-from, .dialog-fade-leave-to { opacity: 0; }
-.dialog-fade-enter-from .exit-dialog, .dialog-fade-leave-to .exit-dialog { transform: scale(0.9); }
 </style>

@@ -1,17 +1,19 @@
 <template>
-  <div class="page home">
+  <FocusSection id="home" class="page home">
     <p class="hint">遥控器方向键移动焦点，OK 键确认，返回键退出。</p>
     <div class="actions">
-      <FocusableButton focus-key="home-detail" @click="goDetail">进入详情页</FocusableButton>
-      <FocusableButton focus-key="home-soon" @click="goSoon">敬请期待页</FocusableButton>
-      <FocusableButton focus-key="home-tts" @click="speak">播报 TTS</FocusableButton>
+      <EButton focus-key="home-detail" label="进入详情页" @enter="goDetail" />
+      <EButton focus-key="home-soon" label="敬请期待页" @enter="goSoon" />
+      <EButton focus-key="home-tts" label="播报 TTS" @enter="speak" />
     </div>
-  </div>
+  </FocusSection>
 </template>
 
 <script setup lang="ts">
+import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusableButton } from '@shell/ui'
+import { FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { EButton } from '@dwy/tv-ui'
 import { ottService } from '@shell/core'
 
 const router = useRouter()
@@ -19,6 +21,12 @@ const router = useRouter()
 const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
 const speak = () => ottService.playTts('这是一个壳模板首页')
+
+// 初始焦点
+onMounted(async () => {
+  await nextTick()
+  SpatialNavigation.focus('[data-focus-key="home-detail"]')
+})
 </script>
 
 <style scoped>
