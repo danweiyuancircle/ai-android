@@ -1,5 +1,5 @@
 <template>
-  <FocusSection id="home" class="page home">
+  <FocusSection id="home" :enter-to="'last-focused'" class="page home">
     <p class="hint">遥控器方向键移动焦点，OK 键确认，返回键退出。</p>
     <div class="actions">
       <EButton focus-key="home-detail" label="进入详情页" @enter="goDetail" />
@@ -10,11 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
+import { onActivated, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { FocusSection, SpatialNavigation, useKeepAliveFocus } from '@dwy/focus-vue3'
 import { EButton } from '@dwy/tv-ui'
 import { ottService } from '@shell/core'
+
+// KeepAlive 契约：被切走时暂停 SN，被切回时恢复
+useKeepAliveFocus()
 
 const router = useRouter()
 
@@ -22,11 +25,15 @@ const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
 const speak = () => ottService.playTts('这是一个壳模板首页')
 
-// 初始焦点
-onMounted(async () => {
+// 进入页面时设焦点：优先按 section 的 enter-to=last-focused 恢复，
+// 首次或无记忆时兜底到第一个按钮
+async function ensureFocus() {
   await nextTick()
-  SpatialNavigation.focus('[data-focus-key="home-detail"]')
-})
+  const ok = SpatialNavigation.focus('home')
+  if (!ok) SpatialNavigation.focus('[data-focus-key="home-detail"]')
+}
+onMounted(ensureFocus)
+onActivated(ensureFocus)
 </script>
 
 <style scoped>
