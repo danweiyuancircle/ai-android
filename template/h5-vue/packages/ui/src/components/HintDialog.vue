@@ -1,35 +1,51 @@
 <template>
-  <Teleport to="body">
-    <Transition name="dialog-fade">
-      <div v-if="modelValue" class="hint-dialog-overlay" @click.self="handleCancel">
-        <div class="hint-dialog">
-          <div class="dialog-content">
-            <Text :lines="2" :text="message" class="dialog-message" />
-          </div>
-          <div class="dialog-buttons">
+  <FocusLayer
+    v-if="modelValue"
+    id="hint-dialog"
+    class="hint-dialog-overlay"
+    @click.self="handleCancel"
+  >
+    <div class="hint-dialog">
+      <div class="dialog-content">
+        <Text :lines="2" :text="message" class="dialog-message" />
+      </div>
+      <FocusSection id="hint-dialog-btns" :restrict="'self-only'">
+        <div class="dialog-buttons">
+          <Focusable
+            v-if="showConfirm"
+            focus-key="hint-confirm-btn"
+            v-slot="{ focused }"
+            class="dialog-btn-wrap"
+            @enter="handleConfirm"
+          >
             <button
-              v-if="showConfirm"
-              :class="['dialog-btn', 'dialog-btn-primary', { 'is-focused': confirmFocused }]"
-              :data-focus-key="confirmKey"
+              class="dialog-btn dialog-btn-primary"
+              :class="{ 'is-focused': focused }"
               @click="handleConfirm"
             >{{ confirmText }}</button>
+          </Focusable>
+          <Focusable
+            v-if="showCancel"
+            focus-key="hint-cancel-btn"
+            v-slot="{ focused }"
+            class="dialog-btn-wrap"
+            @enter="handleCancel"
+          >
             <button
-              v-if="showCancel"
-              :class="['dialog-btn', 'dialog-btn-secondary', { 'is-focused': cancelFocused }]"
-              :data-focus-key="cancelKey"
+              class="dialog-btn dialog-btn-secondary"
+              :class="{ 'is-focused': focused }"
               @click="handleCancel"
             >{{ cancelText }}</button>
-          </div>
+          </Focusable>
         </div>
-      </div>
-    </Transition>
-  </Teleport>
+      </FocusSection>
+    </div>
+  </FocusLayer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import Text from './Text.vue'
-import { useFocusable } from '@shell/core'
+import { Focusable, FocusLayer, FocusSection } from '@dwy/focus-vue3'
 
 interface Props {
   modelValue: boolean
@@ -39,28 +55,19 @@ interface Props {
   confirmText?: string
   cancelText?: string
 }
-
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
   (e: 'confirm'): void
   (e: 'cancel'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   showConfirm: true,
   showCancel: true,
   confirmText: '确定',
   cancelText: '取消',
 })
 const emit = defineEmits<Emits>()
-
-const confirmKey = 'hint-confirm-btn'
-const cancelKey = 'hint-cancel-btn'
-const confirmFocused = ref(false)
-const cancelFocused = ref(false)
-
-const { register, unregister, setFocus } = useFocusable()
-const blockEdge = (): boolean => true
 
 const handleConfirm = () => {
   emit('confirm')
@@ -70,41 +77,6 @@ const handleCancel = () => {
   emit('cancel')
   emit('update:modelValue', false)
 }
-
-onMounted(() => {
-  if (props.showConfirm) {
-    register(confirmKey, {
-      groupId: 'hint-dialog',
-      onFocus: () => (confirmFocused.value = true),
-      onBlur: () => (confirmFocused.value = false),
-      onEnter: handleConfirm,
-      onEdgeLeft: blockEdge, onEdgeRight: blockEdge, onEdgeUp: blockEdge, onEdgeDown: blockEdge,
-    })
-  }
-  if (props.showCancel) {
-    register(cancelKey, {
-      groupId: 'hint-dialog',
-      onFocus: () => (cancelFocused.value = true),
-      onBlur: () => (cancelFocused.value = false),
-      onEnter: handleCancel,
-      onEdgeLeft: blockEdge, onEdgeRight: blockEdge, onEdgeUp: blockEdge, onEdgeDown: blockEdge,
-    })
-  }
-})
-onUnmounted(() => {
-  unregister(confirmKey)
-  unregister(cancelKey)
-})
-
-watch(() => props.modelValue, async (newVal) => {
-  if (newVal) {
-    await nextTick()
-    setTimeout(() => {
-      if (props.showConfirm) setFocus(confirmKey)
-      else if (props.showCancel) setFocus(cancelKey)
-    }, 100)
-  }
-})
 </script>
 
 <style scoped>
@@ -140,9 +112,9 @@ watch(() => props.modelValue, async (newVal) => {
   overflow: hidden;
   word-break: break-word;
 }
-.dialog-buttons {
-  display: flex; gap: 24px;
-}
+.dialog-buttons { display: flex; gap: 24px; }
+.dialog-btn-wrap { display: inline-block; outline: none; }
+.dialog-btn-wrap:focus { outline: none; }
 .dialog-btn {
   min-width: 120px;
   padding: 12px 28px;
@@ -159,11 +131,4 @@ watch(() => props.modelValue, async (newVal) => {
   border-color: #4a9eff;
   background: rgba(74, 158, 255, 0.22);
 }
-
-.dialog-fade-enter-active, .dialog-fade-leave-active { transition: opacity 0.3s ease; }
-.dialog-fade-enter-active .hint-dialog, .dialog-fade-leave-active .hint-dialog {
-  transition: transform 0.3s ease;
-}
-.dialog-fade-enter-from, .dialog-fade-leave-to { opacity: 0; }
-.dialog-fade-enter-from .hint-dialog, .dialog-fade-leave-to .hint-dialog { transform: scale(0.9); }
 </style>

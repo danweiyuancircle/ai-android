@@ -43,6 +43,12 @@ importers:
 
   apps/shell:
     dependencies:
+      '@dwy/focus-vue3':
+        specifier: workspace:*
+        version: link:../../packages/focus-vue3
+      '@dwy/tv-ui':
+        specifier: workspace:*
+        version: link:../../packages/tv-ui
       '@shell/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -73,10 +79,10 @@ importers:
         version: 8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
       '@vitejs/plugin-legacy':
         specifier: 'catalog:'
-        version: 5.4.3(terser@5.48.0)(vite@5.4.21(terser@5.48.0))
+        version: 5.4.3(terser@5.48.0)(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))
       '@vitejs/plugin-vue':
         specifier: 'catalog:'
-        version: 5.2.4(vite@5.4.21(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))
+        version: 5.2.4(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))
       '@vue/tsconfig':
         specifier: 'catalog:'
         version: 0.5.1
@@ -112,10 +118,10 @@ importers:
         version: 8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
       vite:
         specifier: 'catalog:'
-        version: 5.4.21(terser@5.48.0)
+        version: 5.4.21(@types/node@22.19.19)(terser@5.48.0)
       vite-plugin-eslint:
         specifier: ^1.8.1
-        version: 1.8.1(eslint@9.39.4(jiti@2.7.0))(vite@5.4.21(terser@5.48.0))
+        version: 1.8.1(eslint@9.39.4(jiti@2.7.0))(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))
       vue-tsc:
         specifier: 'catalog:'
         version: 2.2.12(typescript@5.9.3)
@@ -143,6 +149,35 @@ importers:
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.35(typescript@5.9.3))
+
+  packages/focus-core:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.19.19
+
+  packages/focus-vue3:
+    dependencies:
+      '@dwy/focus-core':
+        specifier: workspace:*
+        version: link:../focus-core
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.0
+        version: 5.2.4(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.35(typescript@5.9.3)
+
+  packages/tv-ui:
+    dependencies:
+      '@dwy/focus-vue3':
+        specifier: workspace:*
+        version: link:../focus-vue3
+    devDependencies:
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.35(typescript@5.9.3)
 
   packages/ui:
     dependencies:
@@ -1029,6 +1064,9 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+
+  '@types/node@22.19.19':
+    resolution: {integrity: sha512-dyh/xO2Fh5bYrfWaaqGrRQQGkNdmYw6AmaAUvYeUMNTWQtvb796ikLdmTchRmOlOiIJ1TDXfWgVx1QkUlQ6Hew==}
 
   '@typescript-eslint/eslint-plugin@8.60.0':
     resolution: {integrity: sha512-QYb/sa74/s7OKMbACMjrYnGspj9Hs5YI5aaffSL65UfeBUzVzBJfVo3oWSpbzPurvm7yaCCo2Lk7lVj610HqKw==}
@@ -2220,6 +2258,9 @@ packages:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
     engines: {node: '>=4'}
@@ -3275,6 +3316,10 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/node@22.19.19':
+    dependencies:
+      undici-types: 6.21.0
+
   '@typescript-eslint/eslint-plugin@8.60.0(@typescript-eslint/parser@8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
@@ -3366,7 +3411,7 @@ snapshots:
       '@typescript-eslint/types': 8.60.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitejs/plugin-legacy@5.4.3(terser@5.48.0)(vite@5.4.21(terser@5.48.0))':
+  '@vitejs/plugin-legacy@5.4.3(terser@5.48.0)(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
@@ -3377,13 +3422,13 @@ snapshots:
       regenerator-runtime: 0.14.1
       systemjs: 6.15.1
       terser: 5.48.0
-      vite: 5.4.21(terser@5.48.0)
+      vite: 5.4.21(@types/node@22.19.19)(terser@5.48.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))':
+  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))':
     dependencies:
-      vite: 5.4.21(terser@5.48.0)
+      vite: 5.4.21(@types/node@22.19.19)(terser@5.48.0)
       vue: 3.5.35(typescript@5.9.3)
 
   '@volar/language-core@2.4.15':
@@ -4745,6 +4790,8 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
+  undici-types@6.21.0: {}
+
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
   unicode-match-property-ecmascript@2.0.0:
@@ -4768,20 +4815,21 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-plugin-eslint@1.8.1(eslint@9.39.4(jiti@2.7.0))(vite@5.4.21(terser@5.48.0)):
+  vite-plugin-eslint@1.8.1(eslint@9.39.4(jiti@2.7.0))(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0)):
     dependencies:
       '@rollup/pluginutils': 4.2.1
       '@types/eslint': 8.56.12
       eslint: 9.39.4(jiti@2.7.0)
       rollup: 2.80.0
-      vite: 5.4.21(terser@5.48.0)
+      vite: 5.4.21(@types/node@22.19.19)(terser@5.48.0)
 
-  vite@5.4.21(terser@5.48.0):
+  vite@5.4.21(@types/node@22.19.19)(terser@5.48.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.15
       rollup: 4.60.4
     optionalDependencies:
+      '@types/node': 22.19.19
       fsevents: 2.3.3
       terser: 5.48.0
 

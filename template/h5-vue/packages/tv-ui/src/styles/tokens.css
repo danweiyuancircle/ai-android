@@ -1,0 +1,27 @@
+:root {
+  --tv-color-bg: #0f172a;
+  --tv-color-surface: #1e293b;
+  --tv-color-surface-hover: #334155;
+  --tv-color-border: transparent;
+  --tv-color-focus: #38bdf8;
+  --tv-color-text: #e4e4e7;
+  --tv-color-text-muted: #94a3b8;
+  --tv-color-error: #f87171;
+
+  --tv-radius: 8px;
+  --tv-radius-lg: 12px;
+
+  --tv-focus-border-width: 4px;
+  --tv-focus-shadow: 0 0 0 4px rgba(56, 189, 248, 0.4);
+}
+
+.tv-focusable {
+  position: relative;
+  outline: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.tv-focusable.is-focused {
+  z-index: 1;
+  transform: scale(1.04);
+  box-shadow: var(--tv-focus-shadow);
+}
