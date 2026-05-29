@@ -24,14 +24,9 @@ function excludePublicFiles(files: string[]) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  // token.json 不进产物；按 mode 排除另一套环境配置
+export default defineConfig(() => {
+  // token.json 不进产物
   const excludeFiles = ["token.json"];
-  if (mode === "prod") {
-    excludeFiles.push("test-config.json");
-  } else if (mode === "test") {
-    excludeFiles.push("prod-config.json");
-  }
 
   return {
     // TODO: 改成项目专属的 WebView 部署路径，需与 Android 壳加载的 URL 一致

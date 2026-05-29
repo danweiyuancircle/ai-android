@@ -5,8 +5,7 @@
   "packageManager": "pnpm@10.19.0",
   "scripts": {
     "dev": "pnpm --dir apps/shell dev",
-    "build:test": "pnpm --dir apps/shell build:test",
-    "build:prod": "pnpm --dir apps/shell build:prod",
+    "build": "pnpm --dir apps/shell build",
     "preview": "pnpm --dir apps/shell preview",
     "typecheck": "pnpm --dir apps/shell typecheck",
     "lint": "pnpm --dir apps/shell lint"
