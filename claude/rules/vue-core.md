@@ -1,5 +1,5 @@
 ---
-description: Vue 3 + TS + Vite + Tailwind 应用层规范（基础设施统一封装、业务聚合结构、组件 / TS / 路由 / API / 模板 / 样式 / 错误处理 / 注释）
+description: Vue 3 + TS + Vite 应用层规范（基础设施统一封装、业务聚合结构、组件 / TS / 路由 / API / 模板 / 错误处理 / 注释）
 paths:
   - "**/*.vue"
   - "**/*.ts"
@@ -8,7 +8,7 @@ paths:
 
 # Vue 3 应用层开发规范
 
-适用于基于 Vue 3 + TypeScript + Vite + Tailwind CSS 的前端项目。状态管理见 Pinia rule；测试见 Vitest rule。
+适用于基于 Vue 3 + TypeScript + Vite 的前端项目。状态管理见 Pinia rule；测试见 Vitest rule。
 
 ---
 
@@ -341,47 +341,16 @@ export function createUser(data: UserCreate) {
 
 ---
 
-## 八、样式规范
-
-### 强制使用 Tailwind CSS 4
-
-```vue
-<!-- 正例 -->
-<div class="flex items-center gap-4 p-6 rounded-lg bg-card">
-
-<!-- 反例 -->
-<div style="display: flex; padding: 24px;">
-```
-
-### 允许 scoped CSS 的场景
-
-- 第三方组件库内部样式覆盖（`:deep(...)`）
-- 复杂动画定义
-- 无法用 Tailwind 表达的样式
-
-### 响应式与暗色
-
-```vue
-<!-- mobile-first -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-<!-- 暗色用 dark: 前缀 -->
-<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-```
-
----
-
-## 九、Vite 配置
+## 八、Vite 配置
 
 ```typescript
 // vite.config.ts
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
@@ -402,7 +371,7 @@ export default defineConfig({
 
 ---
 
-## 十、错误处理
+## 九、错误处理
 
 ```typescript
 // 异步操作必须有 try / catch 与 loading
@@ -425,7 +394,7 @@ async function handleSubmit() {
 
 ---
 
-## 十一、环境变量
+## 十、环境变量
 
 ```bash
 # .env.development
@@ -444,7 +413,7 @@ VITE_API_BASE_URL=/api
 
 ---
 
-## 十二、导入规范
+## 十一、导入规范
 
 ### 顺序（组间空行）
 
@@ -470,7 +439,7 @@ import type { UserInfo } from '@/modules/users/types'
 
 ---
 
-## 十三、注释规范
+## 十二、注释规范
 
 ### 强制规则
 
@@ -514,7 +483,7 @@ export function formatMoney(value: number, currency = '¥'): string {
 
 ---
 
-## 十四、违规检测清单
+## 十三、违规检测清单
 
 AI 编写或审查 Vue 代码时，**必须**检查以下违规模式：
 
@@ -540,5 +509,4 @@ AI 编写或审查 Vue 代码时，**必须**检查以下违规模式：
 | 注释为英文 | 项目中文环境下写英文注释 | 中 |
 | 硬编码 API 地址 | URL 直接写在代码里，未走 `import.meta.env` | 高 |
 | 相对路径回溯 | `../../../` 跨层导入 | 中 |
-| scoped 替代 Tailwind | 大段 scoped CSS 实现可用 Tailwind 表达的样式 | 中 |
 | 测试与源码混放 | 测试文件放 `src/` 内（详见 `dwy-vue-testing`） | 高 |
