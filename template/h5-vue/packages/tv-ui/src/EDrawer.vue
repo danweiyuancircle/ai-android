@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import { FocusLayer } from '@dwy/focus-vue3'
 import EFocusGroup from './EFocusGroup.vue'
 import { useOverlay } from './composables/useOverlay'
@@ -62,6 +62,13 @@ function close() {
 function onMaskClick() {
   if (props.closeOnMaskClick) close()
 }
+
+watch(
+  () => props.modelValue,
+  (open) => {
+    if (open) emit('open')
+  },
+)
 
 useOverlay({
   modelValue: toRef(props, 'modelValue'),
