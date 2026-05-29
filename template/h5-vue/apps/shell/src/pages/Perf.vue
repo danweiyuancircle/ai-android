@@ -1,7 +1,7 @@
 <template>
-  <FocusSection id="perf" :enter-to="'last-focused'" class="page perf-page">
+  <EPage id="perf" default-focus="cat-0" class="page perf-page">
     <!-- 左侧分类菜单：纯 DOM 列表 + sn:focused 触发 scrollIntoView -->
-    <FocusSection id="perf-menu" :enter-to="'last-focused'" tag="div" class="perf-menu">
+    <EFocusGroup id="perf-menu" tag="div" class="perf-menu">
       <EButton
         v-for="cat in categories"
         :key="cat.id"
@@ -12,7 +12,7 @@
         class="perf-menu__btn"
         @focus="selectedCatId = cat.id"
       />
-    </FocusSection>
+    </EFocusGroup>
 
     <!-- 右侧行容器：纵向 EVirtualList，行 slot 里嵌 EHRow 水平卡片墙 -->
     <EVirtualList
@@ -52,16 +52,13 @@
     </EVirtualList>
 
     <PerfHud v-if="hudEnabled" />
-  </FocusSection>
+  </EPage>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { FocusSection } from '@dwy/focus-vue3'
-import { EButton, ECard, EVirtualList } from '@dwy/tv-ui'
-import { useFocusPage } from '@shell/core'
-import EHRow from '../components/EHRow.vue'
+import { EPage, EFocusGroup, EButton, ECard, EVirtualList, EHRow } from '@dwy/tv-ui'
 import PerfHud from '../components/PerfHud.vue'
 
 // ── 视觉常量 ──────────────────────────────────────────────
@@ -107,9 +104,6 @@ function generateData(catsN: number, rowsN: number, cardsN: number) {
   }
   return { categories, dataMap }
 }
-
-// ── 焦点 ──────────────────────────────────────────────
-useFocusPage('perf', 'cat-0')
 
 // ── URL 参数 ──────────────────────────────────────────────
 const route = useRoute()
