@@ -20,3 +20,6 @@ export { default as EHRow } from './EHRow.vue'
 export { default as EDialog } from './EDialog.vue'
 export { default as EDrawer } from './EDrawer.vue'
 export { default as EToast } from './EToast.vue'
+
+// ─── setup ───
+export { setupTvFocus } from './setup'

@@ -5,12 +5,10 @@ import App from './App.vue'
 import '@shell/ui/styles/index.css'
 import '@dwy/tv-ui/style.css'
 import { loadConfig, OTT_NATIVE_KEYDOWN_EVENT } from '@shell/core'
-import { setupFocus } from '@dwy/focus-vue3'
-import { nativeKeyAdapter } from '@dwy/focus-vue3/native'
+import { setupTvFocus } from '@dwy/tv-ui'
 
 // 初始化 spatial-navigation；把 OTT 原生按键事件透传为 keydown
-setupFocus({ defaults: { rememberSource: true } })
-nativeKeyAdapter(OTT_NATIVE_KEYDOWN_EVENT)
+setupTvFocus(OTT_NATIVE_KEYDOWN_EVENT)
 
 // 先加载配置，再启动应用
 loadConfig().then(() => {
