@@ -26,6 +26,8 @@ const props = withDefaults(defineProps<Props>(), {
   tag: 'div',
 })
 
+// 注：section / restrict / enterTo / leaveFor / defaultElement 在 mount 时读取一次，
+// 不支持运行期动态变更（与 @dwy/focus-vue3 的 FocusSection 行为一致）。
 let sectionId = ''
 if (props.section) {
   const ctx = useFocusSection({

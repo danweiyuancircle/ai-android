@@ -5,7 +5,7 @@
     class="e-focusable"
     :class="{ 'is-focused': focused }"
     tabindex="-1"
-    :disabled="!enabled || undefined"
+    :disabled="enabled ? undefined : true"
   >
     <slot :focused="focused" />
   </component>
@@ -16,6 +16,7 @@ import { useFocusable } from '@dwy/focus-vue3'
 
 interface Props {
   focusKey: string
+  /** false 时占位但不参与焦点：渲染 disabled 属性，focus-core isNavigable 见之即跳过 */
   enabled?: boolean
   tag?: string
 }
