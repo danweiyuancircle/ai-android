@@ -4,6 +4,3 @@
 
 // API URL 配置
 export * from './url'
-
-// 请求工具（get/post/put/del + request）
-export * from './request'
