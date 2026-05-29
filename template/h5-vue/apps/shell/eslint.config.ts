@@ -54,6 +54,28 @@ export default defineConfig([
           ],
         },
       ],
+      // 业务模板里可聚焦/可交互元素必须用 tv-ui 组件，禁裸标签——否则不进 SN、焦点不可用
+      "vue/no-restricted-html-elements": [
+        "error",
+        {
+          element: ["button", "a", "input", "select", "textarea"],
+          message: "可交互元素必须用 @dwy/tv-ui 组件（EButton/EFocusable 等），禁裸标签——裸标签不进焦点系统。",
+        },
+      ],
+      "vue/no-restricted-static-attribute": [
+        "error",
+        {
+          key: "tabindex",
+          message: "禁手写 tabindex 制造可聚焦元素，请用 <EFocusable> 或对应 tv-ui 组件。",
+        },
+      ],
+      "vue/no-restricted-v-on": [
+        "error",
+        {
+          argument: "click",
+          message: "遥控器路径不触发 @click，可聚焦元素的确认请用 tv-ui 组件的 @enter。",
+        },
+      ],
     },
   },
 ]);
