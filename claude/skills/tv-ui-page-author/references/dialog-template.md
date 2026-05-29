@@ -94,7 +94,7 @@ const open = ref(false)
 
 ```vue
 <template>
-  <EToast v-model:modelValue="showToast" message="操作成功" :duration="2000" />
+  <EToast v-model="showToast" message="操作成功" :duration="2000" placement="bottom" />
 </template>
 
 <script setup lang="ts">
@@ -111,4 +111,5 @@ const triggerToast = () => { showToast.value = true }
 **关键参数**：
 - `message`：提示文本。
 - `duration`：自动关闭毫秒数，`0` 表示不自动关闭。
+- `placement`：`'top' | 'center' | 'bottom'`，默认 `bottom`。
 - EToast 不参与焦点系统，显示期间焦点不变。
