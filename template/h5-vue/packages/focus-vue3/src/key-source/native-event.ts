@@ -64,7 +64,35 @@ let attachedEventName: string | null = null
 let handler: ((e: Event) => void) | null = null
 
 /**
- * 注册原生事件名监听器（如 'ott:native-keydown'），把它转为 keydown 派发到 window。
+ * 构造一个等价的 KeyboardEvent；Chromium 53 等旧内核走 createEvent 兜底。
+ */
+function makeKbEvent(type: 'keydown' | 'keyup', key: string, keyCode: number): KeyboardEvent {
+  try {
+    return new KeyboardEvent(type, {
+      key,
+      keyCode,
+      which: keyCode,
+      bubbles: true,
+      cancelable: true,
+    } as KeyboardEventInit)
+  } catch {
+    const evt = document.createEvent('Event') as any
+    evt.initEvent(type, true, true)
+    Object.defineProperty(evt, 'key', { value: key })
+    Object.defineProperty(evt, 'keyCode', { value: keyCode })
+    Object.defineProperty(evt, 'which', { value: keyCode })
+    return evt as KeyboardEvent
+  }
+}
+
+/**
+ * 注册原生事件名监听器（如 'ott:native-keydown'），把它转为 keydown + keyup 派发到 window。
+ *
+ * 为什么成对派发：Android 壳 dispatchKeyEvent 只在 ACTION_DOWN 透传 onNativeKeyDown，
+ * 不发 ACTION_UP。但 focus-core 的 'enter-up' 事件挂在原生 keyup 上（spatial-navigation.ts onKeyUp），
+ * EButton/useFocusable 又只监听 'sn:enter-up'。只派 keydown 会导致 OK 键完全失活。
+ * 这里同步补一个 keyup，让 OTT 链路对外契约与浏览器键盘一致："按一次 = down+up 成对"。
+ *
  * 重复调用会先卸载上一个监听。
  */
 export function nativeKeyAdapter(eventName: string): () => void {
@@ -78,25 +106,8 @@ export function nativeKeyAdapter(eventName: string): () => void {
     const detail = ((e as CustomEvent).detail || {}) as NativeKeyDetail
     const n = normalize(detail)
     if (!n) return
-    // 派发等价 keydown
-    let evt: KeyboardEvent
-    try {
-      evt = new KeyboardEvent('keydown', {
-        key: n.key,
-        keyCode: n.keyCode,
-        which: n.keyCode,
-        bubbles: true,
-        cancelable: true,
-      } as KeyboardEventInit)
-    } catch {
-      // 旧版浏览器走 createEvent 兜底
-      evt = document.createEvent('Event') as any
-      ;(evt as any).initEvent('keydown', true, true)
-      Object.defineProperty(evt, 'key', { value: n.key })
-      Object.defineProperty(evt, 'keyCode', { value: n.keyCode })
-      Object.defineProperty(evt, 'which', { value: n.keyCode })
-    }
-    window.dispatchEvent(evt)
+    window.dispatchEvent(makeKbEvent('keydown', n.key, n.keyCode))
+    window.dispatchEvent(makeKbEvent('keyup', n.key, n.keyCode))
   }
   window.addEventListener(eventName, handler as EventListener)
   return () => {
