@@ -13,6 +13,7 @@ export { useFocusSection, FOCUS_SECTION_KEY } from './useFocusSection'
 export type { UseFocusSectionOptions, FocusSectionContext } from './useFocusSection'
 
 export { useKeepAliveFocus } from './keep-alive-bridge'
+export { hasOpenLayer } from './layer-stack'
 
 export { default as Focusable } from './Focusable.vue'
 export { default as FocusSection } from './FocusSection.vue'

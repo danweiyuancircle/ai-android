@@ -9,6 +9,7 @@ import { onMounted, onUnmounted, provide } from 'vue'
 import SpatialNavigation from '@dwy/focus-core'
 import { listSections } from './section-registry'
 import { FOCUS_LAYER_KEY, type FocusLayerContext } from './focus-layer-context'
+import { pushLayer, popLayer } from './layer-stack'
 
 /**
  * 模态层：挂载时 disable layer 之外的所有 section、保存焦点；
@@ -40,6 +41,7 @@ let outerSections: string[] = []
 let previousActiveElement: HTMLElement | null = null
 
 onMounted(() => {
+  pushLayer()
   previousActiveElement = (document.activeElement as HTMLElement) ?? null
   outerSections = listSections().filter((id) => !innerSectionIds.has(id))
   outerSections.forEach((id) => {
@@ -48,6 +50,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  popLayer()
   outerSections.forEach((id) => {
     ;(SpatialNavigation as any).enable(id)
   })
