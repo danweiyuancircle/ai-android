@@ -1,5 +1,6 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { hasOpenLayer } from "@dwy/focus-vue3";
 import { getRouteCacheManager } from "./useRouteCache";
 import { ottService, OTT_NATIVE_KEYDOWN_EVENT } from "../bridge";
 
@@ -17,6 +18,7 @@ export function useBackButton() {
   let browserBackEventHandler: ((event: KeyboardEvent) => void) | null = null;
 
   const handleBackButton = () => {
+    if (hasOpenLayer()) return;
     if (route.path === "/" || route.path === "") {
       showExitDialog.value = true;
     } else {
