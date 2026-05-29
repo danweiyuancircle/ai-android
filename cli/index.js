@@ -6,6 +6,7 @@ const { stdin, stdout } = require('node:process');
 const { parseArgs } = require('node:util');
 const stacks = require('./stacks');
 const { generate, DEFAULTS } = require('./lib/generate');
+const { PLATFORMS, setVoiceConfig } = require('./lib/voiceConfig');
 
 // 发布到 npm 时模板随包内置在 ./template（见 package.json 的 prepack）；
 // 仓库内本地开发（npm link）时回退到同仓库的 ../template。
@@ -41,6 +42,48 @@ async function askDefault(rl, label, def, defLabel, preset, interactive) {
   return v || def;
 }
 
+/**
+ * 语音配置交互：先选引擎（视九/OTT），OTT 再选云平台并逐项填密钥（可留空）。
+ * flag 优先（--voice / --voice-platform）；非交互且无 flag 默认视九 shijiu。
+ * @return { engine, platform?, keys? } 供 setVoiceConfig 写入 gradle.properties
+ */
+async function askVoice(rl, flags, interactive) {
+  let engine = flags.voice;
+  if (!engine) {
+    if (!interactive) {
+      return { engine: 'shijiu' };
+    }
+    const a = (await rl.question('语音引擎（1=视九 / 2=OTT互联网，默认 1）: ')).trim();
+    engine = a === '2' ? 'internet' : 'shijiu';
+  }
+  if (engine !== 'internet') {
+    return { engine: 'shijiu' };
+  }
+
+  const order = Object.keys(PLATFORMS); // ['ifly','tencent','volc']
+  let platform = flags['voice-platform'];
+  if (!platform) {
+    if (!interactive) {
+      platform = order[0];
+    } else {
+      const menu = order.map((k, i) => `${i + 1}=${PLATFORMS[k].label}`).join(' / ');
+      const a = (await rl.question(`OTT 云平台（${menu}，默认 1）: `)).trim();
+      platform = order[Number(a) - 1] || order[0];
+    }
+  }
+  if (!PLATFORMS[platform]) {
+    throw new Error(`未知语音平台「${platform}」，可选 ${order.join('|')}`);
+  }
+
+  const keys = {};
+  if (interactive) {
+    for (const { prop, label } of PLATFORMS[platform].keys) {
+      keys[prop] = await askDefault(rl, `${label}（可留空）`, '', '留空', undefined, interactive);
+    }
+  }
+  return { engine, platform, keys };
+}
+
 /** CLI 主流程：解析 flag → 交互补齐缺项 → 生成工程 → 打印后续步骤。 */
 async function main() {
   const { values } = parseArgs({
@@ -50,6 +93,8 @@ async function main() {
       name: { type: 'string' },
       icon: { type: 'string' },
       stack: { type: 'string', default: 'android-support-vue' },
+      voice: { type: 'string' },
+      'voice-platform': { type: 'string' },
     },
   });
 
@@ -69,6 +114,8 @@ async function main() {
       interactive,
     );
 
+    const voice = await askVoice(rl, values, interactive);
+
     const res = generate({
       templateRoot: TEMPLATE_ROOT,
       parentDir: path.resolve(parentName),
@@ -79,6 +126,13 @@ async function main() {
       registry: stacks,
     });
 
+    // 语音配置写入生成工程的壳根 gradle.properties
+    const gradleProps = path.join(res.shellDir, 'gradle.properties');
+    fs.writeFileSync(gradleProps, setVoiceConfig(fs.readFileSync(gradleProps, 'utf8'), voice));
+    const voiceDesc = voice.engine === 'internet'
+      ? `OTT互联网（${PLATFORMS[voice.platform].label}）`
+      : '视九 shijiu';
+
     const def = stacks[values.stack];
     stdout.write([
       '',
@@ -86,6 +140,7 @@ async function main() {
       `  壳：${res.shellDir}`,
       `  H5：${res.h5Dir}`,
       `  图标资源：ic_launcher_${res.iconKey}`,
+      `  语音引擎：${voiceDesc}`,
       '',
       '后续手动步骤：',
       `  1. 按 README 绑定表拷 rules/skill 到目标 .claude/：rules=${def.rules.join(',')} skill=${def.skill.join(',')}`,

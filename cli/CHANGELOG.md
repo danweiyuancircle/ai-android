@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-29
+
+### Added
+- 生成流程集成**语音配置**：交互选视九（`shijiu`）或 OTT 互联网（`internet`）语音；OTT 再选云平台（讯飞 / 腾讯 / 火山）并按需填密钥，直接写入壳工程 `gradle.properties` 的 `voice.engine` + `voice.internet.*`。新增 `--voice` / `--voice-platform` flag（密钥仅交互填，非交互留空）。
+
+### Changed
+- 模板 `gradle.properties` 取消「真实密钥放 `~/.gradle` 不入库」的安全约定，改为脚手架按所选平台直接写入项目（密钥留空仍可过编译）。
+
 ## [0.2.0] - 2026-05-26
 
 ### Added
@@ -28,6 +36,7 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...HEAD
+[0.3.0]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...v0.3.0
 [0.2.0]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...v0.2.0
 [0.1.0]: https://gitee.com/sh_chances/ai-android/releases/tag/v0.1.0
