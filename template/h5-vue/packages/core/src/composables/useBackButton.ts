@@ -18,6 +18,9 @@ export function useBackButton() {
   let browserBackEventHandler: ((event: KeyboardEvent) => void) | null = null;
 
   const handleBackButton = () => {
+    // 模态层（EDialog/EDrawer 的 FocusLayer）打开时，全局返回键让位：
+    // 本守卫负责"不后退/不弹退出框"，弹层内 useFocusLockedKeys 负责"关弹层"。
+    // 两道防线互补且与监听注册顺序无关——勿因调整监听时序而移除本守卫。
     if (hasOpenLayer()) return;
     if (route.path === "/" || route.path === "") {
       showExitDialog.value = true;
