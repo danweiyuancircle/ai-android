@@ -24,11 +24,6 @@ const routes: RouteRecordRaw[] = [
     name: 'Perf',
     component: () => import('../pages/Perf.vue')
   },
-  {
-    path: '/playground',
-    name: 'Playground',
-    component: () => import('../pages/Playground.vue')
-  },
   // AIChat 卡带（bridge 的 onNavigateToAIChat 拉起）；无 AI 对话需求可删此行
   createAIChatRoute({ path: '/ai-chat' })
 ]
