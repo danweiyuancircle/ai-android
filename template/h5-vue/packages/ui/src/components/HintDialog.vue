@@ -1,52 +1,34 @@
 <template>
-  <FocusLayer
-    v-if="modelValue"
-    id="hint-dialog"
-    class="hint-dialog-overlay"
-    @click.self="handleCancel"
+  <EDialog
+    v-model="open"
+    :default-focus="defaultFocusKey"
+    :width="420"
+    @close="handleBackOrMaskClose"
   >
-    <div class="hint-dialog">
-      <div class="dialog-content">
-        <Text :lines="2" :text="message" class="dialog-message" />
-      </div>
-      <FocusSection id="hint-dialog-btns" :restrict="'self-only'">
-        <div class="dialog-buttons">
-          <Focusable
-            v-if="showConfirm"
-            focus-key="hint-confirm-btn"
-            v-slot="{ focused }"
-            class="dialog-btn-wrap"
-            @enter="handleConfirm"
-          >
-            <button
-              class="dialog-btn dialog-btn-primary"
-              :class="{ 'is-focused': focused }"
-              @click="handleConfirm"
-            >{{ confirmText }}</button>
-          </Focusable>
-          <Focusable
-            v-if="showCancel"
-            focus-key="hint-cancel-btn"
-            v-slot="{ focused }"
-            class="dialog-btn-wrap"
-            @enter="handleCancel"
-          >
-            <button
-              class="dialog-btn dialog-btn-secondary"
-              :class="{ 'is-focused': focused }"
-              @click="handleCancel"
-            >{{ cancelText }}</button>
-          </Focusable>
-        </div>
-      </FocusSection>
-    </div>
-  </FocusLayer>
+    <Text :lines="2" :text="message" class="hint-message" />
+    <template #footer>
+      <EButton
+        v-if="showConfirm"
+        focus-key="hint-confirm-btn"
+        variant="primary"
+        :label="confirmText"
+        @enter="handleConfirm"
+      />
+      <EButton
+        v-if="showCancel"
+        focus-key="hint-cancel-btn"
+        variant="secondary"
+        :label="cancelText"
+        @enter="handleCancel"
+      />
+    </template>
+  </EDialog>
 </template>
 
 <script setup lang="ts">
-import { nextTick, watch } from 'vue'
+import { computed } from 'vue'
 import Text from './Text.vue'
-import { Focusable, FocusLayer, FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { EDialog, EButton } from '@dwy/tv-ui'
 
 interface Props {
   modelValue: boolean
@@ -70,6 +52,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits<Emits>()
 
+const open = computed({
+  get: () => props.modelValue,
+  set: (v: boolean) => emit('update:modelValue', v),
+})
+
+const defaultFocusKey = computed(() =>
+  props.showConfirm ? 'hint-confirm-btn' : 'hint-cancel-btn',
+)
+
 const handleConfirm = () => {
   emit('confirm')
   emit('update:modelValue', false)
@@ -78,73 +69,14 @@ const handleCancel = () => {
   emit('cancel')
   emit('update:modelValue', false)
 }
-
-// 弹框打开时显式聚焦：优先确定按钮，无则取消按钮
-// （FocusLayer 只做隔离与复焦，初始焦点需调用方显式指定 —— dwy-focus 的契约）
-watch(
-  () => props.modelValue,
-  async (open) => {
-    if (!open) return
-    await nextTick()
-    if (props.showConfirm) {
-      SpatialNavigation.focus('[data-focus-key="hint-confirm-btn"]')
-    } else if (props.showCancel) {
-      SpatialNavigation.focus('[data-focus-key="hint-cancel-btn"]')
-    }
-  },
-)
+const handleBackOrMaskClose = () => emit('cancel')
 </script>
 
 <style scoped>
-.hint-dialog-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 1280px; height: 720px;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-}
-.hint-dialog {
-  width: 420px;
-  min-height: 200px;
-  padding: 32px;
-  background: #2a2a2a;
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-  box-sizing: border-box;
-}
-.dialog-content {
-  width: 100%;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 24px; flex: 1;
-}
-.dialog-message {
+.hint-message {
   text-align: center;
   font-size: 22px;
   color: #fff;
   line-height: 32px;
-  max-height: 64px;
-  overflow: hidden;
-  word-break: break-word;
-}
-.dialog-buttons { display: flex; gap: 24px; }
-.dialog-btn-wrap { display: inline-block; outline: none; }
-.dialog-btn-wrap:focus { outline: none; }
-.dialog-btn {
-  min-width: 120px;
-  padding: 12px 28px;
-  font-size: 20px;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-}
-.dialog-btn.is-focused {
-  transform: scale(1.08);
-  border-color: #4a9eff;
-  background: rgba(74, 158, 255, 0.22);
 }
 </style>
