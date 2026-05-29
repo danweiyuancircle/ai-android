@@ -184,6 +184,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@dwy/tv-ui':
+        specifier: workspace:*
+        version: link:../tv-ui
       '@shell/core':
         specifier: workspace:*
         version: link:../core
