@@ -1,8 +1,7 @@
 <template>
   <Teleport to="body" :disabled="!teleport">
-    <FocusLayer v-if="modelValue" :id="`e-dialog-${dialogId}`" class="e-dialog__mask" @click.self="onMaskClick">
+    <FocusLayer v-if="modelValue" id="e-dialog" class="e-dialog__mask" @click.self="onMaskClick">
       <EFocusGroup
-        :id="`e-dialog-group-${dialogId}`"
         restrict="self-only"
         class="e-dialog__panel"
         :style="{ width: typeof width === 'number' ? `${width}px` : width }"
@@ -44,9 +43,6 @@ const emit = defineEmits<{
   close: []
 }>()
 
-let counter = 0
-const dialogId = (counter += 1) + '-' + Math.floor(performance.now())
-
 function close() {
   emit('update:modelValue', false)
   emit('close')
@@ -61,6 +57,7 @@ watch(
   (open) => {
     if (open) emit('open')
   },
+  { immediate: true },
 )
 
 useOverlay({

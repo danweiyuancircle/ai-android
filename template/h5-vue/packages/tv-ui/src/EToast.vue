@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { onUnmounted, watch } from 'vue'
 
 interface Props {
   modelValue: boolean
@@ -39,6 +39,10 @@ watch(
   },
   { immediate: true },
 )
+
+onUnmounted(() => {
+  if (timer) clearTimeout(timer)
+})
 </script>
 
 <style scoped>

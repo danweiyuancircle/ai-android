@@ -1,8 +1,7 @@
 <template>
   <Teleport to="body" :disabled="!teleport">
-    <FocusLayer v-if="modelValue" :id="`e-drawer-${drawerId}`" class="e-drawer__mask" @click.self="onMaskClick">
+    <FocusLayer v-if="modelValue" id="e-drawer" class="e-drawer__mask" @click.self="onMaskClick">
       <EFocusGroup
-        :id="`e-drawer-group-${drawerId}`"
         restrict="self-only"
         :class="['e-drawer__panel', `e-drawer__panel--${placement}`]"
         :style="panelStyle"
@@ -46,9 +45,6 @@ const emit = defineEmits<{
   close: []
 }>()
 
-let counter = 0
-const drawerId = (counter += 1) + '-' + Math.floor(performance.now())
-
 const sizeCss = computed(() => (typeof props.size === 'number' ? `${props.size}px` : props.size))
 const panelStyle = computed(() => {
   const horizontal = props.placement === 'left' || props.placement === 'right'
@@ -68,6 +64,7 @@ watch(
   (open) => {
     if (open) emit('open')
   },
+  { immediate: true },
 )
 
 useOverlay({
