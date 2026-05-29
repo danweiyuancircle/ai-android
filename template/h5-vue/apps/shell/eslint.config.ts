@@ -34,4 +34,26 @@ export default defineConfig([
       "no-case-declarations":"off",
     },
   },
+  {
+    files: ["src/**/*.{ts,vue}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@dwy/focus-vue3",
+              message: "业务层禁止直接用焦点框架，请用 @dwy/tv-ui 的 EPage/ERow/EColumn/EFocusGroup/EDialog/EFocusable；初始化用 setupTvFocus。",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@dwy/focus-vue3/*", "**/tv-ui/src/composables/*"],
+              message: "焦点框架子路径与 tv-ui 内部 composables 不对业务层开放。",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
