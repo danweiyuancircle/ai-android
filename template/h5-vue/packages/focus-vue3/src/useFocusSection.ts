@@ -1,6 +1,6 @@
 import { inject, onMounted, onUnmounted, provide } from 'vue'
 import SpatialNavigation from '@dwy/focus-core'
-import type { Restrict, EnterTo, LeaveFor } from '@dwy/focus-core'
+import type { Restrict, EnterTo, LeaveFor, ExtSelector } from '@dwy/focus-core'
 import { registerSection, unregisterSection } from './section-registry'
 import { FOCUS_LAYER_KEY, type FocusLayerContext } from './focus-layer-context'
 
@@ -20,7 +20,7 @@ export interface UseFocusSectionOptions {
   /** 离开后记忆来源焦点，默认 true */
   rememberSource?: boolean
   /** 进入 section 时默认聚焦的元素（CSS selector / Element） */
-  defaultElement?: import('@dwy/focus-core').ExtSelector
+  defaultElement?: ExtSelector
 }
 
 export interface FocusSectionContext {
