@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { toRef, watch } from 'vue'
 import { FocusLayer } from '@dwy/focus-vue3'
-import EFocusGroup from './EFocusGroup.vue'
-import { useOverlay } from './composables/useOverlay'
+import EFocusGroup from '../EFocusGroup/index.vue'
+import { useOverlay } from '../../composables/useOverlay'
 
 interface Props {
   modelValue: boolean

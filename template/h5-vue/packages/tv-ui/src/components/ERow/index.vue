@@ -7,7 +7,7 @@
     :default-element="defaultElement"
     :section="section"
     :tag="tag"
-    class="e-column"
+    class="e-row"
     :style="flexStyle"
   >
     <slot />
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import EFocusGroup from './EFocusGroup.vue'
+import EFocusGroup from '../EFocusGroup/index.vue'
 import type { Restrict, EnterTo, LeaveFor } from '@dwy/focus-vue3'
 
 interface Props {
@@ -30,6 +30,7 @@ interface Props {
   gap?: number
   justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around'
   align?: 'start' | 'center' | 'end' | 'stretch'
+  wrap?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   section: true,
   tag: 'div',
   gap: 16,
+  wrap: false,
 })
 
 const AXIS: Record<string, string> = {
@@ -52,8 +54,9 @@ const AXIS: Record<string, string> = {
 
 const flexStyle = computed(() => ({
   display: 'flex',
-  flexDirection: 'column' as const,
+  flexDirection: 'row' as const,
   gap: `${props.gap}px`,
+  flexWrap: props.wrap ? ('wrap' as const) : ('nowrap' as const),
   justifyContent: props.justify ? AXIS[props.justify] : undefined,
   alignItems: props.align ? AXIS[props.align] : undefined,
 }))

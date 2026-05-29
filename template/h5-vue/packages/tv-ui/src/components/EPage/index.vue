@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { useEPage } from './composables/useEPage'
+import { useEPage } from '../../composables/useEPage'
 
 interface Props {
   id: string
