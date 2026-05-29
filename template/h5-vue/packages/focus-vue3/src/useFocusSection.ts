@@ -19,6 +19,8 @@ export interface UseFocusSectionOptions {
   straightOnly?: boolean
   /** 离开后记忆来源焦点，默认 true */
   rememberSource?: boolean
+  /** 进入 section 时默认聚焦的元素（CSS selector / Element） */
+  defaultElement?: import('@dwy/focus-core').ExtSelector
 }
 
 export interface FocusSectionContext {
@@ -41,6 +43,7 @@ export function useFocusSection(options: UseFocusSectionOptions = {}): FocusSect
       leaveFor: options.leaveFor ?? null,
       straightOnly: options.straightOnly ?? false,
       rememberSource: options.rememberSource ?? true,
+      defaultElement: options.defaultElement,
     })
     registerSection(sectionId)
     // 在 FocusLayer 内的 section 标记自己，避免被 layer 一并禁用
