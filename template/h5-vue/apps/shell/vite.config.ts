@@ -42,6 +42,12 @@ export default defineConfig(({ mode }) => {
         // Android 5.1.1 WebView (Chromium 53) 兼容基线；遵 claude/rules/android-webview-5.md
         targets: ["chrome >= 53"],
         modernPolyfills: false,
+        // 关键：禁掉 modern chunk，所有设备走 legacy bundle。
+        // 原因：plugin-legacy 现代浏览器探测脚本只检测 import.meta.url / 动态 import / async-generator
+        // （Chrome 63+ 全部支持），Chrome 66/70 这些"够新到通过探测、又老到缺 globalThis/Promise.allSettled"
+        // 的设备会加载没注入 polyfill 的 modern bundle → ReferenceError → 白屏。
+        // TV/盒子场景设备分布跨度大，统一走 legacy 最稳，包体增量主要是 polyfills-legacy.js（~67KB gzip 28KB）。
+        renderModernChunks: false,
       }),
       eslintPlugin(),
       excludePublicFiles(excludeFiles),

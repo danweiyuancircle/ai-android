@@ -4,6 +4,7 @@
     <div class="actions">
       <EButton focus-key="home-detail" label="进入详情页" @enter="goDetail" />
       <EButton focus-key="home-soon" label="敬请期待页" @enter="goSoon" />
+      <EButton focus-key="home-perf" label="性能压测页" @enter="goPerf" />
       <EButton focus-key="home-tts" label="播报 TTS" @enter="speak" />
     </div>
   </FocusSection>
@@ -20,6 +21,7 @@ useFocusPage('home', 'home-detail')
 const router = useRouter()
 const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
+const goPerf = () => router.push({ name: 'Perf' })
 const speak = () => ottService.playTts('这是一个壳模板首页')
 </script>
 

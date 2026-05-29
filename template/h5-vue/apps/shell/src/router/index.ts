@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     name: 'ComingSoon',
     component: () => import('../pages/ComingSoon.vue')
   },
+  {
+    path: '/perf',
+    name: 'Perf',
+    component: () => import('../pages/Perf.vue')
+  },
   // AIChat 卡带（bridge 的 onNavigateToAIChat 拉起）；无 AI 对话需求可删此行
   createAIChatRoute({ path: '/ai-chat' })
 ]
