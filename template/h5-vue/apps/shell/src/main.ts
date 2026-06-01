@@ -2,10 +2,10 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import App from './App.vue'
-import '@shell/ui/styles/index.css'
-import '@dwy/tv-ui/style.css'
+import '@shell/tv-ui/styles/index.css'
+import '@shell/tv-ui/style.css'
 import { OTT_NATIVE_KEYDOWN_EVENT } from '@shell/core'
-import { setupTvFocus } from '@dwy/tv-ui'
+import { setupTvFocus } from '@shell/tv-ui'
 
 // 初始化 spatial-navigation；把 OTT 原生按键事件透传为 keydown
 setupTvFocus(OTT_NATIVE_KEYDOWN_EVENT)

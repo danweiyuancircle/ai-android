@@ -7,7 +7,7 @@
   "types": "src/index.ts",
   "dependencies": {
     "@shell/core": "workspace:*",
-    "@shell/ui": "workspace:*",
+    "@shell/tv-ui": "workspace:*",
     "vue": "catalog:",
     "vue-router": "catalog:"
   }

@@ -9,7 +9,7 @@
   <!-- 1. 根元素用 FocusSection 包，id 与下面 useFocusPage 第一参一致，必须设 enter-to -->
   <FocusSection id="my-page" :enter-to="'last-focused'" class="page">
 
-    <!-- 业务内容：可聚焦项用 dwy 的 Focusable / @dwy/tv-ui 的 EButton / EImage / ECard / EVirtualList -->
+    <!-- 业务内容：可聚焦项用 dwy 的 Focusable / @shell/tv-ui 的 EButton / EImage / ECard / EVirtualList -->
     <EButton focus-key="my-default-btn" label="..." @enter="..." />
     ...
 
@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { FocusSection } from '@dwy/focus-vue3'
-import { EButton } from '@dwy/tv-ui'
+import { FocusSection } from '@shell/core/focus'
+import { EButton } from '@shell/tv-ui'
 import { useFocusPage } from '@shell/core'
 
 // 2. 一行接入：sectionId 必须与上面 FocusSection 的 id 一致；第二参是首次进入兜底聚焦的 focus-key
@@ -52,7 +52,7 @@ useFocusPage('my-page', 'my-default-btn')
 </template>
 <script setup>
 import { watch, nextTick } from 'vue'
-import { Focusable, FocusLayer, FocusSection, SpatialNavigation } from '@dwy/focus-vue3'
+import { Focusable, FocusLayer, FocusSection, SpatialNavigation } from '@shell/core/focus'
 const props = defineProps<{ modelValue: boolean }>()
 watch(() => props.modelValue, async (open) => {
   if (!open) return
@@ -62,7 +62,7 @@ watch(() => props.modelValue, async (open) => {
 </script>
 ```
 
-参考 `packages/ui/src/components/ExitDialog.vue` / `HintDialog.vue` 实战样板。
+参考 `packages/tv-ui/src/components/ExitDialog.vue` / `HintDialog.vue` 实战样板。
 
 ## 反例
 

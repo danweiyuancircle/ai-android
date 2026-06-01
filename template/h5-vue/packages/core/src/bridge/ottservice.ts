@@ -83,11 +83,6 @@ type VoiceCallbacks = {
  */
 export const OTT_NATIVE_KEYDOWN_EVENT = "ott:native-keydown";
 
-/**
- * 跳转 AIChat 回调类型（第三方拉起时传入的 query）
- */
-type NavigateToAIChatCallback = (query: string) => void;
-
 // 工具方法: 检查window.ottService是否存在
 function getOttService(): any {
   const s = (window as any).ottService;
@@ -318,11 +313,6 @@ export function getVoiceCallbacks(): VoiceCallbacks {
   return voiceCallbacks;
 }
 
-/**
- * 跳转 AIChat 回调（由 App 在 onMounted 时设置，内部使用 router 跳转）
- */
-let navigateToAIChatCallback: NavigateToAIChatCallback | null = null;
-
 function normalizeNativeKey(keyCode: number, keyCodeString?: string): string {
   switch (keyCodeString) {
     case "KEYCODE_BACK":
@@ -409,30 +399,4 @@ if (typeof window !== "undefined") {
     );
 
   };
-
-  // 第三方应用拉起 AIChat 页面：基座调用此函数并传入 query，网页跳转到 /ai-chat 并携带 query
-  (window as any).onNavigateToAIChat = (query: string) => {
-    console.log("[ottService] 收到跳转 AIChat 请求, query:", query);
-    navigateToAIChatCallback?.(query ?? "");
-  };
-}
-
-/**
- * 设置跳转 AIChat 回调函数
- * 当基座通过 onNavigateToAIChat 通知时，将使用此回调进行路由跳转（path: /ai-chat, query: { text }）
- * @param callback 接收 query 字符串，内部应执行 router.push({ path: '/ai-chat', query: { text: query } })
- */
-export function setNavigateToAIChatCallback(
-  callback: NavigateToAIChatCallback,
-) {
-  navigateToAIChatCallback = callback;
-  console.log("[ottService] 跳转 AIChat 回调已设置");
-}
-
-/**
- * 清除跳转 AIChat 回调函数
- */
-export function clearNavigateToAIChatCallback() {
-  navigateToAIChatCallback = null;
-  console.log("[ottService] 跳转 AIChat 回调已清除");
 }

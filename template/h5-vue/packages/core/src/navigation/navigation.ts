@@ -1,41 +1,7 @@
-import type { Router, RouteLocationNormalizedLoaded } from "vue-router";
+import type { Router } from "vue-router";
 import type { AreaItem } from "../types";
 import { routerStack } from "./routerStack";
 import { ottService } from "../bridge";
-
-/**
- * 跳转到 AIChat 页面
- * 统一处理语音识别、第三方拉起等场景的跳转逻辑
- *
- * @param router Vue Router 实例
- * @param route 当前路由（用于判断是否已在 AIChat 页面）
- * @param query 查询文本
- */
-export function navigateToAIChat(
-  router: Router,
-  route: RouteLocationNormalizedLoaded,
-  query: string
-): void {
-  console.log("[Navigation] 跳转到 AIChat, query:", query);
-
-  // 检查当前路由是否已在 AIChat 页面
-  const isAIChatPage = route.name === "AIChat";
-
-  if (isAIChatPage) {
-    // 如果当前已在 AIChat 页面，使用 replace 更新参数，复用当前页面
-    console.log("[Navigation] 当前已在 AIChat 页面，replace 更新参数");
-    router.replace({
-      name: "AIChat",
-      query: { text: query },
-    });
-  } else {
-    // 如果不在 AIChat 页面，使用 push 跳转
-    router.push({
-      name: "AIChat",
-      query: { text: query },
-    });
-  }
-}
 
 /**
  * 导航工具类

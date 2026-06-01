@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFocusable } from '@dwy/focus-vue3'
+import { useFocusable } from '@shell/core/focus'
 
 interface Props {
   focusKey?: string

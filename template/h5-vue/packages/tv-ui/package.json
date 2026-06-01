@@ -1,8 +1,8 @@
 {
-  "name": "@dwy/tv-ui",
+  "name": "@shell/tv-ui",
+  "private": true,
   "version": "0.1.0",
-  "description": "TV 项目可复用 UI 组件：EImage / EButton / ECard / EVirtualList，基于 @dwy/focus-vue3。",
-  "license": "MIT",
+  "description": "TV 端纯基础 UI 组件（全部 E 前缀），基于 @shell/core/focus。",
   "type": "module",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -12,7 +12,8 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts"
     },
-    "./style.css": "./src/styles/tokens.css"
+    "./style.css": "./src/styles/tokens.css",
+    "./styles/index.css": "./src/styles/index.css"
   },
   "files": [
     "src"
@@ -21,7 +22,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@dwy/focus-vue3": "workspace:*"
+    "@shell/core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

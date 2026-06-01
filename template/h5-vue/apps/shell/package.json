@@ -11,9 +11,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@dwy/tv-ui": "workspace:*",
+    "@shell/tv-ui": "workspace:*",
     "@shell/core": "workspace:*",
-    "@shell/ui": "workspace:*",
+    "@shell/feature-shared": "workspace:*",
     "@shell/feature-aichat": "workspace:*",
     "pinia": "catalog:",
     "vue": "catalog:",

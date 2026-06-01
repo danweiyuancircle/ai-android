@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import EFocusGroup from '../EFocusGroup/index.vue'
-import type { Restrict, EnterTo, LeaveFor } from '@dwy/focus-vue3'
+import type { Restrict, EnterTo, LeaveFor } from '@shell/core/focus'
 
 interface Props {
   id?: string

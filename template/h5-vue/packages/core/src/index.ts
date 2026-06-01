@@ -4,8 +4,8 @@
  * 纯逻辑层：桥(ottService)、HTTP、导航/路由栈、通用 composables、类型。
  * 不含任何 .vue 组件，不含 pinia store。
  *
- * 焦点系统由 @dwy/focus-vue3 提供（Focusable / FocusSection / FocusLayer /
- * useFocusable / setupFocus / nativeKeyAdapter），请直接从那里 import。
+ * 焦点系统由子入口 @shell/core/focus 提供（Focusable / FocusSection / FocusLayer /
+ * useFocusable / setupFocus / nativeKeyAdapter）。业务层禁止直连，请用 @shell/tv-ui 组件。
  */
 
 export * from './bridge'

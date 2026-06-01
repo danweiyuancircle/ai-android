@@ -19,16 +19,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   createRouteCacheManager,
   useAutoBackButton,
   useVoiceInteraction,
-  setNavigateToAIChatCallback,
-  navigateToAIChat,
 } from '@shell/core'
-import { VoiceDialog, ExitDialog } from '@shell/ui'
+import { navigateToAIChat, registerAIChatDeepLink } from '@shell/feature-aichat'
+import { VoiceDialog, ExitDialog } from '@shell/feature-shared'
 
 const router = useRouter()
 const route = useRoute()
@@ -36,15 +35,17 @@ const route = useRoute()
 const maxCache = 10
 const { include } = createRouteCacheManager(maxCache)
 const { showExitDialog, confirmExit, cancelExit } = useAutoBackButton()
-const { voiceDialogVisible, voiceText } = useVoiceInteraction()
+// 语音最终结果 → 跳转 AIChat（业务装配在壳侧，core 不绑定具体页面）
+const { voiceDialogVisible, voiceText } = useVoiceInteraction({
+  onFinalResult: (text) => navigateToAIChat(router, route, text),
+})
 
 const handleExitConfirm = () => confirmExit()
 const handleExitCancel = () => cancelExit()
 
 onMounted(() => {
-  // 第三方应用通过 Intent 拉起 AIChat 时，基座调用 onNavigateToAIChat(query)
-  setNavigateToAIChatCallback((query) => {
-    navigateToAIChat(router, route, query)
-  })
+  // 第三方应用通过 Intent 拉起 AIChat 时，基座调用 window.onNavigateToAIChat(query)
+  const dispose = registerAIChatDeepLink((query) => navigateToAIChat(router, route, query))
+  onUnmounted(dispose)
 })
 </script>

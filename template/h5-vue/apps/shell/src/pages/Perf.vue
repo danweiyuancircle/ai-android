@@ -14,42 +14,46 @@
       />
     </EFocusGroup>
 
-    <!-- 右侧行容器：纵向 EVirtualList，行 slot 里嵌 EHRow 水平卡片墙 -->
-    <EVirtualList
+    <!-- 右侧：纵向 EVirtual（行），每行 slot 内嵌横向 EVirtual（卡片墙）。两层都窗口化 -->
+    <EVirtual
       ref="rowsListRef"
       class="perf-rows"
       section-id="perf-rows"
+      direction="vertical"
       :items="currentRows"
-      :item-size="ROW_HEIGHT"
-      :visible-count="3"
+      :item-width="ROW_W"
+      :item-height="ROW_HEIGHT"
+      :main-visible="3"
+      :gap="0"
       :item-key="'id'"
-      focus-key-prefix="row"
+      focus-key-prefix="perfrow"
     >
       <template #default="{ item: row, index: rowIdx }">
         <div class="perf-row">
           <div class="perf-row__title">{{ row.title }}</div>
-          <EHRow
+          <EVirtual
             :section-id="`perf-row-${selectedCatId}-${rowIdx}`"
+            direction="horizontal"
             :items="row.cards"
-            :item-size="CARD_W + CARD_GAP"
-            :visible-count="4"
+            :item-width="CARD_W"
+            :item-height="CARD_H"
+            :main-visible="4"
+            :gap="CARD_GAP"
             :item-key="'id'"
             :focus-key-prefix="`card-${selectedCatId}-${rowIdx}`"
           >
             <template #default="{ item: card, focusKey }">
-              <div class="perf-card-wrap">
-                <ECard
-                  :focus-key="focusKey"
-                  :title="card.title"
-                  :image="card.poster"
-                  :width="CARD_W"
-                />
-              </div>
+              <ECard
+                :focus-key="focusKey"
+                :title="card.title"
+                :image="card.poster"
+                :width="CARD_W"
+              />
             </template>
-          </EHRow>
+          </EVirtual>
         </div>
       </template>
-    </EVirtualList>
+    </EVirtual>
 
     <PerfHud v-if="hudEnabled" />
   </EPage>
@@ -58,12 +62,14 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { EPage, EFocusGroup, EButton, ECard, EVirtualList, EHRow } from '@dwy/tv-ui'
+import { EPage, EFocusGroup, EButton, ECard, EVirtual } from '@shell/tv-ui'
 import PerfHud from '../components/PerfHud.vue'
 
 // ── 视觉常量 ──────────────────────────────────────────────
-const ROW_HEIGHT = 220   // 单行总高 = 标题 + 卡片
+const ROW_HEIGHT = 240   // 单行总高 = 标题 + 卡片
+const ROW_W = 1040       // 行内容宽（右侧区）
 const CARD_W = 200       // 卡片宽
+const CARD_H = 200       // 卡片高
 const CARD_GAP = 16      // 卡片间距
 
 // ── 数据 ──────────────────────────────────────────────
@@ -117,11 +123,11 @@ const selectedCatId = ref(categories[0].id)
 const currentRows = computed(() => dataMap[selectedCatId.value])
 
 // ── 嵌套结构的滚动跟随 ──────────────────────────────────────
-// EVirtualList 内置的滚动追踪只看顶层 focusKey 前缀（这里是 "row-"），
-// 但实际焦点落在卡片（key 形如 "card-{cat}-{row}-{idx}"），所以行级 EVirtualList
-// 不会自动滚。这里在 document 级监听 sn:focused，解析 rowIdx 主动调 trackFocus。
-// EVirtualList 是泛型 setup 组件，InstanceType 拿不到；按 defineExpose 的形状结构化声明
-const rowsListRef = ref<{ trackFocus: (index: number) => void } | null>(null)
+// 外层纵向 EVirtual 的内置跟随只认自己的 focusKey 前缀（"perfrow-"），
+// 但实际焦点落在卡片（key 形如 "card-{cat}-{row}-{idx}"），所以行级 EVirtual
+// 不会自动纵向滚。这里在 document 级监听 sn:focused，解析 rowIdx 主动调 ensureLineVisible。
+// EVirtual 是泛型 setup 组件，InstanceType 拿不到；按 defineExpose 的形状结构化声明
+const rowsListRef = ref<{ ensureLineVisible: (index: number) => void } | null>(null)
 
 function onGlobalFocused(e: Event) {
   const el = e.target as HTMLElement | null
@@ -132,7 +138,7 @@ function onGlobalFocused(e: Event) {
   const m = key.match(/^card-\d+-(\d+)-\d+$/)
   if (m) {
     const rowIdx = parseInt(m[1], 10)
-    rowsListRef.value?.trackFocus(rowIdx)
+    rowsListRef.value?.ensureLineVisible(rowIdx)
     return
   }
 

@@ -1,13 +1,13 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { hasOpenLayer } from "@dwy/focus-vue3";
+import { hasOpenLayer } from "../focus";
 import { getRouteCacheManager } from "./useRouteCache";
 import { ottService, OTT_NATIVE_KEYDOWN_EVENT } from "../bridge";
 
 /**
  * 全局返回键处理
  * 监听 Android TV 返回键，实现页面返回与缓存清理。
- * 退出弹框的焦点隔离 / 复焦由 @dwy/focus-vue3 的 FocusLayer 自动管理，不再手动保存/恢复焦点。
+ * 退出弹框的焦点隔离 / 复焦由 ../focus 的 FocusLayer 自动管理，不再手动保存/恢复焦点。
  */
 export function useBackButton() {
   const router = useRouter();

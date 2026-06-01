@@ -88,7 +88,7 @@ H5 收到后归一化为标准 key，再派发自定义事件 `ott:native-keydow
 | --- | --- | --- |
 | `onNavigateToAIChat` | `(query: string) => void` | 第三方应用拉起时传入 query，H5 路由跳转到 AI 对话页 |
 
-H5 侧用 `setNavigateToAIChatCallback(cb)` / `clearNavigateToAIChatCallback()` 注册。此为业务可选项，无 AI 对话页时可不实现。
+H5 侧由 `@shell/feature-aichat` 的 `registerAIChatDeepLink(navigate)` 注册（返回注销函数），跳转用同包 `navigateToAIChat(router, route, query)`。此为 AIChat 卡带业务，不属壳 core；无 AI 对话页时可不接入。
 
 ---
 

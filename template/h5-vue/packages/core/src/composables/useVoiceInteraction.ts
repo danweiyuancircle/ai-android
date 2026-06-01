@@ -1,16 +1,22 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import { setVoiceCallbacks, clearVoiceCallbacks } from '../bridge/ottservice'
-import { navigateToAIChat } from '../navigation/navigation'
+
+/**
+ * useVoiceInteraction 选项
+ */
+export interface VoiceInteractionOptions {
+  /**
+   * 最终识别结果回调（已去空白、非空）。
+   * 业务侧在此决定去向（如跳转 AIChat），core 不绑定任何具体页面。
+   */
+  onFinalResult?: (text: string) => void
+}
 
 /**
  * 语音交互管理
- * 管理全局语音弹框的显示和语音事件处理
+ * 管理全局语音弹框的显示和语音事件处理；最终结果通过 onFinalResult 上抛业务侧。
  */
-export function useVoiceInteraction() {
-  const router = useRouter()
-  const route = useRoute()
-  
+export function useVoiceInteraction(options: VoiceInteractionOptions = {}) {
   // 语音弹框状态
   const voiceDialogVisible = ref(false)
   const voiceText = ref('')
@@ -55,16 +61,16 @@ export function useVoiceInteraction() {
   }
 
   /**
-   * 最终识别结果，跳转到 AI 交互页面
+   * 最终识别结果，上抛业务侧处理
    */
   const handleFinalResult = (result: string) => {
     const normalizedResult = (result || '').trim()
     if (!normalizedResult) {
-      console.log('[VoiceInteraction] 最终识别结果为空，不执行跳转')
+      console.log('[VoiceInteraction] 最终识别结果为空，不上抛')
       return
     }
-    console.log('[VoiceInteraction] 最终识别结果，准备跳转到AI交互页面:', normalizedResult)
-    navigateToAIChat(router, route, normalizedResult)
+    console.log('[VoiceInteraction] 最终识别结果:', normalizedResult)
+    options.onFinalResult?.(normalizedResult)
   }
 
   /**

@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { useFocusable } from '@dwy/focus-vue3'
+import { useFocusable } from '@shell/core/focus'
 
 interface Props {
   /** 焦点 key；无值时元素不参与焦点 */

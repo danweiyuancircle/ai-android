@@ -43,18 +43,18 @@ importers:
 
   apps/shell:
     dependencies:
-      '@dwy/tv-ui':
-        specifier: workspace:*
-        version: link:../../packages/tv-ui
       '@shell/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@shell/feature-aichat':
         specifier: workspace:*
         version: link:../../packages/features/aichat
-      '@shell/ui':
+      '@shell/feature-shared':
         specifier: workspace:*
-        version: link:../../packages/ui
+        version: link:../../packages/features/shared
+      '@shell/tv-ui':
+        specifier: workspace:*
+        version: link:../../packages/tv-ui
       pinia:
         specifier: 'catalog:'
         version: 2.3.1(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3))
@@ -125,9 +125,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@dwy/focus-vue3':
-        specifier: workspace:*
-        version: link:../focus-vue3
       vue:
         specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)
@@ -140,9 +137,9 @@ importers:
       '@shell/core':
         specifier: workspace:*
         version: link:../../core
-      '@shell/ui':
+      '@shell/tv-ui':
         specifier: workspace:*
-        version: link:../../ui
+        version: link:../../tv-ui
       vue:
         specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)
@@ -150,45 +147,23 @@ importers:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.35(typescript@5.9.3))
 
-  packages/focus-core:
-    devDependencies:
-      '@types/node':
-        specifier: ^22.9.0
-        version: 22.19.19
-
-  packages/focus-vue3:
+  packages/features/shared:
     dependencies:
-      '@dwy/focus-core':
+      '@shell/tv-ui':
         specifier: workspace:*
-        version: link:../focus-core
-    devDependencies:
-      '@vitejs/plugin-vue':
-        specifier: ^5.2.0
-        version: 5.2.4(vite@5.4.21(@types/node@22.19.19)(terser@5.48.0))(vue@3.5.35(typescript@5.9.3))
+        version: link:../../tv-ui
       vue:
-        specifier: ^3.5.13
+        specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)
 
   packages/tv-ui:
     dependencies:
-      '@dwy/focus-vue3':
-        specifier: workspace:*
-        version: link:../focus-vue3
-    devDependencies:
-      vue:
-        specifier: ^3.5.13
-        version: 3.5.35(typescript@5.9.3)
-
-  packages/ui:
-    dependencies:
-      '@dwy/tv-ui':
-        specifier: workspace:*
-        version: link:../tv-ui
       '@shell/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
       vue:
-        specifier: 'catalog:'
+        specifier: ^3.5.13
         version: 3.5.35(typescript@5.9.3)
 
 packages:
@@ -3322,6 +3297,7 @@ snapshots:
   '@types/node@22.19.19':
     dependencies:
       undici-types: 6.21.0
+    optional: true
 
   '@typescript-eslint/eslint-plugin@8.60.0(@typescript-eslint/parser@8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)':
     dependencies:
@@ -4793,7 +4769,8 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  undici-types@6.21.0: {}
+  undici-types@6.21.0:
+    optional: true
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 

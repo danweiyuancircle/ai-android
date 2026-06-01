@@ -3,7 +3,8 @@
   "include": [
     "src",
     "../../packages/core/src",
-    "../../packages/ui/src",
+    "../../packages/tv-ui/src",
+    "../../packages/features/shared/src",
     "../../packages/features/aichat/src"
   ]
 }

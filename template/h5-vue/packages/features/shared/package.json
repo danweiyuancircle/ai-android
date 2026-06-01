@@ -1,0 +1,12 @@
+{
+  "name": "@shell/feature-shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@shell/tv-ui": "workspace:*",
+    "vue": "catalog:"
+  }
+}

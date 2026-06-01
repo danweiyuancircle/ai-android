@@ -1,5 +1,5 @@
 import { computed, nextTick, watch, type Ref } from 'vue'
-import { SpatialNavigation } from '@dwy/focus-vue3'
+import { SpatialNavigation } from '@shell/core/focus'
 import { useFocusLockedKeys } from './useFocusLockedKeys'
 
 interface Options {

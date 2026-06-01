@@ -24,6 +24,16 @@ const routes: RouteRecordRaw[] = [
     name: 'Perf',
     component: () => import('../pages/Perf.vue')
   },
+  {
+    path: '/gallery',
+    name: 'Gallery',
+    component: () => import('../pages/Gallery.vue')
+  },
+  {
+    path: '/scene',
+    name: 'Scene',
+    component: () => import('../pages/scene/SceneView.vue')
+  },
   // AIChat 卡带（bridge 的 onNavigateToAIChat 拉起）；无 AI 对话需求可删此行
   createAIChatRoute({ path: '/ai-chat' })
 ]

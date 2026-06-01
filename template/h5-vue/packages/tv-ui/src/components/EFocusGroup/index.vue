@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { useFocusSection } from '@dwy/focus-vue3'
-import type { Restrict, EnterTo, LeaveFor } from '@dwy/focus-vue3'
+import { useFocusSection } from '@shell/core/focus'
+import type { Restrict, EnterTo, LeaveFor } from '@shell/core/focus'
 
 interface Props {
   id?: string
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // 注：section / restrict / enterTo / leaveFor / defaultElement 在 mount 时读取一次，
-// 不支持运行期动态变更（与 @dwy/focus-vue3 的 FocusSection 行为一致）。
+// 不支持运行期动态变更（与 @shell/core/focus 的 FocusSection 行为一致）。
 let sectionId = ''
 if (props.section) {
   const ctx = useFocusSection({
