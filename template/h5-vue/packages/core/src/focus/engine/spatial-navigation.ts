@@ -261,7 +261,9 @@ var $: any = null;
     return destPriority.group;
   }
 
-  function navigate(target, direction, candidates, config) {
+  // preferNearest=true：跨 section 查找，直线/斜向合并按距离竞争（就近原则）。
+  // preferNearest=false（默认）：section 内查找，保留上游分层（直线强于斜向）。
+  function navigate(target, direction, candidates, config, preferNearest) {
     if (!target || !direction || !candidates || !candidates.length) {
       return null;
     }
@@ -297,109 +299,89 @@ var $: any = null;
     );
 
     var priorities;
+    var df = distanceFunction;
+    var internalGroup, straightGroup, diagonalGroups;
+    var internalDist, straightDist, diagonalDist, mergedDist;
 
     switch (direction) {
       case 'left':
-        priorities = [
-          {
-            group: internalGroups[0].concat(internalGroups[3])
-                                     .concat(internalGroups[6]),
-            distance: [
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.topIsBetter
-            ]
-          },
-          {
-            // 就近原则：直线(groups[3])与斜向(groups[0]/[6])候选合并按距离竞争，
-            // 主轴(水平)最近者优先，再以垂直对齐(nearHorizon)细分，避免远处同行元素抢焦点
-            group: config.straightOnly
-              ? groups[3]
-              : groups[3].concat(groups[0]).concat(groups[6]),
-            distance: [
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.topIsBetter
-            ]
-          }
-        ];
+        internalGroup = internalGroups[0].concat(internalGroups[3])
+                                          .concat(internalGroups[6]);
+        straightGroup = groups[3];
+        diagonalGroups = groups[0].concat(groups[6]);
+        internalDist = [df.nearPlumbLineIsBetter, df.topIsBetter];
+        straightDist = [df.nearPlumbLineIsBetter, df.topIsBetter];
+        diagonalDist = [df.nearHorizonIsBetter, df.rightIsBetter,
+                        df.nearTargetTopIsBetter];
+        // 合并时主轴=水平最近，次轴=垂直对齐
+        mergedDist = [df.nearPlumbLineIsBetter, df.nearHorizonIsBetter,
+                      df.topIsBetter];
         break;
       case 'right':
-        priorities = [
-          {
-            group: internalGroups[2].concat(internalGroups[5])
-                                     .concat(internalGroups[8]),
-            distance: [
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.topIsBetter
-            ]
-          },
-          {
-            // 就近原则：直线(groups[5])与斜向(groups[2]/[8])候选合并按距离竞争，
-            // 主轴(水平)最近者优先，再以垂直对齐(nearHorizon)细分
-            group: config.straightOnly
-              ? groups[5]
-              : groups[5].concat(groups[2]).concat(groups[8]),
-            distance: [
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.topIsBetter
-            ]
-          }
-        ];
+        internalGroup = internalGroups[2].concat(internalGroups[5])
+                                          .concat(internalGroups[8]);
+        straightGroup = groups[5];
+        diagonalGroups = groups[2].concat(groups[8]);
+        internalDist = [df.nearPlumbLineIsBetter, df.topIsBetter];
+        straightDist = [df.nearPlumbLineIsBetter, df.topIsBetter];
+        diagonalDist = [df.nearHorizonIsBetter, df.leftIsBetter,
+                        df.nearTargetTopIsBetter];
+        mergedDist = [df.nearPlumbLineIsBetter, df.nearHorizonIsBetter,
+                      df.topIsBetter];
         break;
       case 'up':
-        priorities = [
-          {
-            group: internalGroups[0].concat(internalGroups[1])
-                                     .concat(internalGroups[2]),
-            distance: [
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.leftIsBetter
-            ]
-          },
-          {
-            // 就近原则：直线(groups[1])与斜向(groups[0]/[2])候选合并按距离竞争，
-            // 主轴(垂直)最近者优先，再以水平对齐(nearPlumbLine)细分，避免远处同列元素抢焦点
-            group: config.straightOnly
-              ? groups[1]
-              : groups[1].concat(groups[0]).concat(groups[2]),
-            distance: [
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.leftIsBetter
-            ]
-          }
-        ];
+        internalGroup = internalGroups[0].concat(internalGroups[1])
+                                          .concat(internalGroups[2]);
+        straightGroup = groups[1];
+        diagonalGroups = groups[0].concat(groups[2]);
+        internalDist = [df.nearHorizonIsBetter, df.leftIsBetter];
+        straightDist = [df.nearHorizonIsBetter, df.leftIsBetter];
+        diagonalDist = [df.nearPlumbLineIsBetter, df.bottomIsBetter,
+                        df.nearTargetLeftIsBetter];
+        // 合并时主轴=垂直最近，次轴=水平对齐
+        mergedDist = [df.nearHorizonIsBetter, df.nearPlumbLineIsBetter,
+                      df.leftIsBetter];
         break;
       case 'down':
-        priorities = [
-          {
-            group: internalGroups[6].concat(internalGroups[7])
-                                     .concat(internalGroups[8]),
-            distance: [
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.leftIsBetter
-            ]
-          },
-          {
-            // 就近原则：直线(groups[7])与斜向(groups[6]/[8])候选合并按距离竞争，
-            // 主轴(垂直)最近者优先，再以水平对齐(nearPlumbLine)细分，避免远处同列元素抢焦点
-            group: config.straightOnly
-              ? groups[7]
-              : groups[7].concat(groups[6]).concat(groups[8]),
-            distance: [
-              distanceFunction.nearHorizonIsBetter,
-              distanceFunction.nearPlumbLineIsBetter,
-              distanceFunction.leftIsBetter
-            ]
-          }
-        ];
+        internalGroup = internalGroups[6].concat(internalGroups[7])
+                                          .concat(internalGroups[8]);
+        straightGroup = groups[7];
+        diagonalGroups = groups[6].concat(groups[8]);
+        internalDist = [df.nearHorizonIsBetter, df.leftIsBetter];
+        straightDist = [df.nearHorizonIsBetter, df.leftIsBetter];
+        diagonalDist = [df.nearPlumbLineIsBetter, df.topIsBetter,
+                        df.nearTargetLeftIsBetter];
+        mergedDist = [df.nearHorizonIsBetter, df.nearPlumbLineIsBetter,
+                      df.leftIsBetter];
         break;
       default:
         return null;
     }
 
-    // straightOnly 已在各方向分支内处理（仅取直线候选），不再统一移除斜向优先级
+    if (preferNearest) {
+      // 跨 section：直线与斜向候选合并为一层按距离竞争，最近一行/一列胜出，
+      // 修复「远处同列元素抢焦点」（如按下从按钮行越过相邻行跳到远处对齐元素）。
+      priorities = [
+        { group: internalGroup, distance: internalDist },
+        {
+          group: config.straightOnly
+            ? straightGroup
+            : straightGroup.concat(diagonalGroups),
+          distance: mergedDist
+        }
+      ];
+    } else {
+      // section 内：保留上游分层（直线候选强于斜向），保证同行/同列相邻项优先，
+      // 不被「不同行/不同列但像素更近」的元素抢走（如变宽卡片墙里同行相邻卡）。
+      priorities = [
+        { group: internalGroup, distance: internalDist },
+        { group: straightGroup, distance: straightDist },
+        { group: diagonalGroups, distance: diagonalDist }
+      ];
+      if (config.straightOnly) {
+        priorities.pop();
+      }
+    }
 
     var destGroup = prioritize(priorities);
     if (!destGroup) {
@@ -767,9 +749,9 @@ var $: any = null;
 
   // 就近原则的「层级」延伸：跨 section 查找时，先只在与当前焦点同一滚动/裁剪容器内找
   // （哪怕候选已滚出视口），同容器该方向确实没有候选时，才允许跳到容器外的元素（如固定页头）。
-  function navigateWithinScrollScope(target, direction, candidates, config) {
+  function navigateWithinScrollScope(target, direction, candidates, config, preferNearest) {
     if (!candidates || candidates.length < 2) {
-      return navigate(target, direction, candidates, config);
+      return navigate(target, direction, candidates, config, preferNearest);
     }
     var targetScope = getScrollScope(target);
     var inScope = [];
@@ -782,10 +764,10 @@ var $: any = null;
       }
     }
     if (inScope.length && outScope.length) {
-      return navigate(target, direction, inScope, config) ||
-             navigate(target, direction, outScope, config);
+      return navigate(target, direction, inScope, config, preferNearest) ||
+             navigate(target, direction, outScope, config, preferNearest);
     }
-    return navigate(target, direction, candidates, config);
+    return navigate(target, direction, candidates, config, preferNearest);
   }
 
   function focusNext(direction, currentFocusedElement, currentSectionId) {
@@ -823,19 +805,23 @@ var $: any = null;
       );
 
       if (!next && config.restrict == 'self-first') {
+        // 离开本 section 跨区查找：就近原则 + 滚动容器感知
         next = navigateWithinScrollScope(
           currentFocusedElement,
           direction,
           exclude(allNavigableElements, currentSectionNavigableElements),
-          config
+          config,
+          true
         );
       }
     } else {
+      // restrict:'none'：全局单平面，保留上游分层（直线优先），仅叠加滚动容器感知
       next = navigateWithinScrollScope(
         currentFocusedElement,
         direction,
         exclude(allNavigableElements, currentFocusedElement),
-        config
+        config,
+        false
       );
     }
 

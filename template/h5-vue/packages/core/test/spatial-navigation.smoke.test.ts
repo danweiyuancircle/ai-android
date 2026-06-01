@@ -80,29 +80,52 @@ describe('SpatialNavigation 冒烟', () => {
     expect(document.activeElement?.id).toBe('cell-3')
   })
 
-  it('down 就近原则：跳到最近一行的非同列元素，而非远处同列元素', () => {
-    // 复现「组件总览」场景：焦点在右侧按钮上按下，应落到最近一行（左侧）的可聚焦元素，
-    // 而不是跳过它去找远处恰好同列的元素。
-    const root = document.createElement('div')
-    function cell(id: string, left: number, top: number, w: number, h: number) {
+  it('跨 section 就近：按下落到最近一行的非同列元素，而非远处同列元素', () => {
+    // 复现「组件总览」：焦点在按钮 section 按下，应落到最近一行（另一 section、左侧）元素，
+    // 而不是跳过它去找远处恰好同列的 section。三者各属独立 section → 走跨 section 就近。
+    function cell(cls: string, id: string, left: number, top: number) {
       const el = document.createElement('div')
-      el.className = 'jcell'
+      el.className = cls
       el.id = id
       el.tabIndex = -1
-      mockRect(el, left, top, w, h)
-      root.appendChild(el)
+      mockRect(el, left, top, 100, 50)
+      document.body.appendChild(el)
     }
-    cell('btn', 200, 0, 100, 50) // 焦点起点（右侧）
-    cell('near', 0, 100, 100, 50) // 最近一行，但在左侧（与 btn 不同列）
-    cell('far', 200, 300, 100, 50) // 远处一行，但与 btn 同列
-    document.body.appendChild(root)
+    cell('j-btn', 'btn', 200, 0) // 焦点起点（按钮 section）
+    cell('j-near', 'near', 0, 100) // 最近一行 section，但在左侧（与 btn 不同列）
+    cell('j-far', 'far', 200, 300) // 远处一行 section，但与 btn 同列
 
-    const id = SpatialNavigation.add({ selector: '.jcell' })
-    SpatialNavigation.makeFocusable(id)
+    SpatialNavigation.add({ selector: '.j-btn', restrict: 'self-first' })
+    SpatialNavigation.add({ selector: '.j-near', restrict: 'self-first' })
+    SpatialNavigation.add({ selector: '.j-far', restrict: 'self-first' })
+    SpatialNavigation.makeFocusable()
     SpatialNavigation.focus('#btn')
     SpatialNavigation.move('down')
 
     expect(document.activeElement?.id).toBe('near')
+  })
+
+  it('section 内：左移优先同行相邻项，不被斜下方水平更近的元素抢走', () => {
+    // 复现卡片墙「精选2 按左聚焦到精选4 而非精选1」：变宽卡片下，
+    // 斜下方元素右缘水平上离目标中心更近，但同 section 内应保持同行优先。
+    function cell(id: string, left: number, top: number, w: number) {
+      const el = document.createElement('div')
+      el.className = 'jrow'
+      el.id = id
+      el.tabIndex = -1
+      mockRect(el, left, top, w, 50)
+      document.body.appendChild(el)
+    }
+    cell('mid', 200, 0, 100) // 焦点起点，中心 x=250
+    cell('same', 0, 0, 100) // 同行左邻，右缘 x=100
+    cell('belowleft', 50, 100, 180) // 斜下方，右缘 x=230（水平上离 250 更近）
+
+    SpatialNavigation.add({ selector: '.jrow', restrict: 'self-first' })
+    SpatialNavigation.makeFocusable()
+    SpatialNavigation.focus('#mid')
+    SpatialNavigation.move('left')
+
+    expect(document.activeElement?.id).toBe('same')
   })
 
   it('跨容器导航：优先同滚动容器内（含已滚出视口）的候选，固定头部仅作兜底', () => {
