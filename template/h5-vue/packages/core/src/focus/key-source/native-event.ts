@@ -64,25 +64,27 @@ let attachedEventName: string | null = null
 let handler: ((e: Event) => void) | null = null
 
 /**
- * 构造一个等价的 KeyboardEvent；Chromium 53 等旧内核走 createEvent 兜底。
+ * 构造一个等价的 KeyboardEvent。
+ *
+ * 为什么不在构造器里传 keyCode/which：Blink 全版本（含 Chromium 53 / Chrome 66）的
+ * KeyboardEvent 构造器都不读 KeyboardEventInit 里的 keyCode/which（它们是只读 legacy 属性，
+ * 不在 init 字典内），构造产物 evt.keyCode 恒为 0。而 SpatialNavigation.onKeyDown/onKeyUp
+ * 完全靠 evt.keyCode（37/38/39/40/13）路由方向键与确定键，keyCode=0 会导致全部失效。
+ * 必须构造后用 Object.defineProperty 在实例上加 own 属性 shadow 掉原型 getter，强制写入 keyCode/which。
  */
 function makeKbEvent(type: 'keydown' | 'keyup', key: string, keyCode: number): KeyboardEvent {
+  let evt: any
   try {
-    return new KeyboardEvent(type, {
-      key,
-      keyCode,
-      which: keyCode,
-      bubbles: true,
-      cancelable: true,
-    } as KeyboardEventInit)
+    evt = new KeyboardEvent(type, { key, bubbles: true, cancelable: true })
   } catch {
-    const evt = document.createEvent('Event') as any
+    // 极旧内核无 KeyboardEvent 构造器时兜底
+    evt = document.createEvent('Event')
     evt.initEvent(type, true, true)
-    Object.defineProperty(evt, 'key', { value: key })
-    Object.defineProperty(evt, 'keyCode', { value: keyCode })
-    Object.defineProperty(evt, 'which', { value: keyCode })
-    return evt as KeyboardEvent
+    Object.defineProperty(evt, 'key', { value: key, configurable: true })
   }
+  Object.defineProperty(evt, 'keyCode', { value: keyCode, configurable: true })
+  Object.defineProperty(evt, 'which', { value: keyCode, configurable: true })
+  return evt as KeyboardEvent
 }
 
 /**
