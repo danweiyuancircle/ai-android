@@ -8,6 +8,8 @@
       <EButton focus-key="home-soon" label="敬请期待页" @enter="goSoon" />
       <EButton focus-key="home-perf" label="性能压测页" @enter="goPerf" />
       <EButton focus-key="home-tts" label="播报 TTS" @enter="speak" />
+      <EButton focus-key="home-tvui" label="TV UI 测试页" variant="primary" @enter="goTvUiTest" />
+      <EButton focus-key="home-ldt" label="列表详情测试" variant="primary" @enter="goListDetailTest" />
     </div>
   </EPage>
 </template>
@@ -23,6 +25,8 @@ const goScene = () => router.push({ name: 'Scene' })
 const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
 const goPerf = () => router.push({ name: 'Perf' })
+const goTvUiTest = () => router.push({ name: 'TvUiTest' })
+const goListDetailTest = () => router.push({ name: 'ListDetailTest' })
 const speak = () => voiceService.playTts('这是一个壳模板首页')
 </script>
 

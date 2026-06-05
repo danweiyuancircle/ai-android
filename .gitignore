@@ -29,4 +29,5 @@ build/
 # 工具缓存 / 调试产物
 .codegraph/
 .playwright-mcp/
+.chances/
 tvkit-*.png
