@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-06-05
+
+### Changed
+- README 精简为仅安装与用法（npm 包页面只展示安装命令），flag 表 / 行为 / 扩展 / 测试等开发向说明移除（详见仓库 AGENTS.md 与源码）。
+
 ## [0.4.0] - 2026-06-05
 
 ### Changed
@@ -42,7 +47,8 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.4.1...HEAD
+[0.4.1]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...v0.4.1
 [0.4.0]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...v0.4.0
 [0.3.0]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...v0.3.0
 [0.2.0]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...v0.2.0
