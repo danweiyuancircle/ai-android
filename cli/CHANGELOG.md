@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-05
+
+### Changed
+- **包名迁移到 npm 组织**：`create-android-shell` → `@chancestv/create-android-shell`。免安装命令改为 `npm create @chancestv/android-shell`（`npx @chancestv/create-android-shell` 等价）。原无 scope 包停更，新版只发 scoped 包。
+- 模板 H5（`template/h5-vue/`）删除内置 focus 库与本地 `packages/tv-ui`，改引用已发布的 `@chancestv/tv-focus`、`@chancestv/tv-ui`（0.4.0）；版本统一在 pnpm `catalog` 管理。
+
 ## [0.3.0] - 2026-05-29
 
 ### Added
@@ -36,7 +42,8 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...HEAD
+[0.4.0]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...v0.4.0
 [0.3.0]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...v0.3.0
 [0.2.0]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...v0.2.0
 [0.1.0]: https://gitee.com/sh_chances/ai-android/releases/tag/v0.1.0

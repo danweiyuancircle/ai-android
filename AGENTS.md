@@ -2,11 +2,11 @@
 
 ## 项目结构与模块组织
 
-`/Users/chances/StudioProjects/ai-android/cli` 是 `create-android-shell` npm 脚手架，入口在 `/Users/chances/StudioProjects/ai-android/cli/index.js`，核心逻辑在 `/Users/chances/StudioProjects/ai-android/cli/lib`，测试在 `/Users/chances/StudioProjects/ai-android/cli/test`。
+`/Users/chances/StudioProjects/ai-android/cli` 是 `@chancestv/create-android-shell` npm 脚手架，入口在 `/Users/chances/StudioProjects/ai-android/cli/index.js`，核心逻辑在 `/Users/chances/StudioProjects/ai-android/cli/lib`，测试在 `/Users/chances/StudioProjects/ai-android/cli/test`。
 
 `/Users/chances/StudioProjects/ai-android/template` 存放可运行模板：`/Users/chances/StudioProjects/ai-android/template/android-shell` 是 Android WebView 壳，`/Users/chances/StudioProjects/ai-android/template/h5-vue` 是 Vue3 + Vite H5 工作区，`/Users/chances/StudioProjects/ai-android/template/bridge-contract.md` 是壳与 H5 的 JSBridge 契约。`/Users/chances/StudioProjects/ai-android/claude` 只放 AI rules/skills，无运行代码；`/Users/chances/StudioProjects/ai-android/docs/superpowers` 放设计和计划文档。
 
-H5 源码集中在 `/Users/chances/StudioProjects/ai-android/template/h5-vue/apps/shell/src`、`/Users/chances/StudioProjects/ai-android/template/h5-vue/packages/core/src`、`/Users/chances/StudioProjects/ai-android/template/h5-vue/packages/tv-ui/src`；资源放在 `/Users/chances/StudioProjects/ai-android/template/h5-vue/apps/shell/public` 和 `/Users/chances/StudioProjects/ai-android/template/android-shell/app/src/main/res`。
+H5 源码集中在 `/Users/chances/StudioProjects/ai-android/template/h5-vue/apps/shell/src`、`/Users/chances/StudioProjects/ai-android/template/h5-vue/packages/core/src`、`/Users/chances/StudioProjects/ai-android/template/h5-vue/packages/features/*/src`；TV 焦点与 UI 组件改用已发布的 `@chancestv/tv-focus`、`@chancestv/tv-ui` 包；资源放在 `/Users/chances/StudioProjects/ai-android/template/h5-vue/apps/shell/public` 和 `/Users/chances/StudioProjects/ai-android/template/android-shell/app/src/main/res`。
 
 ## 构建、测试与开发命令
 

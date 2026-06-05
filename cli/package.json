@@ -1,6 +1,6 @@
 {
-  "name": "create-android-shell",
-  "version": "0.3.0",
+  "name": "@chancestv/create-android-shell",
+  "version": "0.4.0",
   "description": "脚手架：生成 Android WebView 套壳 + H5 模板工程",
   "bin": { "create-android-shell": "index.js" },
   "type": "commonjs",

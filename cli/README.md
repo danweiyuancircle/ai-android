@@ -1,19 +1,19 @@
-# create-android-shell
+# @chancestv/create-android-shell
 
 脚手架：按技术栈生成「Android WebView 套壳 + H5」模板工程，定制 applicationId / 应用名 / 图标。
 
 ## 安装与用法
 
-需 Node ≥18。已发布到 npm（`create-android-shell`），无需 clone 仓库。
+需 Node ≥18。已发布到 npm（`@chancestv/create-android-shell`），无需 clone 仓库。
 
 ```bash
 # 免安装直接跑（交互补齐 父目录/applicationId/应用名/图标）
-npm create android-shell@latest
+npm create @chancestv/android-shell@latest
 # 或带参数（npm create 需用 -- 透传 flag）
-npm create android-shell@latest -- --parent ./myapp --app-id com.chances.tour --name 旅游助手 --icon ./logo.png
+npm create @chancestv/android-shell@latest -- --parent ./myapp --app-id com.chances.tour --name 旅游助手 --icon ./logo.png
 
-# 等价：npx create-android-shell / pnpm create android-shell / yarn create android-shell
-# 或全局安装：npm i -g create-android-shell && create-android-shell ...
+# 等价：npx @chancestv/create-android-shell / pnpm create @chancestv/android-shell / yarn create @chancestv/android-shell
+# 或全局安装：npm i -g @chancestv/create-android-shell && create-android-shell ...
 ```
 
 flag / 默认值：
