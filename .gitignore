@@ -20,6 +20,9 @@ build/
 .env.local
 .env.*.local
 
+# npm 凭证（绝不入库）
+.npmrc
+
 # Claude Code 本地配置 / 测试目录（不入版本控制，按用户偏好整个排除）
 .claude/
 
