@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { EPage, EButton } from '@chancestv/tv-ui'
-import { ottService } from '@shell/core'
+import { voiceService } from '@shell/core'
 
 const router = useRouter()
 const goGallery = () => router.push({ name: 'Gallery' })
@@ -23,7 +23,7 @@ const goScene = () => router.push({ name: 'Scene' })
 const goDetail = () => router.push({ name: 'Detail' })
 const goSoon = () => router.push({ name: 'ComingSoon' })
 const goPerf = () => router.push({ name: 'Perf' })
-const speak = () => ottService.playTts('这是一个壳模板首页')
+const speak = () => voiceService.playTts('这是一个壳模板首页')
 </script>
 
 <style scoped>

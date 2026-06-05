@@ -24,7 +24,7 @@ import com.chances.shell.voice.VoiceController
 import com.chances.shell.voice.VoiceControllerFactory
 
 /**
- * 壳 WebView 宿主页：承载 H5 入口，转发遥控器按键到 H5，并内聚语音双向桥接（ottService）。
+ * 壳 WebView 宿主页：承载 H5 入口，转发遥控器按键到 H5，注入 ottService（壳通用能力）与 voiceService（语音双向桥接）。
  *
  * 在原壳首页基础上叠加"调试态修改地址"隐藏入口：用户连按 [TRIGGER_COUNT] 次菜单键
  * （`KEYCODE_MENU`）弹出 [WebUrlDialog]，可查看当前加载地址 + 重新输入，保存后立即落盘
@@ -160,9 +160,11 @@ class WebActivity : BaseActivity(), ShellHost {
         // 语音实现由 ServiceLoader 热插拔发现：打包了实现模块（如 feature_voice_shijiu）则用之，否则回退 Noop
         voiceController = VoiceControllerFactory.create(applicationContext)
         voiceController.init(applicationContext)
-        // VoiceBridge 内聚语音双向桥接：构造时即注册 OnVoiceListener，把识别/TTS 事件转发到 H5
+        // VoiceBridge 自带 @JavascriptInterface，单独注入为 window.voiceService：
+        // 构造时即注册 OnVoiceListener，把识别/TTS 事件转发到 H5，语音双向桥接与 ottService 解耦
         val voiceBridge = VoiceBridge(webView, voiceController)
-        bridge = OttServiceBridge(webView, this, voiceBridge)
+        webView.addJavascriptInterface(voiceBridge, "voiceService")
+        bridge = OttServiceBridge(webView, this)
         webView.addJavascriptInterface(bridge, "ottService")
         resolveAndLoadUrl()
         handleIntentQuery(intent)

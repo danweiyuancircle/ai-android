@@ -1,5 +1,5 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { setVoiceCallbacks, clearVoiceCallbacks } from '../bridge/ottservice'
+import { setVoiceCallbacks, clearVoiceCallbacks } from '../bridge/voiceservice'
 
 /**
  * useVoiceInteraction 选项

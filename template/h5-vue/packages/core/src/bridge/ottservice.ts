@@ -2,7 +2,12 @@
  * ottService js bridge methods for WebView (typescript version)
  * 以对象方式统一调用，便于管理。每个方法在android环境下会被android注入，如果不存在就打印日志
  * 句柄：window.ottService
+ *
+ * 语音 / TTS 桥接已拆到独立的 voiceservice.ts（句柄 window.voiceService）；
+ * exitApp 默认行为需先释放语音，故从同目录 voiceservice 引入 voiceService。
  */
+
+import { voiceService } from "./voiceservice";
 
 /**
  * OttServiceType
@@ -40,43 +45,35 @@ type OttServiceType = {
    */
   hideLoading: () => void;
   /**
-   * 释放语音
+   * 获取设备/应用基础信息
+   * @returns 基础信息对象；非Android环境或获取失败返回null
    */
-  releaseVoice: () => void;
-  /**
-   * 播放TTS语音
-   * @param text 要播放的文本
-   */
-  playTts: (text: string) => void;
-  /**
-   * 停止TTS语音播报
-   */
-  stopTts: () => void;
-  /**
-   * 是否正在播放TTS
-   */
-  isTtsPlaying: () => boolean;
+  getBaseInfo: () => BaseInfo | null;
 };
 
 /**
- * 语音识别相关回调事件类型
+ * 设备/应用基础信息
  */
-type VoiceCallbacks = {
-  /** 开始语音识别 */
-  onBeginSpeech?: () => void;
-  /** 结束语音识别 */
-  onEndSpeech?: () => void;
-  /** 动态识别结果回调 */
-  onDynamicResult?: (result: string) => void;
-  /** 最终识别结果回调 */
-  onFinalResult?: (result: string) => void;
-  /** 识别错误回调 */
-  onError?: (error: string) => void;
-  /** TTS开始播放回调 */
-  onTtsStart?: (id: string) => void;
-  /** TTS播放完成回调 */
-  onTtsDone?: (id: string) => void;
-};
+export interface BaseInfo {
+  /** 设备MAC地址 */
+  mac: string;
+  /** 设备IP地址 */
+  ip: string;
+  /** 应用版本名 */
+  versionName: string;
+  /** 应用版本号 */
+  versionCode: number;
+  /** 应用包名 */
+  packageName: string;
+  /** 设备型号 */
+  deviceModel: string;
+  /** 设备厂商 */
+  vendor: string;
+  /** Android系统版本号 */
+  androidVersion: string;
+  /** Android API级别 */
+  androidSdkInt: number;
+}
 
 /**
  * 原生按键透传事件名
@@ -141,7 +138,7 @@ export const ottService: OttServiceType = {
   exitApp(text?: string): void {
     const s = getOttService();
     if (s && typeof s.exitApp === "function") {
-      this.releaseVoice();
+      voiceService.releaseVoice();
       // 构建意图数据
       const intentData: IntentData = {
         action: "com.coocaa.voice.core.action.INTENT_CALLBACK",
@@ -181,46 +178,18 @@ export const ottService: OttServiceType = {
       }
     }
   },
-  releaseVoice(): void {
+  getBaseInfo(): BaseInfo | null {
     const s = getOttService();
-    if (s && typeof s.releaseVoice === "function") {
+    if (s && typeof s.getBaseInfo === "function") {
       try {
-        s.releaseVoice();
+        // 原生 @JavascriptInterface 只能返回 String，故回传 JSON 字符串，H5 侧解析为对象
+        const json = s.getBaseInfo();
+        return json ? (JSON.parse(json) as BaseInfo) : null;
       } catch (err) {
-        console.log("[ottService] releaseVoice error:", err);
+        console.log("[ottService] getBaseInfo error:", err);
       }
     }
-  },
-  playTts(text: string): void {
-    const s = getOttService();
-    if (s && typeof s.playTts === "function") {
-      try {
-        s.playTts(text);
-      } catch (err) {
-        console.log("[ottService] playTts error:", err);
-      }
-    }
-  },
-  stopTts(): void {
-    const s = getOttService();
-    if (s && typeof s.stopTts === "function") {
-      try {
-        s.stopTts();
-      } catch (err) {
-        console.log("[ottService] stopTts error:", err);
-      }
-    }
-  },
-  isTtsPlaying(): boolean {
-    const s = getOttService();
-    if (s && typeof s.isTtsPlaying === "function") {
-      try {
-        return s.isTtsPlaying();
-      } catch (err) {
-        console.log("[ottService] isTtsPlaying error:", err);
-      }
-    }
-    return false;
+    return null;
   },
 };
 
@@ -236,81 +205,6 @@ export interface IntentData {
   className?: string;
   /** 额外数据 */
   extras?: Record<string, string>;
-}
-
-/**
- * 语音识别事件监听器
- * Android会调用以下window全局函数来通知语音识别事件
- */
-let voiceCallbacks: VoiceCallbacks = {};
-
-// 注册全局监听函数，供Android调用
-if (typeof window !== "undefined") {
-  // 开始语音识别
-  (window as any).onBeginSpeech = () => {
-    console.log("[ottService] 开始语音识别");
-    voiceCallbacks.onBeginSpeech?.();
-  };
-
-  // 结束语音识别
-  (window as any).onEndSpeech = () => {
-    console.log("[ottService] 结束语音识别");
-    voiceCallbacks.onEndSpeech?.();
-  };
-
-  // 动态识别结果（实时）
-  (window as any).onDynamicResult = (result: string) => {
-    console.log("[ottService] 动态识别结果:", result);
-    voiceCallbacks.onDynamicResult?.(result);
-  };
-
-  // 最终识别结果
-  (window as any).onFinalResult = (result: string) => {
-    console.log("[ottService] 最终识别结果:", result);
-    voiceCallbacks.onFinalResult?.(result);
-  };
-
-  // 识别错误
-  (window as any).onVoiceError = (error: string) => {
-    console.error("[ottService] 语音识别错误:", error);
-    voiceCallbacks.onError?.(error);
-  };
-
-  // TTS开始播放
-  (window as any).onTtsStart = (id: string) => {
-    console.log("[ottService] TTS开始播放:", id);
-    voiceCallbacks.onTtsStart?.(id);
-  };
-
-  // TTS播放完成
-  (window as any).onTtsDone = (id: string) => {
-    console.log("[ottService] TTS播放完成:", id);
-    voiceCallbacks.onTtsDone?.(id);
-  };
-}
-
-/**
- * 设置语音识别事件回调函数
- * @param callbacks 回调函数集合
- */
-export function setVoiceCallbacks(callbacks: VoiceCallbacks) {
-  voiceCallbacks = callbacks;
-  console.log("[ottService] 语音识别回调函数已设置");
-}
-
-/**
- * 清除语音识别回调函数
- */
-export function clearVoiceCallbacks() {
-  voiceCallbacks = {};
-  console.log("[ottService] 语音识别回调函数已清除");
-}
-
-/**
- * 获取当前的语音识别回调函数
- */
-export function getVoiceCallbacks(): VoiceCallbacks {
-  return voiceCallbacks;
 }
 
 function normalizeNativeKey(keyCode: number, keyCodeString?: string): string {

@@ -1,32 +1,33 @@
 package com.chances.shell.bridge
 
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import chances.core.log.Logger
+import chances.core.utils.device.AppUtils
+import chances.core.utils.device.DeviceUtils
 import chances.core.web.TvWebView
 import com.chances.shell.base.bridge.IntentData
 import com.chances.shell.base.bridge.ShellHost
 import com.chances.shell.base.bridge.WebViewJsHelper
-import com.chances.shell.voice.VoiceBridge
 import com.google.gson.Gson
 
 /**
- * ottService JS Bridge 原生实现（壳 app 层门面，组合 base 基础设施 + voice 能力）。
+ * ottService JS Bridge 原生实现（壳 app 层门面，承载壳通用能力）。
  * 注入名固定为 "ottService"：webView.addJavascriptInterface(bridge, "ottService")。
  * 方法签名与 template/bridge-contract.md 一一对应。
  *
- * 语音 / TTS 相关方法只做薄委派到 [VoiceBridge]（逻辑内聚在 feature_voice）；
- * `@JavascriptInterface` 标注必须留在本门面，因 addJavascriptInterface 只注入单一对象。
+ * 语音 / TTS 已独立为 `window.voiceService`（[com.chances.shell.voice.VoiceBridge] 自带
+ * `@JavascriptInterface` 单独注入），不再经本门面委派——本门面只剩壳通用方法。
  *
  * @author template
  */
 class OttServiceBridge(
     private val webView: TvWebView,
-    private val host: ShellHost,
-    private val voice: VoiceBridge
+    private val host: ShellHost
 ) {
 
     companion object {
@@ -97,24 +98,35 @@ class OttServiceBridge(
         mainHandler.post { host.hideLoading() }
     }
 
-    /** 释放语音资源（委派 [VoiceBridge]，主线程切换在其内部完成） */
+    /**
+     * 获取设备 / 应用基础信息，返回 [BaseInfo] 的 JSON 字符串。
+     *
+     * 含 mac / ip / 版本名 / 版本号 / 包名 / 设备型号 / 厂商 / Android 版本 / API 级别。
+     * mac、ip 取机顶盒主网口（[DeviceUtils.getStbIpAddress]）；型号 / 厂商 / 系统版本优先取 SDK，
+     * 取空时回退 [Build]。供 H5 通过 `ottService.getBaseInfo()` 调用。
+     *
+     * @return BaseInfo 的 JSON 字符串；底层取值失败的字段为空串，不抛异常
+     */
     @JavascriptInterface
-    fun releaseVoice() = voice.releaseVoice()
-
-    /** 播放 TTS（委派 [VoiceBridge]） */
-    @JavascriptInterface
-    fun playTts(text: String) = voice.playTts(text)
-
-    /** 停止 TTS（委派 [VoiceBridge]） */
-    @JavascriptInterface
-    fun stopTts() = voice.stopTts()
-
-    /** 是否正在播放 TTS（委派 [VoiceBridge]） */
-    @JavascriptInterface
-    fun isTtsPlaying(): Boolean = voice.isTtsPlaying()
-
-    // ===================== 原生 → H5 =====================
-    // 语音 / TTS 的原生→H5 回调已内聚到 feature_voice 的 VoiceBridge（实现 OnVoiceListener）。
+    fun getBaseInfo(): String {
+        val context = webView.context
+        val ipAndMac = DeviceUtils.getStbIpAddress()
+        val deviceType = DeviceUtils.getDeviceType()
+        val vendor = DeviceUtils.getVendor()
+        val deviceVersion = DeviceUtils.getDeviceVersion()
+        val info = BaseInfo(
+            mac = ipAndMac?.mac.orEmpty(),
+            ip = ipAndMac?.ip.orEmpty(),
+            versionName = AppUtils.getVersionName(context).orEmpty(),
+            versionCode = AppUtils.getVersionCode(context),
+            packageName = AppUtils.getPackageName(context).orEmpty(),
+            deviceModel = if (deviceType.isNullOrEmpty()) Build.MODEL.orEmpty() else deviceType,
+            vendor = if (vendor.isNullOrEmpty()) Build.MANUFACTURER.orEmpty() else vendor,
+            androidVersion = if (deviceVersion.isNullOrEmpty()) Build.VERSION.RELEASE.orEmpty() else deviceVersion,
+            androidSdkInt = Build.VERSION.SDK_INT
+        )
+        return gson.toJson(info)
+    }
 
     /** 透传原生按键（原始 keyCode + keyCode 字符串，归一化由 H5 完成） */
     fun notifyKeyDown(keyCode: Int, keyCodeString: String) =
