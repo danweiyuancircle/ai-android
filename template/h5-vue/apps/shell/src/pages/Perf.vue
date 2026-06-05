@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { EPage, EFocusGroup, EButton, ECard, EVirtual } from '@shell/tv-ui'
+import { EPage, EFocusGroup, EButton, ECard, EVirtual } from '@chancestv/tv-ui'
 import PerfHud from '../components/PerfHud.vue'
 
 // ── 视觉常量 ──────────────────────────────────────────────

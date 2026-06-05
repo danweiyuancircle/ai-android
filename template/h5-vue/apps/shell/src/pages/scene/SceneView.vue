@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { EPage, EColumn, EButton } from '@shell/tv-ui'
+import { EPage, EColumn, EButton } from '@chancestv/tv-ui'
 import CardWall from './styles/CardWall.vue'
 import GridList from './styles/GridList.vue'
 import Rails from './styles/Rails.vue'

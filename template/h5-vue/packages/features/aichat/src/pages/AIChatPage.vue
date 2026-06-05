@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { EPage, EButton } from '@shell/tv-ui'
+import { EPage, EButton } from '@chancestv/tv-ui'
 
 const route = useRoute()
 const router = useRouter()

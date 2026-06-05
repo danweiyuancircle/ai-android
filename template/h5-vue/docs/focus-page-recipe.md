@@ -1,84 +1,142 @@
-# 焦点页面接入规范
+# 新增页面开发规范（TV 焦点体系）
 
-新建一个被路由 + KeepAlive 管的业务页面时，按下面三步走，焦点（首次默认 / 跨页面记忆 / 弹框隔离与复焦）自动正确。
+基于 `@shell/tv-ui` 的 E* 组件新增一个被路由管理的页面。照此写，方向键导航、首焦点、跨页焦点记忆、弹框隔离自动正确。
 
-## 三步模板
+> 业务层**禁止**直连 `@shell/core/focus`（eslint 报错）；一律用 `@shell/tv-ui` 组件 + `setupTvFocus` 初始化。
+
+## 心智模型（先记这 3 条）
+
+1. **页面 = 1 个 `<EPage>`**；**布局容器（ERow/EColumn/EFocusGroup）= 1 个「焦点 section」**；**可交互项 = EButton/EFocusable 等 E 组件**。
+2. **方向键**：section 内同行/同列直线移动，section 之间就近跳；**OK 键 = `@enter`，不是 `@click`**。
+3. 首焦点 / 跨页记忆 / 弹框隔离都由组件内置，你只需给 `id` 和 `focus-key`。
+
+## 步骤 1：建页面文件
+
+路径：`apps/shell/src/pages/Xxx.vue`。最小可用模板：
 
 ```vue
 <template>
-  <!-- 1. 根元素用 FocusSection 包，id 与下面 useFocusPage 第一参一致，必须设 enter-to -->
-  <FocusSection id="my-page" :enter-to="'last-focused'" class="page">
-
-    <!-- 业务内容：可聚焦项用 dwy 的 Focusable / @shell/tv-ui 的 EButton / EImage / ECard / EVirtualList -->
-    <EButton focus-key="my-default-btn" label="..." @enter="..." />
-    ...
-
-  </FocusSection>
+  <EPage id="xxx" default-focus="xxx-first" class="page">
+    <EButton focus-key="xxx-first" label="确定" variant="primary" @enter="onOk" />
+    <EButton focus-key="xxx-back" label="返回" @enter="() => router.back()" />
+  </EPage>
 </template>
 
 <script setup lang="ts">
-import { FocusSection } from '@shell/core/focus'
-import { EButton } from '@shell/tv-ui'
-import { useFocusPage } from '@shell/core'
+import { useRouter } from 'vue-router'
+import { EPage, EButton } from '@shell/tv-ui'
 
-// 2. 一行接入：sectionId 必须与上面 FocusSection 的 id 一致；第二参是首次进入兜底聚焦的 focus-key
-useFocusPage('my-page', 'my-default-btn')
+const router = useRouter()
+const onOk = () => { /* 业务 */ }
 </script>
 ```
 
-## 三件必做的事 / 一行调用都包了
+- `id`：本页唯一标识（SN section id）。
+- `default-focus`：**首次**进页兜底聚焦的 `focus-key`；二次返回会自动恢复上次焦点。
+- `focus-key`：**全局唯一**（SN 用 `[data-focus-key="..."]` 定位），约定加页面前缀，如 `xxx-`。
 
-`useFocusPage(sectionId, defaultFocusKey?)` 内部做的：
+## 步骤 2：多行/多列布局（决定方向键怎么走）
 
-1. 调 `useKeepAliveFocus()` —— dwy 契约，KeepAlive 缓存的页面切走时 `SpatialNavigation.pause()`、切回时 `resume()`，缺这一步会让别的页面 `focus()` 失效
-2. 注册 `onActivated` —— Vue 3 在 KeepAlive 包裹下 `onActivated` 在**首次 mount 后**也会触发，覆盖"首次进入 + 复活"两场景，且早于业务自己的 onMounted 也安全
-3. 在 `onActivated` 里 `await nextTick()` 后调 `SpatialNavigation.focus(sectionId)`：
-   - section 有上次聚焦项记忆 → 自动恢复（依赖 `enter-to: 'last-focused'`）
-   - section 无记忆（首次访问） → 兜底到 `defaultFocusKey`
-
-## 弹框（Modal）
-
-弹框场景不用 `useFocusPage`，用 `<FocusLayer>` 自动做模态隔离 + 关闭复焦，但**初始焦点要自己显式指定**（dwy 故意不自动，因不同弹框默认聚焦位置不同）：
+每个「方向分组」用一个 section 容器包起来，给稳定 `id`：
 
 ```vue
-<template>
-  <FocusLayer v-if="modelValue" id="my-dialog" class="overlay">
-    <FocusSection id="my-dialog-btns" :restrict="'self-only'">
-      <Focusable focus-key="ok-btn" v-slot="{ focused }" @enter="ok">
-        <button :class="{ 'is-focused': focused }">确定</button>
-      </Focusable>
-    </FocusSection>
-  </FocusLayer>
-</template>
-<script setup>
-import { watch, nextTick } from 'vue'
-import { Focusable, FocusLayer, FocusSection, SpatialNavigation } from '@shell/core/focus'
-const props = defineProps<{ modelValue: boolean }>()
-watch(() => props.modelValue, async (open) => {
-  if (!open) return
-  await nextTick()
-  SpatialNavigation.focus('[data-focus-key="ok-btn"]')
-})
-</script>
+<EPage id="menu" default-focus="top-a">
+  <EColumn :gap="24">                 <!-- 整页纵向：上下在行之间走 -->
+    <ERow id="top" :gap="16">         <!-- 一行：左右在项之间走 -->
+      <EButton focus-key="top-a" label="A" @enter="..." />
+      <EButton focus-key="top-b" label="B" @enter="..." />
+    </ERow>
+    <ERow id="bottom" :gap="16">
+      <EButton focus-key="bot-a" label="C" @enter="..." />
+      <EButton focus-key="bot-b" label="D" @enter="..." />
+    </ERow>
+  </EColumn>
+</EPage>
 ```
 
-参考 `packages/tv-ui/src/components/ExitDialog.vue` / `HintDialog.vue` 实战样板。
+- `<ERow>` 横向 section（左右导航）、`<EColumn>` 纵向（上下）。嵌套即得「行间上下、行内左右」。
+- 每个 section 给唯一 `id` → 才会「记住上次焦点」（`enter-to` 默认 `last-focused`）。
 
-## 反例
+## 步骤 3：列表 / 网格（大量项用虚拟列表）
 
-| 反例 | 正面 |
+```vue
+<EVirtual
+  section-id="list" direction="vertical" :cross="4" :items="items"
+  :item-width="150" :item-height="90" :main-visible="3" :gap="14"
+  focus-key-prefix="cell" v-slot="{ item, focusKey }"
+>
+  <EFocusable :focus-key="focusKey" v-slot="{ focused }" @enter="open(item)">
+    <div class="cell" :class="{ hot: focused }">{{ item.name }}</div>
+  </EFocusable>
+</EVirtual>
+```
+
+- `direction` 横/纵、`cross` 网格列数、`main-visible` 可视屏数、`focus-key-prefix` 自动给每项生成唯一 key。
+
+## 步骤 4：弹框 / 抽屉 / 提示
+
+```vue
+<EDialog v-model="open" title="提示" default-focus="dlg-ok">
+  <EText text="内容" :font-size="22" color="#ddd" />
+  <template #footer>
+    <EButton focus-key="dlg-ok" variant="primary" label="知道了" @enter="open = false" />
+  </template>
+</EDialog>
+```
+
+- 弹框**自动**隔离背景焦点 + 关闭后复焦；**但必须显式给 `default-focus`**（不同弹框初始焦点位置不同，故不自动猜）。
+- 同类：`EDrawer`（抽屉，加 `placement`）、`EHintDialog`（`message` + `@confirm`）、`EToast`（轻提示）。
+
+## 步骤 5：注册路由 + 跳转
+
+在 `apps/shell/src/router/index.ts` 的 `routes` 加一项（懒加载）：
+
+```ts
+{ path: '/xxx', name: 'Xxx', component: () => import('../pages/Xxx.vue') }
+```
+
+跳转用 `name`：`router.push({ name: 'Xxx' })`；返回：`router.back()`。
+
+## 步骤 6（按需）：内容超屏 → 焦点跟随滚动
+
+固定头 + 滚动区，用 `useScrollFollow`（见 `apps/shell/src/pages/Gallery.vue`）：聚焦项自动滚进可视区，`transform: translateY(-scrollY)`。
+
+## 组件速查
+
+| 组件 | 作用 | 关键 props | 事件/插槽 |
+|---|---|---|---|
+| `EPage` | 页面根 + 焦点初始化 | `id`、`default-focus` | — |
+| `ERow` | 横向 section | `id`、`gap`、`justify`、`align`、`wrap` | — |
+| `EColumn` | 纵向 section | `id`、`gap`、`justify`、`align` | — |
+| `EFocusGroup` | 通用 section | `id`、`restrict`、`enter-to`、`leave-for` | — |
+| `EButton` | 按钮 | `focus-key`、`label`、`variant`(primary/secondary/ghost/danger)、`size`(sm/md/lg)、`disabled` | `@enter`/`@focus`/`@blur` |
+| `EFocusable` | 自定义可聚焦块 | `focus-key`、`enabled` | `@enter`，slot `{ focused }` |
+| `EImage`/`ECard` | 可聚焦图/卡片 | `focus-key`、… | — |
+| `EVirtual` | 虚拟列表/网格 | `section-id`、`direction`、`items`、`item-width/height`、`main-visible`、`cross`、`gap`、`focus-key-prefix` | slot `{ item, focusKey }` |
+| `EDialog`/`EDrawer` | 弹框/抽屉 | `v-model`、`default-focus`、`title` | `@open`/`@close` |
+| `EHintDialog`/`EToast` | 提示/轻提示 | `v-model`、`message` | `@confirm` |
+
+## 硬规矩（违反 eslint 直接报错）
+
+| 禁 | 用 |
 |---|---|
-| 只绑 `onMounted` 设焦点 | KeepAlive 复用时不再触发 onMounted；且首次 onMounted 早于上游 onActivated.resume()，调 focus() 时 SN 仍 paused → 失败 |
-| FocusSection 不写 `enter-to="last-focused"` | section 不会记忆上次聚焦项，回来始终落到默认 |
-| 用 KeepAlive 但不调 `useKeepAliveFocus()` | 切走时 SN 未 pause，下个页面 setFocus 时机/状态错乱 |
-| 弹框开后不 watch + focus | FocusLayer 只管隔离与关闭复焦，初始焦点要自己设 |
-| 路由组件的 `@click` 写业务跳转 | TV 场景遥控器按 OK 触发的是 `@enter`，不是 `@click`；`@click` 只响鼠标 |
+| 裸 `<button>`/`<a>`/`<input>`/`<select>`/`<textarea>` | `EButton` / `EFocusable` 等 E 组件（裸标签不进焦点系统） |
+| 手写 `tabindex` | `EFocusable` |
+| 可聚焦项用 `@click` 触发确认 | `@enter`（遥控器 OK 不发 click） |
+| 业务层 `import ... from '@shell/core/focus'`（及子路径、tv-ui 内部 composables） | 只用 `@shell/tv-ui` 组件 |
 
-## 一行体检
+## 提交前自检
 
-新页面写完，对照下面 4 点过一遍：
+- [ ] 根是 `<EPage>`，有唯一 `id` + `default-focus`
+- [ ] 每个方向分组用 `ERow`/`EColumn` 包并给了 `id`
+- [ ] 所有可聚焦项有**全局唯一** `focus-key`，确认走 `@enter`
+- [ ] 路由已在 `apps/shell/src/router/index.ts` 注册，用 `name` 跳转
+- [ ] 弹框用 `EDialog`/`EDrawer` 且设了 `default-focus`
+- [ ] 无裸标签 / `tabindex` / `@click`，无 `@shell/core/focus` 直连
+- [ ] 进二级页再返回，焦点回到离开前那一项（不是默认项）
 
-- [ ] 模板根是 `<FocusSection id="xxx" :enter-to="'last-focused'">`
-- [ ] script setup 有 `useFocusPage('xxx', '<default-key>')`
-- [ ] 所有可聚焦项用 `EButton`/`Focusable`，事件用 `@enter` 不是 `@click`
-- [ ] 进二级页再返回，焦点回到走前那个按钮（不是默认）
+## 实战样板
+
+- 简单页：`apps/shell/src/pages/Home.vue` / `apps/shell/src/pages/Detail.vue`
+- 多分组 + 滚动 + 全组件 + 弹框：`apps/shell/src/pages/Gallery.vue`
+- 分类场景：`apps/shell/src/pages/scene/SceneView.vue`

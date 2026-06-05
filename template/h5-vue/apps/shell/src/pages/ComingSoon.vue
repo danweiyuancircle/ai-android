@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { EPage, EButton } from '@shell/tv-ui'
+import { EPage, EButton } from '@chancestv/tv-ui'
 
 const router = useRouter()
 const goBack = () => router.back()

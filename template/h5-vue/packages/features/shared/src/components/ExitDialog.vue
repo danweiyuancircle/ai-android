@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { EDialog, EButton } from '@shell/tv-ui'
+import { EDialog, EButton } from '@chancestv/tv-ui'
 
 interface Props {
   modelValue: boolean

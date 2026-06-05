@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { EVirtual, ECard } from '@shell/tv-ui'
+import { EVirtual, ECard } from '@chancestv/tv-ui'
 import { useScrollFollow } from '../../../composables/useScrollFollow'
 
 const RAIL_NAMES = ['热门推荐', '最近更新', '经典回顾', '动作', '纪录片', '少儿']

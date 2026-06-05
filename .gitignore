@@ -22,3 +22,8 @@ build/
 
 # Claude Code 本地配置 / 测试目录（不入版本控制，按用户偏好整个排除）
 .claude/
+
+# 工具缓存 / 调试产物
+.codegraph/
+.playwright-mcp/
+tvkit-*.png

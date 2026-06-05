@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@chancestv/tv-focus':
+      specifier: ^0.4.0
+      version: 0.4.0
+    '@chancestv/tv-ui':
+      specifier: ^0.4.0
+      version: 0.4.0
     '@vitejs/plugin-legacy':
       specifier: ^5.4.3
       version: 5.4.3
@@ -43,6 +49,12 @@ importers:
 
   apps/shell:
     dependencies:
+      '@chancestv/tv-focus':
+        specifier: 'catalog:'
+        version: 0.4.0(vue@3.5.35(typescript@5.9.3))
+      '@chancestv/tv-ui':
+        specifier: 'catalog:'
+        version: 0.4.0(@chancestv/tv-focus@0.4.0(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
       '@shell/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -52,9 +64,6 @@ importers:
       '@shell/feature-shared':
         specifier: workspace:*
         version: link:../../packages/features/shared
-      '@shell/tv-ui':
-        specifier: workspace:*
-        version: link:../../packages/tv-ui
       pinia:
         specifier: 'catalog:'
         version: 2.3.1(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3))
@@ -125,6 +134,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@chancestv/tv-focus':
+        specifier: 'catalog:'
+        version: 0.4.0(vue@3.5.35(typescript@5.9.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)
@@ -134,12 +146,12 @@ importers:
 
   packages/features/aichat:
     dependencies:
+      '@chancestv/tv-ui':
+        specifier: 'catalog:'
+        version: 0.4.0(@chancestv/tv-focus@0.4.0(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
       '@shell/core':
         specifier: workspace:*
         version: link:../../core
-      '@shell/tv-ui':
-        specifier: workspace:*
-        version: link:../../tv-ui
       vue:
         specifier: 'catalog:'
         version: 3.5.35(typescript@5.9.3)
@@ -149,21 +161,11 @@ importers:
 
   packages/features/shared:
     dependencies:
-      '@shell/tv-ui':
-        specifier: workspace:*
-        version: link:../../tv-ui
+      '@chancestv/tv-ui':
+        specifier: 'catalog:'
+        version: 0.4.0(@chancestv/tv-focus@0.4.0(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
       vue:
         specifier: 'catalog:'
-        version: 3.5.35(typescript@5.9.3)
-
-  packages/tv-ui:
-    dependencies:
-      '@shell/core':
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      vue:
-        specifier: ^3.5.13
         version: 3.5.35(typescript@5.9.3)
 
 packages:
@@ -664,6 +666,17 @@ packages:
   '@babel/types@7.29.7':
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
+
+  '@chancestv/tv-focus@0.4.0':
+    resolution: {integrity: sha512-bnzqzhocM7jhxaI/e6I8pM495qp0p07XcCRoqbK1rWA7++zoQWaHWnYPYNGgZvOFCovGYZpNZYwKYpf2ElvrtQ==, tarball: https://r.cnpmjs.org/@chancestv/tv-focus/-/tv-focus-0.4.0.tgz}
+    peerDependencies:
+      vue: ^3.0.0
+
+  '@chancestv/tv-ui@0.4.0':
+    resolution: {integrity: sha512-X23bWP2MkX3l4iRvWvFrSqprW5XdUCfD+RqGQMa51qh74B8KQa9e457BBnNPgaDRXywzytNBLqW/pfQ2i6bcDg==, tarball: https://r.cnpmjs.org/@chancestv/tv-ui/-/tv-ui-0.4.0.tgz}
+    peerDependencies:
+      '@chancestv/tv-focus': ^0.4.0
+      vue: ^3.0.0
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -3041,6 +3054,15 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
+
+  '@chancestv/tv-focus@0.4.0(vue@3.5.35(typescript@5.9.3))':
+    dependencies:
+      vue: 3.5.35(typescript@5.9.3)
+
+  '@chancestv/tv-ui@0.4.0(@chancestv/tv-focus@0.4.0(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))':
+    dependencies:
+      '@chancestv/tv-focus': 0.4.0(vue@3.5.35(typescript@5.9.3))
+      vue: 3.5.35(typescript@5.9.3)
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true

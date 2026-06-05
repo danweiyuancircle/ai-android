@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@shell/tv-ui": "workspace:*",
+    "@chancestv/tv-ui": "catalog:",
     "vue": "catalog:"
   }
 }

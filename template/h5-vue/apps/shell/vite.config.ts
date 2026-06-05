@@ -48,12 +48,12 @@ export default defineConfig(() => {
       excludePublicFiles(excludeFiles),
     ],
     resolve: {
+      // tv-ui / tv-focus 改用 npm 包 @chancestv/*，其内部 import 的 vue 必须与 app 共用同一实例，
+      // 否则跨包 provide/inject 的焦点上下文失效，方向键导航全失灵。
+      dedupe: ["vue"],
       alias: {
         "@": resolve(__dirname, "src"),
         // workspace 包以源码参与构建，统一走 app 的 legacy 降级链
-        // 更长前缀放前面，避免被短前缀提前匹配
-        "@shell/tv-ui/style.css": resolve(__dirname, "../../packages/tv-ui/src/styles/tokens.css"),
-        "@shell/tv-ui": resolve(__dirname, "../../packages/tv-ui/src"),
         "@shell/core": resolve(__dirname, "../../packages/core/src"),
         "@shell/feature-shared": resolve(__dirname, "../../packages/features/shared/src"),
         "@shell/feature-aichat": resolve(__dirname, "../../packages/features/aichat/src"),
@@ -61,7 +61,7 @@ export default defineConfig(() => {
     },
     server: {
       host: "0.0.0.0",
-      port: 5173,
+      port: 5175,
       strictPort: true,
       // TODO: 按项目后端补 proxy，示例：
       // proxy: {

@@ -11,10 +11,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@shell/tv-ui": "workspace:*",
+    "@chancestv/tv-focus": "catalog:",
+    "@chancestv/tv-ui": "catalog:",
     "@shell/core": "workspace:*",
-    "@shell/feature-shared": "workspace:*",
     "@shell/feature-aichat": "workspace:*",
+    "@shell/feature-shared": "workspace:*",
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"

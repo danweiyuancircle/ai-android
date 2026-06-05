@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { EFocusGroup, ECard } from '@shell/tv-ui'
+import { EFocusGroup, ECard } from '@chancestv/tv-ui'
 
 // 随机宽度（确定性按 index 取，保证一致），picsum 随机图
 const WIDTHS = [200, 240, 200, 280, 220, 200, 260, 240]

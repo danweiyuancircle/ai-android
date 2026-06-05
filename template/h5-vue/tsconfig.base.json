@@ -21,11 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@shell/core": ["packages/core/src/index.ts"],
-      "@shell/core/focus": ["packages/core/src/focus/index.ts"],
       "@shell/core/*": ["packages/core/src/*"],
-      "@shell/tv-ui": ["packages/tv-ui/src/index.ts"],
-      "@shell/tv-ui/style.css": ["packages/tv-ui/src/styles/tokens.css"],
-      "@shell/tv-ui/*": ["packages/tv-ui/src/*"],
       "@shell/feature-shared": ["packages/features/shared/src/index.ts"],
       "@shell/feature-aichat": ["packages/features/aichat/src/index.ts"]
     }

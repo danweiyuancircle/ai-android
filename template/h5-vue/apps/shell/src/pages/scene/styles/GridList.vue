@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { EVirtual, ECard } from '@shell/tv-ui'
+import { EVirtual, ECard } from '@chancestv/tv-ui'
 
 // 大数据量演示虚拟滑动；picsum 随机图
 const items = Array.from({ length: 60 }, (_, i) => ({

@@ -146,7 +146,7 @@ import { useRouter } from 'vue-router'
 import {
   EPage, ERow, EButton, EText, ELoadingSpinner, EImage, ECard,
   EFocusable, EVirtual, EDialog, EDrawer, EToast, EHintDialog,
-} from '@shell/tv-ui'
+} from '@chancestv/tv-ui'
 import { useScrollFollow } from '../composables/useScrollFollow'
 
 const router = useRouter()
