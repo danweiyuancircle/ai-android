@@ -66,6 +66,9 @@ dependencies {
     // app → feature_voice:core → lib_base（透传 lib_base 与 chances-sdk core）
     implementation project(':feature_voice:core')
 
+    // app → feature_player：播放器桥接 + 多引擎注册（ijk 经 player-ijk aar，native 随 core）
+    implementation project(':feature_player')
+
     // 语音实现编译期二选一：由根 gradle.properties 的 voice.engine 决定，只打包选中的实现，
     // 另一个不进 classpath，ServiceLoader 命中确定（VoiceControllerFactory）。app 不引用其具体类。
     def voiceEngine = (project.findProperty('voice.engine') ?: '').toString().trim()

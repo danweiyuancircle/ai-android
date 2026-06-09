@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+// 与依赖 com.chances.sdk:core 的 kotlin_module 文件名错开，避免 mergeJavaResource 冲突（同 feature_voice/core）
+archivesBaseName = 'feature_player'
+
+android {
+    // AGP 3.6.0：包名写在 AndroidManifest.xml 的 package 属性
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // 基础库：lib_base 透出 chances-sdk core，core 内含播放器抽象层 chances.core.player.*
+    // 与原生引擎 chances.core.player.natives.NativeFactory（native 引擎随 core 一起带出）
+    api project(':lib_base')
+
+    // ijk 播放器引擎（含三套 ABI 的 .so，编译期依赖 core 在运行时由 lib_base 满足）
+    // 多引擎按 type 注册到 PlayerEngineRegistry：ijk -> IjkFactory，native -> NativeFactory
+    api 'com.chances.sdk:player-ijk:1.0.0'
+
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}

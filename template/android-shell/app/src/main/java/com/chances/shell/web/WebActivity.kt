@@ -2,10 +2,12 @@ package com.chances.shell.web
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.WebResourceError
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import chances.core.activitylife.ActivityLifeManager
@@ -19,6 +21,8 @@ import com.chances.shell.BuildConfig
 import com.chances.shell.R
 import com.chances.shell.base.bridge.ShellHost
 import com.chances.shell.bridge.OttServiceBridge
+import com.chances.shell.player.PlayerBridge
+import com.chances.shell.player.PlayerManager
 import com.chances.shell.voice.VoiceBridge
 import com.chances.shell.voice.VoiceController
 import com.chances.shell.voice.VoiceControllerFactory
@@ -90,6 +94,7 @@ class WebActivity : BaseActivity(), ShellHost {
     private lateinit var loadingView: ProgressBar
     private lateinit var bridge: OttServiceBridge
     private lateinit var voiceController: VoiceController
+    private lateinit var playerManager: PlayerManager
 
     /** 网页是否就绪（hideLoading 已被调用） */
     private var isWebPageReady = false
@@ -134,6 +139,12 @@ class WebActivity : BaseActivity(), ShellHost {
     override fun initView() {
         webView = findViewById(R.id.web_view)
         loadingView = findViewById(R.id.loading_view)
+        // 背播：WebView 叠在 player_container 之上，透明区域才能看到下层播放器画面。
+        // 1) 背景色透明；2) SOFTWARE 合成层（TV 上 HARDWARE 层常整块不透明，挡住下层 SurfaceView/TextureView）；
+        // 3) H5 侧 html/body 也需透明（见 PlayerControl.vue 的 player-backplay 类）。
+        webView.setBackgroundColor(Color.TRANSPARENT)
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        webView.background?.setAlpha(0)
         webView.enableWebViewDebug(BuildConfig.DEBUG)
         webView.onWebViewListener = object : TvWebView.OnWebViewListener {
             override fun onPageStarted(view: TvWebView?, url: String?) {
@@ -164,6 +175,12 @@ class WebActivity : BaseActivity(), ShellHost {
         // 构造时即注册 OnVoiceListener，把识别/TTS 事件转发到 H5，语音双向桥接与 ottService 解耦
         val voiceBridge = VoiceBridge(webView, voiceController)
         webView.addJavascriptInterface(voiceBridge, "voiceService")
+        // 播放器：容器位于 WebView 之下，PlayerBridge 单独注入为 window.playerService。
+        // 多实例：create 返回 playerId，H5 按 id 操作；引擎按 type 由 PlayerEngineRegistry 创建（ijk/native，可扩展）
+        val playerContainer = findViewById<FrameLayout>(R.id.player_container)
+        playerManager = PlayerManager(playerContainer)
+        val playerBridge = PlayerBridge(webView, playerManager)
+        webView.addJavascriptInterface(playerBridge, "playerService")
         bridge = OttServiceBridge(webView, this)
         webView.addJavascriptInterface(bridge, "ottService")
         resolveAndLoadUrl()
@@ -340,6 +357,7 @@ class WebActivity : BaseActivity(), ShellHost {
         urlDialog?.dismiss()
         urlDialog = null
         voiceController.releaseVoice()
+        playerManager.releaseAll()
         webView.destroy()
         super.onDestroy()
     }

@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- 播放器容器：位于 WebView 之下（背播），承载 PlayerManager 创建的多个播放器实例 View -->
+    <FrameLayout
+        android:id="@+id/player_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- WebView 叠在播放器之上；壳侧将其背景设为透明，使下层视频透出（见 WebActivity） -->
     <chances.core.web.TvWebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"

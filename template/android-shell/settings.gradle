@@ -3,4 +3,5 @@
 // 语音聚合在 feature_voice/ 下：core=抽象稳定层，shijiu=视九实现，internet=互联网语音实现(voice-remote-sdk)。
 // shijiu/internet 二选一：由根 gradle.properties 的 voice.engine 决定编译期只打包哪个（见 app/build.gradle）。
 // 两个都 include 仅为 IDE 可见可改源码，未被选中者不进 apk。
-include ':app', ':feature_voice:core', ':feature_voice:shijiu', ':feature_voice:internet', ':lib_base'
+// 播放器聚合在 feature_player：单模块，多引擎（ijk/native）共存，运行时按 type 切换（见 PlayerEngineRegistry）。
+include ':app', ':feature_voice:core', ':feature_voice:shijiu', ':feature_voice:internet', ':feature_player', ':lib_base'

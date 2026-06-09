@@ -10,6 +10,7 @@
       <EButton focus-key="home-tts" label="播报 TTS" @enter="speak" />
       <EButton focus-key="home-tvui" label="TV UI 测试页" variant="primary" @enter="goTvUiTest" />
       <EButton focus-key="home-ldt" label="列表详情测试" variant="primary" @enter="goListDetailTest" />
+      <EButton focus-key="home-player" label="播放器控制页" variant="primary" @enter="goPlayer" />
     </div>
   </EPage>
 </template>
@@ -27,6 +28,7 @@ const goSoon = () => router.push({ name: 'ComingSoon' })
 const goPerf = () => router.push({ name: 'Perf' })
 const goTvUiTest = () => router.push({ name: 'TvUiTest' })
 const goListDetailTest = () => router.push({ name: 'ListDetailTest' })
+const goPlayer = () => router.push({ name: 'PlayerControl' })
 const speak = () => voiceService.playTts('这是一个壳模板首页')
 </script>
 
