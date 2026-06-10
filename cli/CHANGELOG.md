@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-10
+
+### Changed
+- 交互层从手搓 `readline` 迁移到 **@clack/prompts**：文本/单选/多选/密钥统一用成熟库，多选改原生勾选（上下键 + 空格，修复中文宽字符对齐乱码）。流程加引导式进度感（`intro` 开场 → 分步骤 → `spinner` 落地反馈 → `outro` 收尾）。
+- 非交互（无 TTY）路径完整保留：全 flag 传入时零交互、不挂起，输出纯文本（CI 友好）。
+
+### Added
+- 运行时依赖 `@clack/prompts ^1.5.1`（ESM-only，CJS 经动态 import 桥接，不改 `type:commonjs`）。
+
 ## [0.5.0] - 2026-06-10
 
 ### Added
@@ -57,7 +66,8 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.5.0...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.6.0...HEAD
+[0.6.0]: https://gitee.com/sh_chances/ai-android/compare/v0.5.0...v0.6.0
 [0.5.0]: https://gitee.com/sh_chances/ai-android/compare/v0.4.1...v0.5.0
 [0.4.1]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...v0.4.1
 [0.4.0]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...v0.4.0
