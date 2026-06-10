@@ -1,14 +1,14 @@
 {
   "name": "@chancestv/create-android-shell",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "脚手架：生成 Android WebView 套壳 + H5 模板工程",
   "bin": { "create-android-shell": "index.js" },
   "type": "commonjs",
-  "files": ["index.js", "stacks.js", "lib/", "template/", "CHANGELOG.md"],
+  "files": ["index.js", "stacks.js", "lib/", "template/", "rules/", "skills/", "CHANGELOG.md"],
   "scripts": {
     "test": "node --test",
-    "prepack": "node -e \"const{copyTree,DEFAULT_EXCLUDES}=require('./lib/copyTree');require('fs').rmSync('template',{recursive:true,force:true});copyTree('../template','template',DEFAULT_EXCLUDES)\"",
-    "postpack": "node -e \"require('fs').rmSync('template',{recursive:true,force:true})\""
+    "prepack": "node -e \"const{copyTree,DEFAULT_EXCLUDES}=require('./lib/copyTree');const fs=require('fs');const ex={...DEFAULT_EXCLUDES,names:['.DS_Store',...DEFAULT_EXCLUDES.names]};for(const[s,d]of[['../template','template'],['../claude/rules','rules'],['../claude/skills','skills']]){fs.rmSync(d,{recursive:true,force:true});copyTree(s,d,ex)}\"",
+    "postpack": "node -e \"const fs=require('fs');for(const d of['template','rules','skills'])fs.rmSync(d,{recursive:true,force:true})\""
   },
   "engines": { "node": ">=18" },
   "repository": { "type": "git", "url": "https://gitee.com/sh_chances/ai-android.git", "directory": "cli" },

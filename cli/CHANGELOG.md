@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-10
+
+### Added
+- 生成流程集成 **rules/skills 多平台落地**：交互「选 AI 平台 → 选 rules → 选 skills」，自动按平台格式写入生成工程。支持 Claude Code（`.claude/rules/*.md` 原样 + `.claude/skills/`）、Cursor（`.cursor/rules/*.mdc` 注入 `alwaysApply:true` + `.agents/skills/`）、Codex（拼接进根 `AGENTS.md` + `.agents/skills/`）。
+- 新增 `--target` / `--rules` / `--skills` flag（逗号分隔或 `all` 全选）；`--config` 子模式对已有工程补配置（不生成工程，作用于当前目录或 `--parent` 指定工程）；`--force` 覆盖已存在文件（默认跳过保护用户定制）。
+- 发布打包内置 `claude/rules`、`claude/skills` 源（prepack 拷入、postpack 清理，排除 `.DS_Store`），运行期优先用内置源、本地开发回退 `../claude`。
+
+### Changed
+- 生成后的「后续手动步骤」移除「手动拷 rules/skill 到 .claude/」提示，改为自动落地摘要。
+
 ## [0.4.1] - 2026-06-05
 
 ### Changed
@@ -47,7 +57,8 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.4.1...HEAD
+[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.5.0...HEAD
+[0.5.0]: https://gitee.com/sh_chances/ai-android/compare/v0.4.1...v0.5.0
 [0.4.1]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...v0.4.1
 [0.4.0]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...v0.4.0
 [0.3.0]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...v0.3.0
