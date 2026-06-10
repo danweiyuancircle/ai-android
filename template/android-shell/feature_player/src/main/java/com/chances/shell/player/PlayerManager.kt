@@ -27,6 +27,13 @@ class PlayerManager(private val container: ViewGroup) {
     private val seq = AtomicInteger(0)
     private var listener: OnPlayerListener? = null
 
+    /**
+     * 单实例独占模式：为 true 时，每次 [create] 新播放器前先释放其他全部已存在实例，
+     * 保证同一时刻只有一个活动播放器。多数 OTT 盒子硬件仅支持单路解码，故默认开启。
+     * 置 false 可允许多实例并存。
+     */
+    var singleInstanceMode: Boolean = true
+
     /** 内部分发器：把各实例（带 id）的事件转给宿主 listener */
     private val dispatcher = object : OnPlayerListener {
         override fun onPrepared(playerId: String) {
@@ -69,11 +76,19 @@ class PlayerManager(private val container: ViewGroup) {
     /**
      * 用指定 id 创建一个播放器实例并选择引擎（主线程）。
      *
+     * [singleInstanceMode] 为 true（默认）时，创建前先释放其他全部已存在实例，保证单实例独占。
+     *
      * @param playerId   由 [nextId] 预分配的 id
      * @param playerType 引擎类型；为空或未注册时回退 [PlayerType.DEFAULT]
      * @return 该实例的 id
      */
     fun create(playerId: String, playerType: String?): String {
+        if (singleInstanceMode && players.isNotEmpty()) {
+            // 单实例独占：盒子多为单路解码，新建前先清掉其余实例，避免抢占解码器导致黑屏/无声
+            players.values.forEach { it.release() }
+            players.clear()
+            Logger.i(TAG, "单实例独占：创建前已释放其他全部播放器")
+        }
         val instance = PlayerInstance(playerId, container, dispatcher)
         players[playerId] = instance
         instance.create(playerType)
