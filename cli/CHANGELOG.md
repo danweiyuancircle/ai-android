@@ -3,6 +3,12 @@
 本项目变更记录，遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased]
+## [0.6.2] - 2026-06-11
+
+### Changed
+- 发布改为 GitHub OIDC（Trusted Publishing）工作流：workflow 添加 `id-token: write`，改为 Node.js 22.14 + npm11，`npm publish` 改为使用 OIDC 认证，不再依赖 `NPM_TOKEN`。
+- `cli/package.json` 的 `repository.url` 更新为 GitHub 仓库地址，便于 npm 元数据与源仓库一致。
+- 说明文档同步 OIDC 发布要求与 `github` 标签推送方式。
 
 ## [0.6.0] - 2026-06-10
 
@@ -66,11 +72,12 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://gitee.com/sh_chances/ai-android/compare/v0.6.0...HEAD
-[0.6.0]: https://gitee.com/sh_chances/ai-android/compare/v0.5.0...v0.6.0
-[0.5.0]: https://gitee.com/sh_chances/ai-android/compare/v0.4.1...v0.5.0
-[0.4.1]: https://gitee.com/sh_chances/ai-android/compare/v0.4.0...v0.4.1
-[0.4.0]: https://gitee.com/sh_chances/ai-android/compare/v0.3.0...v0.4.0
-[0.3.0]: https://gitee.com/sh_chances/ai-android/compare/v0.2.0...v0.3.0
-[0.2.0]: https://gitee.com/sh_chances/ai-android/compare/v0.1.0...v0.2.0
-[0.1.0]: https://gitee.com/sh_chances/ai-android/releases/tag/v0.1.0
+[Unreleased]: https://github.com/danweiyuancircle/ai-android/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/danweiyuancircle/ai-android/compare/v0.6.0...v0.6.2
+[0.6.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/danweiyuancircle/ai-android/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/danweiyuancircle/ai-android/releases/tag/v0.1.0
