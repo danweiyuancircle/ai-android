@@ -18,7 +18,14 @@ npm create @chancestv/android-shell@latest
 仓库采用 GitHub Actions 在 Tag (`vX.Y.Z`) 时发布 `cli`：
 
 1. 更新 `cli/package.json` 版本号；
-2. 打标签 `git tag vX.Y.Z && git push origin vX.Y.Z`；
-3. GitHub Actions 自动执行测试并用 `NPM_TOKEN` 发布到 npm。
+2. 打标签 `git tag vX.Y.Z && git push github vX.Y.Z`；
+3. GitHub Actions 自动执行测试并用 OIDC（trusted publishing）发布到 npm，无需 `NPM_TOKEN`。
+
+OIDC 预置要求（`npmjs.com`）：
+
+- `https://www.npmjs.com/package/@chancestv/create-android-shell` 打开后进入 `Settings → Trusted publishing`；
+- 新增 GitHub Actions 入口：`danweiyuancircle` / `ai-android` / `cli-release.yml`；
+- 允许操作：`npm publish`；
+- 本仓库发布时需保留 workflow 的 `permissions: id-token: write` 与 `contents: write`。
 
 Workflow 文件：`.github/workflows/cli-release.yml`。
