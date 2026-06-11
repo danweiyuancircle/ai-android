@@ -29,3 +29,27 @@ OIDC 预置要求（`npmjs.com`）：
 - 本仓库发布时需保留 workflow 的 `permissions: id-token: write` 与 `contents: write`。
 
 Workflow 文件：`.github/workflows/cli-release.yml`。
+
+## 变更记录
+
+- 本 CLI 的发布日志见：`cli/CHANGELOG.md`
+
+## 本地发布检查（可选）
+
+```bash
+cd /Users/chances/StudioProjects/ai-android/cli
+npm test
+npm pack --dry-run
+```
+
+## 发布流程（OIDC）
+
+```bash
+cd /Users/chances/StudioProjects/ai-android
+cd cli
+npm version patch
+git add package.json package-lock.json CHANGELOG.md README.md
+git commit -m 'chore(cli): bump patch version for release'
+git tag v0.X.Y
+git push github master v0.X.Y
+```
