@@ -49,10 +49,20 @@ fun init(
 `HttpConfig.builder().rxJavaErrorCallback(cb).build()`。`rxJavaErrorCallback` 默认 `null`（RxJava 全局异常仅 Logger 打 error）。详见 `http.md`。
 
 ### TinkerConfig — `chances.core.upgrade.tinker.TinkerConfig`
-`applicationLike(ApplicationLike)` **必填**（缺则装配跳过并 warn）；`tinkerEnable(Boolean)` 默认 `true`；`retryEnable(Boolean)` 默认 `true`。
+`applicationLike(ApplicationLike)` **必填**（缺则装配跳过并 warn）；`tinkerEnable(Boolean)` 默认 `true`；`retryEnable(Boolean)` 默认 `true`；`patchRestartUiEnable(Boolean)` 默认 `true`（补丁合成成功后弹重启框）；`patchRestartUiCancelable(Boolean)` 默认 `false`（重启框不可关闭，只能点重启；可关闭则下次手动重启生效）。
+
+可直接继承 `chances.core.upgrade.tinker.TinkerApplicationLike`（`@DefaultLifeCycle` 编译期生成 `chances.core.upgrade.tinker.CoreTinkerApplication`）：基类已封装 `MultiDex.install` + Tinker 安装时序，子类只需实现 `onTinkerReady()` 做业务初始化（在其中调 `SdkCore.init(getApplication(), tinker = TinkerConfig.default(this), ...)`，`this` 即 ApplicationLike）。Manifest 的 `application android:name` 指向生成的 `CoreTinkerApplication`（或 combuild 主工程插件配置的 application 名）。
 
 ### UpgradeConfig — `chances.core.upgrade.UpgradeConfig`
-`updateTransformer(UpgradeManager.UpdateServiceTransformer)` **必填**（升级检查的网络请求）；`checkUpgradeInterval(Long)` 默认 2 小时，`≤0` 视为不覆盖。
+三种升级模式（默认 / 强制 / 补丁）内置默认 UI，每个环节可替换。字段：
+- 网络请求两条路（二选一，`updateTransformer` 优先）：
+  - **注入 Server（推荐）**：`upgradeServer(UpgradeServer)` 注入外部 Retrofit 实例（BaseUrl 由外部决定，`@Url` 动态地址）+ `checkUpdateUrl(String)` 完整请求地址 + `responseAdapter(UpgradeResponseAdapter)`（默认 `DefaultUpgradeResponseAdapter` 同名直映）。
+  - **完全自定义（退路）**：`updateTransformer(UpgradeManager.UpdateServiceTransformer)` 自己发请求，绕过 server+adapter。
+- 安装器：`apkInstaller(ApkInstaller)`（默认 `DefaultApkInstaller`，走标准 Intent+FileProvider）；`fileProviderAuthority(String)` 默认运行时按 `<packageName>.upgrade.file.provider` 拼接。
+- UI：`uiProvider(UpgradeUiProvider)`（默认 `DefaultUpgradeUiProvider`，可整体替换）；`countdownSeconds(Int)` 默认 `5`（默认升级倒计时秒数）；`allowCancelNormalUpgrade(Boolean)` 默认 `false`（默认升级框是否给取消按钮，取消不影响返回键）。
+- `checkUpgradeInterval(Long)` 默认 2 小时，`≤0` 视为不覆盖。
+
+升级交互：默认升级=静默后台下载→下载完弹 N 秒倒计时框→确认/倒计时结束安装；强制升级=进度条框拦截所有按键→下载完安装；补丁升级=Tinker 合成成功后弹重启框。任一失败都强制关闭弹框。手动检查走 `UpgradeManager.getInstance().checkUpdateManual(context, OnCheckUpdateCallback)`。错误码见 `chances.core.upgrade.UpgradeErrorCode`（53xxx 收编）。
 
 ## 日志 Logger — `chances.core.log.Logger`
 静态方法，五级 `v/d/i/w/e`，每级有多个重载：`(tag, message)`、`(tag, message, Throwable)`、`(tag, Object)`、`(tag, String format, Object... args)`、`(tag, Object[])`。
