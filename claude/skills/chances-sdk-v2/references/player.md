@@ -1,9 +1,12 @@
-# player：播放器（系统 MediaPlayer + IJK 热切换）
+# player：播放器（系统 MediaPlayer + IJK + ExoPlayer 热切换）
 
-分层：`PlayerFactory`（工厂）→ `PlayerKernel`（内核接口）→ `VideoPlayerView`（抽象 View）→ 具体实现（`NativePlayerView` / `IjkPlayerView`）。对外统一用顶层 `chances.core.player.UniversalVideoView`，支持运行时切换引擎。
+分层：`PlayerFactory`（工厂）→ `PlayerKernel`（内核接口）→ `VideoPlayerView`（抽象 View）→ 具体实现（`NativePlayerView` / `IjkPlayerView` / `ExoPlayerView`）。对外统一用顶层 `chances.core.player.UniversalVideoView`，支持运行时切换引擎。
 
 - 系统引擎工厂：`chances.core.player.natives.NativeFactory`（core 自带，无 so）。
 - IJK 引擎工厂：`chances.core.player.ijk.IjkFactory`（来自 `player-ijk` 模块，+~38MB so）。
+- ExoPlayer 引擎工厂：`chances.core.player.exo.ExoFactory`（来自 `player-exo` 模块，ExoPlayer `2.9.6`，so 在 aar 内）。
+
+三引擎选型：本地 mp4 / 简单流 → `NativeFactory`；RTMP / FLV / 复杂点直播 → `IjkFactory`；HLS(.m3u8) / DASH(.mpd) / SmoothStreaming / Progressive 标准流 → `ExoFactory`（按 URL 后缀自动选 MediaSource）。
 
 ## 设默认引擎（Application）
 ```kotlin

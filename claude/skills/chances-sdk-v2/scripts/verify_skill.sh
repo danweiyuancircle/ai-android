@@ -3,16 +3,17 @@
 #
 # 机械比对 skill 里声明的「模块坐标版本 / 锁定库版本 / 入口类」与 BaseComponent 源码的实际值，
 # 发现漂移即报错(退出码 1)。**仅在 BaseComponent 源码仓库运行**(依赖源码 grep)；下游主工程无源码，跑不了。
-# 用法: bash .claude/skills/chances-sdk/scripts/verify_skill.sh
+# 用法: bash skills/chances-sdk-v2/scripts/verify_skill.sh
 #
 # 注意:本脚本只能抓「版本号 / 类名」这类字符串级漂移,抓不了方法签名 / Config 字段默认值的语义漂移——
 # 后者由 /check-chances-sdk-skill 命令里的语义抽查补。
 set -uo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
-SKILL="$REPO_ROOT/.claude/skills/chances-sdk/SKILL.md"
+# 脚本位于 <repo>/skills/chances-sdk-v2/scripts/,往上 3 级到仓库根
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+SKILL="$REPO_ROOT/skills/chances-sdk-v2/SKILL.md"
 CONFIG="$REPO_ROOT/config.gradle"
-SRC_DIRS=(core tvms wslog player_ijk iptv2ex)
+SRC_DIRS=(core tvms wslog player_ijk player_exo iptv2ex)
 
 fail=0
 pass() { echo "  ✓ $1"; }
@@ -38,6 +39,7 @@ check_mod core_compiler core-compiler
 check_mod tvms tvms
 check_mod wslog wslog
 check_mod player_ijk player-ijk
+check_mod player_exo player-exo
 check_mod iptv2ex iptv2ex
 
 echo "[2] 锁定第三方库版本  config.gradle ↔ SKILL.md 版本表"
@@ -68,7 +70,7 @@ check_sym() {
 }
 for s in SdkCore WsLogManager TvmsManager TvmsServerApi PermissionHelper IjkFactory \
          IPTV2ExtendsManager UniversalVideoView HttpClientManager SdkErrorCodeRegistry \
-         HttpStaticalCache NativeFactory; do
+         HttpStaticalCache NativeFactory ExoFactory; do
   check_sym "$s"
 done
 
