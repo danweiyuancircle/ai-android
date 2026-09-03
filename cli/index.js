@@ -41,23 +41,27 @@ async function askDefault(label, def, defLabel, preset, interactive) {
 
 /**
  * 语音配置交互：先选引擎（视九/OTT），OTT 再选云平台并逐项填密钥（可留空）。
- * flag 优先（--voice / --voice-platform）；非交互且无 flag 默认视九 shijiu。
+ * flag 优先（--voice / --voice-platform）；非交互且无 flag 默认不启用。
  * @return { engine, platform?, keys? } 供 setVoiceConfig 写入 gradle.properties
  */
 async function askVoice(flags, interactive) {
   let engine = flags.voice;
   if (!engine) {
     if (!interactive) {
-      return { engine: 'shijiu' };
+      return { engine: 'none' };
     }
     engine = await prompt.askSelect({
       message: '语音引擎',
       options: [
+        { value: 'none', label: '不启用' },
         { value: 'shijiu', label: '视九' },
         { value: 'internet', label: 'OTT 互联网' },
       ],
-      initialValue: 'shijiu',
+      initialValue: 'none',
     });
+  }
+  if (engine === 'none' || engine === '') {
+    return { engine: 'none' };
   }
   if (engine !== 'internet') {
     return { engine: 'shijiu' };
@@ -290,7 +294,9 @@ async function main() {
   fs.writeFileSync(gradleProps, setVoiceConfig(fs.readFileSync(gradleProps, 'utf8'), voice));
   const voiceDesc = voice.engine === 'internet'
     ? `OTT互联网（${PLATFORMS[voice.platform].label}）`
-    : '视九 shijiu';
+    : voice.engine === 'none'
+      ? '不启用'
+      : '视九 shijiu';
 
   // rules/skills 落地到工程根（新工程目录本空，overwrite:true）
   let summary = [];

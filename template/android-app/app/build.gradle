@@ -77,8 +77,10 @@ dependencies {
     } else if (voiceEngine == 'internet') {
         // 互联网语音(voice-remote-sdk)：云引擎与密钥见 gradle.properties 的 voice.internet.* 段
         runtimeOnly project(':feature_voice:internet')
+    } else if (voiceEngine == 'none' || voiceEngine == '') {
+        // 不打包实现，VoiceControllerFactory 回退 NoopVoiceController
     } else {
-        throw new GradleException("voice.engine 配置非法：'${voiceEngine}'，可选 shijiu|internet（见根 gradle.properties）")
+        throw new GradleException("voice.engine 配置非法：'${voiceEngine}'，可选 none|shijiu|internet（见根 gradle.properties）")
     }
 
     // 仅 DEBUG 引入远程日志（无 ADB 拉 logcat / 重启 / 装 APK）

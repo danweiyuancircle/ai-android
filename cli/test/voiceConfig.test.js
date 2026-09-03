@@ -31,6 +31,12 @@ function val(text, key) {
   return m ? m[1] : undefined;
 }
 
+test('none：engine 写成 none，internet 段不变', () => {
+  const out = setVoiceConfig(SAMPLE, { engine: 'none' });
+  assert.strictEqual(val(out, 'voice.engine'), 'none');
+  assert.strictEqual(val(out, 'voice.internet.asrMode'), 'IFLY');
+});
+
 test('shijiu：只改 engine，internet 段不变', () => {
   const out = setVoiceConfig(SAMPLE, { engine: 'shijiu' });
   assert.strictEqual(val(out, 'voice.engine'), 'shijiu');

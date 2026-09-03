@@ -1,7 +1,7 @@
 // 模块分层（命名前缀即层级，Studio 视图按字母序天然呈现 app→业务→base）：
 // app（壳应用）→ feature_*（业务层）→ lib_*（基础库）
 // 语音聚合在 feature_voice/ 下：core=抽象稳定层，shijiu=视九实现，internet=互联网语音实现(voice-remote-sdk)。
-// shijiu/internet 二选一：由根 gradle.properties 的 voice.engine 决定编译期只打包哪个（见 app/build.gradle）。
+// shijiu/internet/none：由根 gradle.properties 的 voice.engine 决定编译期打包哪个（见 app/build.gradle）；none 不打包实现。
 // 两个都 include 仅为 IDE 可见可改源码，未被选中者不进 apk。
 // 播放器聚合在 feature_player：单模块，多引擎（ijk/native）共存，运行时按 type 切换（见 PlayerEngineRegistry）。
 include ':app', ':feature_voice:core', ':feature_voice:shijiu', ':feature_voice:internet', ':feature_player', ':lib_base'

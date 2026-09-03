@@ -50,17 +50,19 @@ function setProp(text, key, value) {
  * 按语音选择改写 gradle.properties 文本。
  *
  * @param text gradle.properties 原文
- * @param choice.engine 'shijiu' | 'internet'
+ * @param choice.engine 'none' | 'shijiu' | 'internet'
  * @param choice.platform 'ifly' | 'tencent' | 'volc'（engine=internet 时必填）
  * @param choice.keys { [prop]: value }（可选，留空的 prop 不写、保持模板空值）
  * @return 新文本
  *
+ * none：voice.engine=none，不打包任何语音实现（运行时 Noop）。
  * shijiu：只改 voice.engine，internet 段原样保留。
  * internet：改 engine + asrMode/ttsMode 为平台 mode，按 keys 填入非空凭证。
  */
 function setVoiceConfig(text, choice) {
-  let out = setProp(text, 'voice.engine', choice.engine);
-  if (choice.engine !== 'internet') {
+  const engine = choice.engine === 'none' || !choice.engine ? 'none' : choice.engine;
+  let out = setProp(text, 'voice.engine', engine);
+  if (engine !== 'internet') {
     return out;
   }
   const platform = PLATFORMS[choice.platform];
