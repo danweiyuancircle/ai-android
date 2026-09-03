@@ -1,6 +1,6 @@
 # ottService JSBridge 契约
 
-Android 壳 ↔ H5 的唯一接口定义。`android-shell` 与任意 H5（`h5-vue` / `h5-react`）都以本文件为准实现，两边互为镜像。
+Android 壳 ↔ H5 的唯一接口定义。`android-app` 与任意 H5（`web` / `h5-react`）都以本文件为准实现，两边互为镜像。
 
 - 句柄：H5 侧通过 `window.ottService` / `window.voiceService` / `window.playerService`（三个对象）调原生；原生通过 `window.<回调名>`（全局函数）通知 H5。语音 / TTS 内聚在 `voiceService`，播放器内聚在 `playerService`，其余壳通用能力在 `ottService`。
 - 注入时机：壳在 WebView `onPageStarted/onPageFinished` 时注入这些对象（Android 用 `@JavascriptInterface` + `addJavascriptInterface(obj, "ottService")` / `addJavascriptInterface(voiceObj, "voiceService")` / `addJavascriptInterface(playerObj, "playerService")`）。

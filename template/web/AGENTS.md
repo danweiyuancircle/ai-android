@@ -1,4 +1,4 @@
-# h5-vue 脚手架
+# web
 
 可直接 `pnpm install && pnpm dev`。TV 组件来自 npm `@chancestv/tv-ui`，壳逻辑在 `@shell/core`。
 
@@ -8,7 +8,7 @@
 - 根用 `<EPage id default-focus>`，确认用 `@enter`
 - 不要 `import '@chancestv/tv-focus'`，不要裸 `button` / `@click`
 - 焦点换肤改 `apps/shell/src/theme.css`，示例页 `pages/Theme.vue`
-- 组件用法：`docs/tv-ui.md`；写页 skill：`tv-ui-page-author`
+- 组件用法：`docs/tv-ui.md`；写页 skill：`chances-tv-ui`
 
 ## 样板
 

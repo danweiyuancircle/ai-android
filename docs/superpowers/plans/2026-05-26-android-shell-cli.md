@@ -52,7 +52,7 @@
 
 Run:
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 grep -rln "com.example.shell" . | grep -v '/build/'
 ```
 Expected: 列出 app / lib_base / feature_voice 三层下的 kt、xml、gradle、pro 文件（约 30 个）。记下数量。
@@ -61,7 +61,7 @@ Expected: 列出 app / lib_base / feature_voice 三层下的 kt、xml、gradle�
 
 每个模块把 `com/example` 整体改名为 `com/chances`（`example` 下仅 `shell`）：
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 for m in app lib_base feature_voice/core feature_voice/internet feature_voice/shijiu; do
   git mv "$m/src/main/java/com/example" "$m/src/main/java/com/chances"
 done
@@ -71,7 +71,7 @@ Expected: 5 次移动成功，无报错。
 - [ ] **Step 3: 重命名 2 个 SPI service 文件**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 for m in shijiu internet; do
   d="feature_voice/$m/src/main/resources/META-INF/services"
   git mv "$d/com.example.shell.voice.VoiceControllerProvider" \
@@ -83,7 +83,7 @@ Expected: 2 次移动成功。
 - [ ] **Step 4: 全量替换文件内容 com.example.shell → com.chances.shell**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 grep -rln "com.example.shell" . | grep -v '/build/' | while read -r f; do
   perl -pi -e 's/com\.example\.shell/com.chances.shell/g' "$f"
 done
@@ -94,7 +94,7 @@ Expected: 无报错。（含 kt 的 package/import、5 个 manifest 的 `package
 
 Run:
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 echo "残留:"; grep -rln "com.example.shell" . | grep -v '/build/' | wc -l
 echo "新包目录:"; find . -type d -path '*com/chances/shell' -not -path '*/build/*' | wc -l
 echo "manifest:"; grep -rh 'package=' */src/main/AndroidManifest.xml feature_voice/*/src/main/AndroidManifest.xml
@@ -105,7 +105,7 @@ Expected: 残留 `0`；新包目录 `5`；5 个 manifest 全部 `com.chances.she
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add -A template/android-shell
 git commit -m "refactor(template): android-shell 包名 com.example.shell → com.chances.shell"
 ```
@@ -123,7 +123,7 @@ git commit -m "refactor(template): android-shell 包名 com.example.shell → co
 
 用 Node 内置 zlib 生成合法 PNG，写入 mipmap-xxhdpi：
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 mkdir -p app/src/main/res/mipmap-xxhdpi
 node -e '
 const zlib=require("zlib"),fs=require("fs");
@@ -164,7 +164,7 @@ Expected: 输出 `wrote NNNN bytes`，`file` 报告 `PNG image data, 144 x 144`�
 
 Run:
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-shell
 grep -n 'android:icon' app/src/main/AndroidManifest.xml
 ls -l app/src/main/res/mipmap-xxhdpi/ic_launcher_shell.png
 grep -c 'sym_def_app_icon' app/src/main/AndroidManifest.xml
@@ -174,7 +174,7 @@ Expected: icon 行为 `@mipmap/ic_launcher_shell`；PNG 存在；`sym_def_app_ic
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add -A template/android-shell/app/src/main/res template/android-shell/app/src/main/AndroidManifest.xml template/README.md
 git commit -m "feat(template): android-shell 用唯一名启动图标 ic_launcher_shell 替换系统默认图标"
 ```
@@ -244,13 +244,13 @@ test('默认技术栈 android-support-vue 存在且字段完整', () => {
 
 - [ ] **Step 4: 跑测试**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test`
 Expected: PASS（1 test）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/package.json cli/stacks.js cli/test/stacks.test.js
 git commit -m "feat(cli): 脚手架骨架 + 技术栈注册表"
 ```
@@ -310,7 +310,7 @@ test('validateIcon 要求存在的 PNG 文件', () => {
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/validate.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/validate.test.js`
 Expected: FAIL（`Cannot find module '../lib/validate'`）。
 
 - [ ] **Step 3: 实现 validate.js**
@@ -366,13 +366,13 @@ module.exports = { validateAppId, validateStack, validateParent, validateIcon };
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/validate.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/validate.test.js`
 Expected: PASS（4 tests）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/validate.js cli/test/validate.test.js
 git commit -m "feat(cli): 输入校验 validate（appId/stack/parent/icon）"
 ```
@@ -402,7 +402,7 @@ test('取 applicationId 末段并 sanitize 成 [a-z0-9_]', () => {
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/iconKey.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/iconKey.test.js`
 Expected: FAIL（模块缺失）。
 
 - [ ] **Step 3: 实现 iconKey.js**
@@ -427,13 +427,13 @@ module.exports = { iconKeyFromAppId };
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/iconKey.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/iconKey.test.js`
 Expected: PASS（1 test）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/iconKey.js cli/test/iconKey.test.js
 git commit -m "feat(cli): 图标资源 key 推导 iconKey"
 ```
@@ -479,7 +479,7 @@ test('setLauncherIcon 替换 android:icon', () => {
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/textEdits.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/textEdits.test.js`
 Expected: FAIL（模块缺失）。
 
 - [ ] **Step 3: 实现 textEdits.js**
@@ -515,13 +515,13 @@ module.exports = { setApplicationId, setManifestPackage, setAppName, setLauncher
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/textEdits.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/textEdits.test.js`
 Expected: PASS（4 tests）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/textEdits.js cli/test/textEdits.test.js
 git commit -m "feat(cli): gradle/manifest/strings 文本变换 textEdits"
 ```
@@ -568,7 +568,7 @@ test('拷贝时排除构建产物目录/文件', () => {
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/copyTree.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/copyTree.test.js`
 Expected: FAIL（模块缺失）。
 
 - [ ] **Step 3: 实现 copyTree.js**
@@ -613,13 +613,13 @@ module.exports = { copyTree, DEFAULT_EXCLUDES };
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/copyTree.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/copyTree.test.js`
 Expected: PASS（1 test）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/copyTree.js cli/test/copyTree.test.js
 git commit -m "feat(cli): 带排除的递归拷贝 copyTree"
 ```
@@ -692,7 +692,7 @@ test('只改写 app 自有包，保留 .base/.voice 库包', () => {
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/renameAppPackage.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/renameAppPackage.test.js`
 Expected: FAIL（模块缺失）。
 
 - [ ] **Step 3: 实现 renameAppPackage.js**
@@ -798,13 +798,13 @@ module.exports = { renameAppPackage };
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/renameAppPackage.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/renameAppPackage.test.js`
 Expected: PASS（1 test）。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/renameAppPackage.js cli/test/renameAppPackage.test.js
 git commit -m "feat(cli): app 模块包重写 renameAppPackage（保留库包）"
 ```
@@ -895,7 +895,7 @@ test('generate 生成壳+H5、改写 app 包/applicationId/名称/图标，保�
 
 - [ ] **Step 2: 跑测试确认失败**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/generate.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/generate.test.js`
 Expected: FAIL（`Cannot find module '../lib/generate'`）。
 
 - [ ] **Step 3: 实现 generate.js**
@@ -966,18 +966,18 @@ module.exports = { generate };
 
 - [ ] **Step 4: 跑测试确认通过**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test test/generate.test.js`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test test/generate.test.js`
 Expected: PASS（1 test）。若 FAIL 提示残留 `com.chances.shell`，检查部分 A（Task 1）是否已把模板基线改干净。
 
 - [ ] **Step 5: 全量测试**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test`
 Expected: 所有测试 PASS。
 
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/lib/generate.js cli/test/generate.test.js
 git commit -m "feat(cli): 编排器 generate + e2e 测试"
 ```
@@ -1074,7 +1074,7 @@ main().catch((e) => {
 
 Run:
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/cli
+cd /Users/chances/workspace/eng_prod/chances-tv-android/cli
 node -e 'const fs=require("fs");fs.writeFileSync("/tmp/smoke-icon.png",Buffer.from([137,80,78,71,13,10,26,10]))'
 rm -rf /tmp/smoke-proj
 node index.js --parent /tmp/smoke-proj/myapp --app-id com.chances.demo --name 演示 --icon /tmp/smoke-icon.png
@@ -1121,13 +1121,13 @@ flag：`--parent` 工程根目录｜`--app-id` applicationId｜`--name` 应用�
 
 - [ ] **Step 4: 验证 + 全量测试**
 
-Run: `cd /Users/chances/workspace/eng_prod/ai-android/cli && node --test`
+Run: `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && node --test`
 Expected: 全部 PASS。
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android
+cd /Users/chances/workspace/eng_prod/chances-tv-android
 git add cli/index.js cli/README.md
 git commit -m "feat(cli): CLI 入口 index + 用法文档"
 ```

@@ -5,10 +5,10 @@ const path = require('node:path');
 const { PLATFORMS, setVoiceConfig } = require('../lib/voiceConfig');
 
 // 真实模板：发布包内 cli/template，仓库内回退 ../template
-const bundled = path.join(__dirname, '..', 'template', 'android-shell', 'gradle.properties');
+const bundled = path.join(__dirname, '..', 'template', 'android-app', 'gradle.properties');
 const REAL_TEMPLATE = fs.existsSync(bundled)
   ? bundled
-  : path.join(__dirname, '..', '..', 'template', 'android-shell', 'gradle.properties');
+  : path.join(__dirname, '..', '..', 'template', 'android-app', 'gradle.properties');
 
 // 模板 gradle.properties 的语音段最小样本（字段名须与模板一致）
 const SAMPLE = [

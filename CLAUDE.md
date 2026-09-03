@@ -11,11 +11,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `claude/skills/` — 可直接拷贝到下游项目的 skill
 - `template/` — 脚手架工程，存放可运行的模板代码
   - `template/bridge-contract.md` — 壳↔H5 的 `window.ottService` JSBridge 契约（壳与各 H5 模板共同实现）
-  - `template/android-shell/` — 通用 Android WebView 壳（chances-sdk 基线：Support 27.1.1 / 非 AndroidX / AGP 3.6.0 / compileSdk 28 / minSdk 19）
-  - `template/h5-vue/` — Vue3 + Vite H5 壳骨架（Chromium 53 + `@chancestv/tv-ui`），后续可加 `template/h5-react/`
+  - `template/android-app/` — 通用 Android WebView 壳（chances-sdk 基线：Support 27.1.1 / 非 AndroidX / AGP 3.6.0 / compileSdk 28 / minSdk 19）
+  - `template/web/` — Vue3 + Vite H5 壳骨架（Chromium 53 + `@chancestv/tv-ui`），后续可加 `template/h5-react/`
   - `template/README.md` — 组合矩阵（Vue/React + 壳）与 rules/skill 绑定表
 
-起项目时按 `template/README.md` 的绑定表，CLI 从 `claude/` 拷贝对应 rules/skill 到目标工程（单一来源在 `claude/`）。写 TV 页用 `claude/skills/tv-ui-page-author`。
+起项目时按 `template/README.md` 的绑定表，CLI 从 `claude/` 拷贝对应 rules/skill 到目标工程（单一来源在 `claude/`）。写 TV 页用 `claude/skills/chances-tv-ui`。
 
 `claude/` 无需 build / lint / test 工具链。"测试"即把 rules 投放到目标项目里跑 Claude Code 验证效果。
 
@@ -30,7 +30,7 @@ claude/rules/
 
 `android-webview-*` 内容范围：仅 JS API / CSS 特性 / SSE / 构建配置，**不要**写 Vue 组件用法。
 
-TV 页面写法（EPage / @enter / 模板）放 skill `tv-ui-page-author`，不要写进 webview rule。
+TV 页面写法（EPage / @enter / 模板）放 skill `chances-tv-ui`，不要写进 webview rule。
 
 **严禁出现**：
 

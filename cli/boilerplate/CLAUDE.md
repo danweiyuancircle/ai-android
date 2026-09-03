@@ -9,7 +9,7 @@
 
 ## 写 TV 页
 
-先读 skill `tv-ui-page-author`，组件说明见 `web/docs/tv-ui.md`。
+先读 skill `chances-tv-ui`，组件说明见 `web/docs/tv-ui.md`。
 
 - 只用 `@chancestv/tv-ui`
 - `<EPage id default-focus>`

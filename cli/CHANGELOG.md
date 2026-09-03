@@ -4,13 +4,23 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-03
+
+### Changed
+- 仓库模板目录与生成结果统一为 `android-app/` + `web/`。
+- 写页 skill 更名为 `chances-tv-ui`（原 `tv-ui-page-author`），默认拷到 `.claude/skills` 与 `.agents/skills`。
+- 生成工程依赖 `@chancestv/tv-ui` / `tv-focus` `^0.5.0`。
+
+### Added
+- 工程根 `AGENTS.md` / `CLAUDE.md`；skill 含 README 与无脚手架接入说明。
+
 ## [0.7.0] - 2026-09-03
 
 ### Changed
-- 生成目录改为 `android-app/` + `web/`（不再用 `android-shell` / `h5-vue`）。
+- 生成目录与仓库模板统一为 `android-app/` + `web/`（不再用 `android-shell` / `h5-vue`）。
 
 ### Added
-- 工程根默认写入 `AGENTS.md` / `CLAUDE.md`，H5 带 `docs/tv-ui.md`；默认拷贝 `tv-ui-page-author` 等到 `.claude/skills` 与 `.agents/skills`，打开工程即可让 AI 写页。
+- 工程根默认写入 `AGENTS.md` / `CLAUDE.md`，H5 带 `docs/tv-ui.md`；默认拷贝 skill `chances-tv-ui`（含 README 与不用脚手架的接入说明）到 `.claude/skills` 与 `.agents/skills`。
 
 ## [0.6.2] - 2026-06-11
 

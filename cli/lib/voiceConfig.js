@@ -2,7 +2,7 @@
  * 语音配置写入：把交互选择落到壳工程根 gradle.properties。
  * 纯文本变换（string -> string），不碰文件系统，风格对齐 lib/textEdits.js。
  *
- * 字段来源：template/android-shell/gradle.properties 的 voice.* 段，
+ * 字段来源：template/android-app/gradle.properties 的 voice.* 段，
  * 由 feature_voice/internet/build.gradle 编译期读入 BuildConfig。
  */
 

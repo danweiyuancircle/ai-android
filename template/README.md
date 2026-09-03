@@ -6,23 +6,23 @@
 
 | 目标形态 | 选用模板 |
 | --- | --- |
-| Vue + Android 壳 | `android-shell` + `h5-vue` |
-| React + Android 壳 | `android-shell` + `h5-react`（待补） |
+| Vue + Android 壳 | `android-app` + `web` |
+| React + Android 壳 | `android-app` + `h5-react`（待补） |
 
-壳与 H5 通过 **`bridge-contract.md`** 定义的 `window.ottService` JSBridge 对接，与 H5 框架无关——同一个 `android-shell` 可配任意实现该契约的 H5。
+壳与 H5 通过 **`bridge-contract.md`** 定义的 `window.ottService` JSBridge 对接，与 H5 框架无关——同一个 `android-app` 可配任意实现该契约的 H5。
 
 ## 目录
 
 ```
 template/
 ├── bridge-contract.md   # ⭐ 壳↔H5 的 ottService 契约（唯一权威定义，先读）
-├── android-shell/       # 通用 Android WebView 壳（chances-sdk 基线）
-├── h5-vue/              # Vue3 + Vite H5 壳骨架
+├── android-app/         # 通用 Android WebView 壳（chances-sdk 基线）
+├── web/                 # Vue3 + Vite H5 壳骨架
 └── README.md
 # h5-react/  待补
 ```
 
-## android-shell
+## android-app
 
 chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chances-sdk/SKILL.md`）：
 - AGP 3.6.0 / Gradle 6.8.3 / JDK 8 / Kotlin 1.8.0
@@ -56,7 +56,7 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 > ```
 > flavor 名不能以 `test` 开头（Gradle 保留），测试环境用 `staging`。
 
-## h5-vue
+## web
 
 Vue3 + Vite 骨架：Chromium 53 legacy、`@chancestv/tv-ui`、`@shell/core`（ottService / 返回键 / 语音 / HTTP / 路由栈）。不含业务卡带。
 
@@ -68,20 +68,20 @@ Vue3 + Vite 骨架：Chromium 53 legacy、`@chancestv/tv-ui`、`@shell/core`（o
 
 验证：
 ```bash
-cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue
+cd /Users/chances/workspace/eng_prod/chances-tv-android/template/web
 pnpm install
 pnpm build
 ```
 
 ## rules / skill 绑定
 
-生成结果：`<parent>/android-app` + `<parent>/web`，工程根带 `AGENTS.md` / `CLAUDE.md`（给 AI 当工作区入口）。CLI 再按技术栈默认勾选，把 rules/skills 拷到 `.claude/` 与 `.agents/skills/`。仓库内模板源仍是 `template/android-shell` 与 `template/h5-vue`。
+生成结果与模板源同名：`<parent>/android-app` + `<parent>/web`，工程根带 `AGENTS.md` / `CLAUDE.md`。CLI 再按技术栈默认勾选，把 rules/skills 拷到 `.claude/` 与 `.agents/skills/`。
 
 | 模板 | rules | skill |
 | --- | --- | --- |
-| android-shell | `android-dev-spec.md` + `android-support-library-only.md` | `chances-sdk-v2` |
-| h5-vue / h5-react | `android-webview-5.md` + `vue-tv-ui.md`（Android 9 设备再加 `android-webview-9.md`） | `tv-ui-page-author` |
+| android-app | `android-dev-spec.md` + `android-support-library-only.md` | `chances-sdk-v2` |
+| web | `android-webview-5.md` + `vue-tv-ui.md`（Android 9 设备再加 `android-webview-9.md`） | `chances-tv-ui` |
 
 ## 新增 h5-react（约定）
 
-React 壳同样实现 `bridge-contract.md` 的 `window.ottService`（H5→原生方法 + `window.<回调>` 全局函数 + 按键归一化），复用同一个 `android-shell`。
+React 壳同样实现 `bridge-contract.md` 的 `window.ottService`（H5→原生方法 + `window.<回调>` 全局函数 + 按键归一化），复用同一个 `android-app`。

@@ -1,6 +1,6 @@
 # TV-UI 基础组件库 + 焦点框架深度集成 — 设计稿
 
-> **已过期（实现已迁出）**：E* 组件与焦点引擎在 [chances-tv-kit](https://github.com/danweiyuancircle/chances-tv-kit) 以 `@chancestv/tv-ui` / `@chancestv/tv-focus` 发布。本仓模板只消费这些包。写 TV 页用 skill `tv-ui-page-author`。下文 `@dwy/*` / 仓库内 `packages/tv-ui` 是当时设计，不要当现况。
+> **已过期（实现已迁出）**：E* 组件与焦点引擎在 [chances-tv-kit](https://github.com/danweiyuancircle/chances-tv-kit) 以 `@chancestv/tv-ui` / `@chancestv/tv-focus` 发布。本仓模板只消费这些包。写 TV 页用 skill `chances-tv-ui`。下文 `@dwy/*` / 仓库内 `packages/tv-ui` 是当时设计，不要当现况。
 
 - **日期**：2026-05-28
 - **作者**：与 Claude 协作（liuyongjie / microboatofficial@gmail.com）

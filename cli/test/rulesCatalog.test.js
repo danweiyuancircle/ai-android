@@ -74,8 +74,8 @@ test('listRules：含已知项、全为 .md', () => {
   assert.ok(rules.every((n) => n.endsWith('.md')));
 });
 
-test('listSkills：含 chances-sdk-v2 与 tv-ui-page-author，仅含有 SKILL.md 的目录', () => {
+test('listSkills：含 chances-sdk-v2 与 chances-tv-ui，仅含有 SKILL.md 的目录', () => {
   const skills = listSkills();
   assert.ok(skills.includes('chances-sdk-v2'));
-  assert.ok(skills.includes('tv-ui-page-author'));
+  assert.ok(skills.includes('chances-tv-ui'));
 });

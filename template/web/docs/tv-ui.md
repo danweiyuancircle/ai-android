@@ -41,4 +41,4 @@ import { EPage, ERow, EButton } from '@chancestv/tv-ui'
 }
 ```
 
-样板页：`src/pages/Home.vue`、`Gallery.vue`、`Theme.vue`。写新页读 skill `tv-ui-page-author`。
+样板页：`src/pages/Home.vue`、`Gallery.vue`、`Theme.vue`。写新页读 skill `chances-tv-ui`。不用脚手架接入见 skill 的 `references/integrate.md`。

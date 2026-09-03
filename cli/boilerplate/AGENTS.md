@@ -13,7 +13,7 @@ Android WebView 壳 + Vue3 H5。打开**本目录**作为工作区即可让 AI �
 - 页面根 `<EPage id default-focus>`，确认用 `@enter`，不要裸 `button` / `@click`
 - 换肤：`web/apps/shell/src/theme.css`
 - 用法：`web/docs/tv-ui.md`
-- 写页配方：skill `tv-ui-page-author`（`.claude/skills/` 与 `.agents/skills/`）
+- 写页配方：skill `chances-tv-ui`（`.claude/skills/` 与 `.agents/skills/`）
 - 样板：`web/apps/shell/src/pages/Home.vue`、`Gallery.vue`、`Theme.vue`
 
 ```bash

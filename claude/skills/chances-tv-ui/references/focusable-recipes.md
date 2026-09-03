@@ -33,6 +33,20 @@
 
 横向列表：`direction="horizontal"`，去掉 `cross` 或 `cross=1`。
 
+## 输入 / 开关 / 滑块
+
+```vue
+<ERow id="form" :gap="16" align="center">
+  <EInput v-model="q" focus-key="form-q" placeholder="搜索" @enter="search" @change="onCommit" />
+  <ESwitch v-model="autoplay" focus-key="form-sw" label="自动播放" @change="onAuto" />
+  <ESlider v-model="vol" focus-key="form-vol" :step="5" @change="onVol" />
+</ERow>
+```
+
+- EInput：聚焦即可输入；方向键把焦点移走；回车 `@enter` 后仍可继续打字。
+- ESwitch：OK 切换，不要给整行再套一层焦点框。
+- ESlider：焦点在滑块上；左右调值，到 min/max 再按才离开。
+
 ## 锁焦区（菜单不把焦点漏到旁边）
 
 ```vue

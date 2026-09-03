@@ -6,7 +6,7 @@ paths:
 
 # TV Vue 焦点硬约束
 
-业务层只用 `@chancestv/tv-ui`。写页面 / 弹框 / 列表先读 skill `tv-ui-page-author`。
+业务层只用 `@chancestv/tv-ui`。写页面 / 弹框 / 列表先读 skill `chances-tv-ui`。
 
 - 页面根：`<EPage id default-focus>`
 - 确认：`@enter`，不是 `@click`

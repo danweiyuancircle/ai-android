@@ -2,29 +2,29 @@
 
 ## 项目结构与模块组织
 
-`/Users/chances/workspace/eng_prod/ai-android/cli` 是 `@chancestv/create-android-shell` npm 脚手架，入口在 `/Users/chances/workspace/eng_prod/ai-android/cli/index.js`，核心逻辑在 `/Users/chances/workspace/eng_prod/ai-android/cli/lib`，测试在 `/Users/chances/workspace/eng_prod/ai-android/cli/test`。
+`/Users/chances/workspace/eng_prod/chances-tv-android/cli` 是 `@chancestv/create-android-shell` npm 脚手架，入口在 `/Users/chances/workspace/eng_prod/chances-tv-android/cli/index.js`，核心逻辑在 `/Users/chances/workspace/eng_prod/chances-tv-android/cli/lib`，测试在 `/Users/chances/workspace/eng_prod/chances-tv-android/cli/test`。
 
-`/Users/chances/workspace/eng_prod/ai-android/template` 存放可运行模板：`/Users/chances/workspace/eng_prod/ai-android/template/android-shell` 是 Android WebView 壳，`/Users/chances/workspace/eng_prod/ai-android/template/h5-vue` 是 Vue3 + Vite H5 工作区，`/Users/chances/workspace/eng_prod/ai-android/template/bridge-contract.md` 是壳与 H5 的 JSBridge 契约。`/Users/chances/workspace/eng_prod/ai-android/claude` 只放 AI rules/skills，无运行代码；`/Users/chances/workspace/eng_prod/ai-android/docs/superpowers` 放设计和计划文档。
+`/Users/chances/workspace/eng_prod/chances-tv-android/template` 存放可运行模板：`/Users/chances/workspace/eng_prod/chances-tv-android/template/android-app` 是 Android WebView 壳，`/Users/chances/workspace/eng_prod/chances-tv-android/template/web` 是 Vue3 + Vite H5 工作区，`/Users/chances/workspace/eng_prod/chances-tv-android/template/bridge-contract.md` 是壳与 H5 的 JSBridge 契约。`/Users/chances/workspace/eng_prod/chances-tv-android/claude` 只放 AI rules/skills，无运行代码；`/Users/chances/workspace/eng_prod/chances-tv-android/docs/superpowers` 放设计和计划文档。
 
-H5 源码集中在 `/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/apps/shell/src`、`/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/packages/core/src`、`/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/packages/features/*/src`；TV 焦点与 UI 组件用已发布的 `@chancestv/tv-ui`（内部依赖 `@chancestv/tv-focus`，业务禁止直连）；写 TV 页 / 弹框 / 列表必须先用 skill `tv-ui-page-author`（`/Users/chances/workspace/eng_prod/ai-android/claude/skills/tv-ui-page-author/SKILL.md`）。资源放在 `/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/apps/shell/public` 和 `/Users/chances/workspace/eng_prod/ai-android/template/android-shell/app/src/main/res`。
+H5 源码集中在 `/Users/chances/workspace/eng_prod/chances-tv-android/template/web/apps/shell/src`、`/Users/chances/workspace/eng_prod/chances-tv-android/template/web/packages/core/src`、`/Users/chances/workspace/eng_prod/chances-tv-android/template/web/packages/features/*/src`；TV 焦点与 UI 组件用已发布的 `@chancestv/tv-ui`（内部依赖 `@chancestv/tv-focus`，业务禁止直连）；写 TV 页 / 弹框 / 列表必须先用 skill `chances-tv-ui`（`/Users/chances/workspace/eng_prod/chances-tv-android/claude/skills/chances-tv-ui/SKILL.md`）。资源放在 `/Users/chances/workspace/eng_prod/chances-tv-android/template/web/apps/shell/public` 和 `/Users/chances/workspace/eng_prod/chances-tv-android/template/android-app/app/src/main/res`。
 
 ## 构建、测试与开发命令
 
-- `cd /Users/chances/workspace/eng_prod/ai-android/cli && npm test`：运行 CLI 的 Node 内置测试。
-- `cd /Users/chances/workspace/eng_prod/ai-android/cli && npm link`：本地挂载脚手架命令 `create-android-shell`。
-- `cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue && pnpm dev`：启动 H5 Vite 开发服务，默认地址 `http://localhost:5173/app/`。
-- `cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue && pnpm install && pnpm build`：安装并构建 H5 模板。
-- `cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue && pnpm lint && pnpm typecheck`：检查 H5 ESLint 与 TypeScript。
-- `cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue && pnpm --filter @shell/core test`：运行 H5 core 的 Vitest 测试。
-- `cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell && JAVA_HOME=<jdk1.8> ./gradlew :app:assembleStagingDebug`：验证 Android 壳；需要 Android SDK 28、JDK 8、公司内网 Maven。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && npm test`：运行 CLI 的 Node 内置测试。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/cli && npm link`：本地挂载脚手架命令 `create-android-shell`。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/template/web && pnpm dev`：启动 H5 Vite 开发服务，默认地址 `http://localhost:5173/app/`。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/template/web && pnpm install && pnpm build`：安装并构建 H5 模板。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/template/web && pnpm lint && pnpm typecheck`：检查 H5 ESLint 与 TypeScript。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/template/web && pnpm --filter @shell/core test`：运行 H5 core 的 Vitest 测试。
+- `cd /Users/chances/workspace/eng_prod/chances-tv-android/template/android-app && JAVA_HOME=<jdk1.8> ./gradlew :app:assembleStagingDebug`：验证 Android 壳；需要 Android SDK 28、JDK 8、公司内网 Maven。
 
 ## 编码风格与命名约定
 
-CLI 使用 CommonJS、2 空格缩进，优先复用 `/Users/chances/workspace/eng_prod/ai-android/cli/lib` 的小函数。Vue/TypeScript 遵循 `/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/apps/shell/eslint.config.ts`；业务模板禁止裸 `button`、`a`、`input`、`tabindex`、`@click`，使用 `@chancestv/tv-ui` 的 `EButton`、`EFocusable`、`EPage` 等组件和 `@enter`。Android 保持 Support 27.1.1、AGP 3.6.0、compileSdk 28，禁止 AndroidX；模块命名沿用 `feature_voice/<vendor>`、`lib_base`。
+CLI 使用 CommonJS、2 空格缩进，优先复用 `/Users/chances/workspace/eng_prod/chances-tv-android/cli/lib` 的小函数。Vue/TypeScript 遵循 `/Users/chances/workspace/eng_prod/chances-tv-android/template/web/apps/shell/eslint.config.ts`；业务模板禁止裸 `button`、`a`、`input`、`tabindex`、`@click`，使用 `@chancestv/tv-ui` 的 `EButton`、`EFocusable`、`EPage` 等组件和 `@enter`。Android 保持 Support 27.1.1、AGP 3.6.0、compileSdk 28，禁止 AndroidX；模块命名沿用 `feature_voice/<vendor>`、`lib_base`。
 
 ## 测试指南
 
-CLI 测试命名为 `/Users/chances/workspace/eng_prod/ai-android/cli/test/*.test.js`，使用 `node:test` 与 `node:assert`。H5 核心测试命名为 `/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/packages/*/test/*.test.ts`，使用 Vitest，重点覆盖焦点导航、桥接和模板约束。修改生成流程、模板结构、焦点行为时必须补充或更新对应测试。
+CLI 测试命名为 `/Users/chances/workspace/eng_prod/chances-tv-android/cli/test/*.test.js`，使用 `node:test` 与 `node:assert`。H5 核心测试命名为 `/Users/chances/workspace/eng_prod/chances-tv-android/template/web/packages/*/test/*.test.ts`，使用 Vitest，重点覆盖焦点导航、桥接和模板约束。修改生成流程、模板结构、焦点行为时必须补充或更新对应测试。
 
 ## 提交与 Pull Request 指南
 
@@ -32,11 +32,11 @@ CLI 测试命名为 `/Users/chances/workspace/eng_prod/ai-android/cli/test/*.tes
 
 ## 安全与配置
 
-`/Users/chances/workspace/eng_prod/ai-android/template/android-shell/app/shell.jks` 仅为 demo keystore，生产项目必须替换。真实语音密钥不要提交到 `/Users/chances/workspace/eng_prod/ai-android/template/android-shell/gradle.properties`，使用 `/Users/chances/.gradle/gradle.properties` 或 CI 凭据覆盖。不要创建 `/Users/chances/workspace/eng_prod/ai-android/README.md`；根说明以 `/Users/chances/workspace/eng_prod/ai-android/CLAUDE.md` 与本文件为准。
+`/Users/chances/workspace/eng_prod/chances-tv-android/template/android-app/app/shell.jks` 仅为 demo keystore，生产项目必须替换。真实语音密钥不要提交到 `/Users/chances/workspace/eng_prod/chances-tv-android/template/android-app/gradle.properties`，使用 `/Users/chances/.gradle/gradle.properties` 或 CI 凭据覆盖。不要创建 `/Users/chances/workspace/eng_prod/chances-tv-android/README.md`；根说明以 `/Users/chances/workspace/eng_prod/chances-tv-android/CLAUDE.md` 与本文件为准。
 
 ## Agent-Specific Instructions
 
-自动化代理回复使用中文；报告文件路径、服务地址、连接串时必须写完整值。改动保持最小范围，优先遵循 `/Users/chances/workspace/eng_prod/ai-android/CLAUDE.md` 和现有模板约定。
+自动化代理回复使用中文；报告文件路径、服务地址、连接串时必须写完整值。改动保持最小范围，优先遵循 `/Users/chances/workspace/eng_prod/chances-tv-android/CLAUDE.md` 和现有模板约定。
 
 <!-- DWY-RULES:START 由 dwy codex sync 生成，请勿手动编辑此区块 -->
 

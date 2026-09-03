@@ -2,7 +2,7 @@
 
 弹层自动隔离背景焦点、关闭后复焦。`EDialog` / `EDrawer` **必须**给 `default-focus`（打开后落在哪一项，组件不猜）。
 
-不要再手写 Teleport + 手动聚焦；退出确认用 `@shell/feature-shared` 的 `ExitDialog`（内部已是 `EDialog`）。
+不要手写 Teleport + 手动 `focus()`。脚手架里退出确认用工程内 `ExitConfirm`（已是 `EDialog`），不要再引已删除的 `@shell/feature-shared`。
 
 ## EDialog
 
