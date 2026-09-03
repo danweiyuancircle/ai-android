@@ -46,9 +46,9 @@ const activeComp = computed(() => COMPS[active.value])
 .scene { display: flex; flex-direction: row; height: 100%; }
 .scene-menu {
   width: 240px; flex-shrink: 0; padding: 32px 20px;
-  background: #16191f; height: 100%; box-sizing: border-box;
+  background: #f5f6f8; height: 100%; box-sizing: border-box;
 }
-.scene-menu__title { font-size: 22px; color: #7fd; margin-bottom: 20px; }
+.scene-menu__title { font-size: 22px; color: #1677ff; margin-bottom: 20px; }
 .scene-menu__item { width: 100%; }
 .scene-content { flex: 1; min-width: 0; padding: 32px 40px; box-sizing: border-box; overflow: hidden; }
 </style>

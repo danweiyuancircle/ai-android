@@ -48,14 +48,21 @@ const rails = RAIL_NAMES.map((name, r) => ({
 }))
 
 const scrollEl = ref<HTMLElement | null>(null)
-const { scrollY } = useScrollFollow(scrollEl, 560)
+const { scrollY } = useScrollFollow(scrollEl, 560, 28)
 </script>
 
 <style scoped>
 .rails { height: 100%; display: flex; flex-direction: column; }
-.rails__title { font-size: 28px; color: #fff; margin-bottom: 16px; }
-.rails-scroll { position: relative; flex: 1; overflow: hidden; }
-.rails-track { position: absolute; top: 0; left: 0; width: 100%; }
+.rails__title { font-size: 28px; color: #222; margin-bottom: 16px; }
+.rails-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+.rails-track { width: 100%; }
 .rail { margin-bottom: 28px; }
-.rail__name { font-size: 22px; color: #cde; margin-bottom: 12px; }
+.rail__name { font-size: 22px; color: #667085; margin-bottom: 12px; }
 </style>

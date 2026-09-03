@@ -2,7 +2,7 @@
   <EPage id="gallery" default-focus="g-back" class="page gallery">
     <!-- 固定头部 -->
     <div class="g-head">
-      <EButton focus-key="g-back" label="返回" size="sm" @enter="goHome" />
+      <EButton focus-key="g-back" label="返回" size="sm" @enter="goBack" />
       <h1 class="g-title">组件总览（E*）</h1>
     </div>
 
@@ -21,6 +21,64 @@
             <EButton focus-key="g-btn-5" label="small" size="sm" />
             <EButton focus-key="g-btn-6" label="large" size="lg" />
             <EButton focus-key="g-btn-7" label="disabled" :disabled="true" />
+          </ERow>
+        </section>
+
+        <!-- EInput -->
+        <section class="g-group">
+          <div class="g-label">EInput — 聚焦即可输入，方向键离开到旁边的焦点</div>
+          <ERow id="g-input" :gap="16" align="center">
+            <EInput
+              v-model="keyword"
+              focus-key="g-input-1"
+              placeholder="搜索"
+              :width="360"
+              @enter="toast = true"
+            />
+            <EInput
+              v-model="password"
+              focus-key="g-input-2"
+              type="password"
+              placeholder="密码"
+              size="sm"
+              :width="240"
+            />
+          </ERow>
+        </section>
+
+        <section class="g-group">
+          <div class="g-label">ESwitch / ESlider — OK 切换开关；进度条聚焦后滑块变大，左右调</div>
+          <ERow id="g-ctrl" :gap="32" align="center">
+            <ESwitch v-model="switchOn" focus-key="g-sw" label="自动播放" />
+            <ESlider v-model="volume" focus-key="g-sl" :width="360" :step="5" />
+            <EText :text="`${volume}`" :font-size="20" color="#222" />
+          </ERow>
+        </section>
+
+        <section class="g-group">
+          <div class="g-label">EMarquee — 聚焦后长标题滚动</div>
+          <ERow id="g-mq" :gap="16">
+            <EFocusable focus-key="g-mq-1" v-slot="{ focused }">
+              <div class="g-tile">
+                <EMarquee
+                  text="这是一段很长的片名用来演示聚焦后横向滚动，短标题不会动"
+                  :active="focused"
+                  :width="320"
+                />
+              </div>
+            </EFocusable>
+          </ERow>
+        </section>
+
+        <section class="g-group">
+          <div class="g-label">EEmpty / EBadge</div>
+          <ERow id="g-misc" :gap="24" align="center">
+            <EEmpty title="暂无收藏" description="去首页看看吧" />
+            <ECard focus-key="g-badge-card" title="带角标" :image="pic(21, 220, 150)" :width="200">
+              <template #badge>
+                <EBadge text="VIP" variant="warning" />
+              </template>
+            </ECard>
           </ERow>
         </section>
 
@@ -62,7 +120,11 @@
               :focus-key="`g-card-${i}`"
               :title="`卡片 ${i}`" description="副标题描述"
               :image="pic(i + 10, 220, 150)" :width="200"
-            />
+            >
+              <template v-if="i === 1" #badge>
+                <EBadge text="NEW" />
+              </template>
+            </ECard>
           </ERow>
         </section>
 
@@ -95,7 +157,8 @@
           <div class="g-label">EVirtual — 横向</div>
           <EVirtual
             section-id="g-ev-h" direction="horizontal" :items="nums"
-            :item-width="140" :item-height="90" :main-visible="6" :gap="14"
+            :item-width="140" :item-height="90" :main-visible="5" :gap="14"
+            :focus-gutter="24"
             focus-key-prefix="g-evh" v-slot="{ item, focusKey }"
           >
             <EFocusable :focus-key="focusKey" v-slot="{ focused }">
@@ -109,6 +172,7 @@
           <EVirtual
             section-id="g-ev-g" direction="vertical" :cross="4" :items="nums"
             :item-width="150" :item-height="90" :main-visible="2" :gap="14"
+            :focus-gutter="24"
             focus-key-prefix="g-evg" v-slot="{ item, focusKey }"
           >
             <EFocusable :focus-key="focusKey" v-slot="{ focused }">
@@ -144,14 +208,19 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
-  EPage, ERow, EButton, EText, ELoadingSpinner, EImage, ECard,
+  EPage, ERow, EButton, EInput, EText, ELoadingSpinner, EImage, ECard,
   EFocusable, EVirtual, EDialog, EDrawer, EToast, EHintDialog,
+  ESwitch, ESlider, EMarquee, EEmpty, EBadge,
 } from '@chancestv/tv-ui'
 import { useScrollFollow } from '../composables/useScrollFollow'
 
 const router = useRouter()
-const goHome = () => router.push({ name: 'Home' })
+const goBack = () => router.push({ name: 'Examples' })
 
+const keyword = ref('')
+const password = ref('')
+const switchOn = ref(true)
+const volume = ref(40)
 const dialog = ref(false)
 const drawer = ref(false)
 const toast = ref(false)
@@ -163,20 +232,36 @@ const pic = (seed: number, w: number, h: number) => `https://picsum.photos/seed/
 
 // 焦点跟随：把聚焦元素滚进可视区
 const scrollEl = ref<HTMLElement | null>(null)
-const { scrollY } = useScrollFollow(scrollEl, 540)
+// 视口按滚动区高度算；pad 与 .g-scroll 内边距对齐，给聚焦放大留安全区
+const { scrollY } = useScrollFollow(scrollEl, 540, 28)
 </script>
 
 <style scoped>
-.gallery { display: flex; flex-direction: column; height: 100%; padding: 0 57px; }
-.g-head { display: flex; align-items: center; padding: 24px 0; }
-.g-title { font-size: 32px; color: #fff; margin-left: 24px; }
-.g-scroll { position: relative; height: 600px; overflow: hidden; }
-.g-track { position: absolute; top: 0; left: 0; width: 100%; }
-.g-group { margin-bottom: 36px; }
-.g-label { font-size: 22px; color: #7fd; margin-bottom: 16px; }
+.gallery {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 72px;
+  box-sizing: border-box;
+}
+.g-head { display: flex; align-items: center; padding: 24px 0 8px; }
+.g-title { font-size: 32px; color: #222; margin-left: 24px; }
+/* 内边距是焦点放大安全区：transform 滚进来的项可以画进 padding，不被 overflow 裁掉 */
+.g-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 28px 24px;
+  box-sizing: border-box;
+}
+.g-track { width: 100%; }
+.g-group { margin-bottom: 40px; }
+.g-label { font-size: 22px; color: #667085; margin-bottom: 16px; }
 .g-tile {
   width: 360px; min-height: 110px; padding: 16px;
   background: #20242c; border-radius: 12px; border: 4px solid transparent;
+  color: #e4e4e7;
 }
 .g-tile.sq { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; color: #cfe; font-size: 24px; }
 .g-tile.hot { border-color: #4af; }

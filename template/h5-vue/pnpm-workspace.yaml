@@ -1,7 +1,6 @@
 packages:
   - apps/*
   - packages/*
-  - packages/features/*
 
 # 第三方依赖版本统一在 catalog 管理，子包用 "catalog:" 引用。
 # 版本锁低保 Chromium 53 / Chrome 66 兼容，禁升级。

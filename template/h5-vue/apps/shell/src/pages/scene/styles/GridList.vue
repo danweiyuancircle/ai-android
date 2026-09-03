@@ -38,5 +38,5 @@ const items = Array.from({ length: 60 }, (_, i) => ({
 
 <style scoped>
 .gridlist { height: 100%; }
-.gridlist__title { font-size: 28px; color: #fff; margin-bottom: 24px; }
+.gridlist__title { font-size: 28px; color: #222; margin-bottom: 24px; }
 </style>

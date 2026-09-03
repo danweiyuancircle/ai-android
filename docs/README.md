@@ -1,9 +1,9 @@
 # ai-android 项目说明
 
 本仓库是 Android WebView 壳 + H5 脚手架项目，包含：
-- CLI 脚手架：`/Users/chances/StudioProjects/ai-android/cli`
-- 模板集合：`/Users/chances/StudioProjects/ai-android/template`
-- 工程约束与规则：`/Users/chances/StudioProjects/ai-android/claude`
+- CLI 脚手架：`/Users/chances/workspace/eng_prod/ai-android/cli`
+- 模板集合：`/Users/chances/workspace/eng_prod/ai-android/template`
+- 工程约束与规则：`/Users/chances/workspace/eng_prod/ai-android/claude`
 - 发布与自动化：`.github/workflows`
 
 ## 一、项目目标
@@ -16,18 +16,18 @@
 
 ## 二、目录速览
 
-- `/Users/chances/StudioProjects/ai-android/cli`
+- `/Users/chances/workspace/eng_prod/ai-android/cli`
   - 脚手架入口：`index.js`
   - 规则与核心实现：`lib/`、`stacks.js`
   - 发布说明：`cli/README.md`
   - 版本记录：`cli/CHANGELOG.md`
-- `/Users/chances/StudioProjects/ai-android/template`
+- `/Users/chances/workspace/eng_prod/ai-android/template`
   - `template/android-shell`：Android 壳模板
   - `template/h5-vue`：Vue3 H5 模板
   - `template/README.md`：模板结构说明
-- `/Users/chances/StudioProjects/ai-android/docs`
+- `/Users/chances/workspace/eng_prod/ai-android/docs`
   - 项目说明与扩展文档
-- `/Users/chances/StudioProjects/ai-android/claude`
+- `/Users/chances/workspace/eng_prod/ai-android/claude`
   - 团队规则与技能说明（不在 template 中冗余）
 - `/.github/workflows/cli-release.yml`
   - GitHub Actions 触发发布配置（Tag 发布）
@@ -37,7 +37,7 @@
 CLI（本仓库核心脚手架模块）：
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android/cli
+cd /Users/chances/workspace/eng_prod/ai-android/cli
 npm test
 npm link
 ```
@@ -45,7 +45,7 @@ npm link
 H5 模板：
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android/template/h5-vue
+cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue
 pnpm install
 pnpm dev
 pnpm build
@@ -57,7 +57,7 @@ pnpm --filter @shell/core test
 Android 壳：
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android/template/android-shell
+cd /Users/chances/workspace/eng_prod/ai-android/template/android-shell
 JAVA_HOME=<jdk1.8> ./gradlew :app:assembleStagingDebug
 ```
 
@@ -66,10 +66,10 @@ JAVA_HOME=<jdk1.8> ./gradlew :app:assembleStagingDebug
 `cli/package.json` 的版本号与 `cli/package-lock.json` 版本必须同步。
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android
+cd /Users/chances/workspace/eng_prod/ai-android
 cd cli
 npm version patch
-cd /Users/chances/StudioProjects/ai-android
+cd /Users/chances/workspace/eng_prod/ai-android
 git add cli/package.json cli/package-lock.json cli/CHANGELOG.md cli/README.md
 git commit -m "chore(cli): bump patch version for release"
 git tag v0.X.Y
@@ -82,6 +82,6 @@ git push github master v0.X.Y
 
 ## 五、注意事项
 
-- 规则与仓库约束见：`/Users/chances/StudioProjects/ai-android/AGENTS.md` 与 `/Users/chances/StudioProjects/ai-android/CLAUDE.md`。
+- 规则与仓库约束见：`/Users/chances/workspace/eng_prod/ai-android/AGENTS.md` 与 `/Users/chances/workspace/eng_prod/ai-android/CLAUDE.md`。
 - 不要提交真实生产签名资产与线上密钥。
 - 模板更新后优先先执行 `npm test` 与模板构建验证，再提 PR。

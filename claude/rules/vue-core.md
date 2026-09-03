@@ -10,6 +10,8 @@ paths:
 
 适用于基于 Vue 3 + TypeScript + Vite 的前端项目。状态管理见 Pinia rule；测试见 Vitest rule。
 
+> **OTT / TV 壳**：可交互元素禁止裸 `<button>` / `@click`，用 `@chancestv/tv-ui` 的 `@enter`。写页面先读 skill `tv-ui-page-author` 与 rule `vue-tv-ui.md`。下面模板示例仅适用于非 TV 项目。
+
 ---
 
 ## 零、基础设施统一封装与依赖复用（强制）

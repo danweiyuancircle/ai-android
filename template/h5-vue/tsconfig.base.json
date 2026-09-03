@@ -21,9 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@shell/core": ["packages/core/src/index.ts"],
-      "@shell/core/*": ["packages/core/src/*"],
-      "@shell/feature-shared": ["packages/features/shared/src/index.ts"],
-      "@shell/feature-aichat": ["packages/features/aichat/src/index.ts"]
+      "@shell/core/*": ["packages/core/src/*"]
     }
   }
 }

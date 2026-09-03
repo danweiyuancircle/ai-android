@@ -2,7 +2,7 @@
   <EPage id="detail" default-focus="detail-back" class="page detail">
     <h1 class="title">详情页占位</h1>
     <div class="actions">
-      <EButton focus-key="detail-back" label="返回首页" @enter="goBack" />
+      <EButton focus-key="detail-back" label="返回" @enter="goBack" />
     </div>
   </EPage>
 </template>
@@ -25,7 +25,7 @@ const goBack = () => router.back()
 }
 .title {
   font-size: 40px;
-  color: #fff;
+  color: #222;
   margin-bottom: 40px;
 }
 </style>

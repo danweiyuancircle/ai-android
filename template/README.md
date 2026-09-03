@@ -58,23 +58,29 @@ chances-sdk 基线的 Android 壳。工具链硬约束（遵 `claude/skills/chan
 
 ## h5-vue
 
-sh_tour_ai 抽象出的 Vue3 骨架，保留：Vite legacy（Chromium 53）、TV 焦点框架（`useFocusManager` + `Focusable*`）、`ottService` bridge、配置系统、退出/语音弹框。剥掉沪小游业务，留占位页（Home / Detail / AIChat / ComingSoon）。
+Vue3 + Vite 骨架：Chromium 53 legacy、`@chancestv/tv-ui`、`@shell/core`（ottService / 返回键 / 语音 / HTTP / 路由栈）。不含业务卡带。
 
-起项目改动点（搜 `TODO`）：`vite.config.ts` 的 `base`（须与壳 `H5_URL` 路径一致）、`index.html` 标题、`public/{test,prod}-config.json`、`src/api/url.ts` 端点、按需补 `src/views`。
+入口 `apps/shell/src/main.ts` 已 `setupTvFocus`。焦点换肤改 `apps/shell/src/theme.css`。占位页：Home / Gallery / Theme / Scene / Detail / ComingSoon / PlayerControl。
+
+业务只用 `@chancestv/tv-ui`，不要直连 `@chancestv/tv-focus`，不要拷 `E*.vue`。确认用 `@enter`。
+
+起项目改动点（搜 `TODO`）：`apps/shell/vite.config.ts` 的 `base`（须与壳 `H5_URL` 路径一致）、`index.html` 标题、按需补 `apps/shell/src/pages`。
 
 验证：
 ```bash
-cd h5-vue && npm install && npm run build:test
+cd /Users/chances/workspace/eng_prod/ai-android/template/h5-vue
+pnpm install
+pnpm build
 ```
 
 ## rules / skill 绑定
 
-起项目时从仓库 `claude/` 拷贝对应资产到目标工程 `.claude/`（单一来源在 `claude/`，模板不冗余携带）：
+起项目时 CLI 从仓库 `claude/` 按技术栈默认勾选落地到目标工程（单一来源在 `claude/`，模板不冗余携带配方正文）：
 
 | 模板 | rules | skill |
 | --- | --- | --- |
-| android-shell | `android-dev-spec.md` + `android-support-library-only.md` | `chances-sdk` |
-| h5-vue / h5-react | `android-webview-5.md`（含 Android 9 设备再加 `android-webview-9.md`） | — |
+| android-shell | `android-dev-spec.md` + `android-support-library-only.md` | `chances-sdk-v2` |
+| h5-vue / h5-react | `android-webview-5.md` + `vue-tv-ui.md`（Android 9 设备再加 `android-webview-9.md`） | `tv-ui-page-author` |
 
 ## 新增 h5-react（约定）
 

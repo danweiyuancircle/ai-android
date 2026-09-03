@@ -4,6 +4,7 @@ import router from './router'
 import App from './App.vue'
 import '@chancestv/tv-ui/styles/index.css'
 import '@chancestv/tv-ui/style.css'
+import './theme.css'
 import { OTT_NATIVE_KEYDOWN_EVENT } from '@shell/core'
 import { setupTvFocus } from '@chancestv/tv-ui'
 

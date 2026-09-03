@@ -1,0 +1,65 @@
+/*
+ * 项目换肤。后于 tv-ui/style.css 引入，覆盖包默认。
+ *
+ * 全局焦点（改这里即可，不必 fork 组件）：
+ *   --chances-tv-color-focus   焦点框颜色
+ *   --chances-tv-focus-scale   聚焦放大（默认 1 = 不放大；1.08 即放大）
+ */
+
+:root {
+  --chances-tv-color-bg: #ffffff;
+  --chances-tv-color-surface: #ffffff;
+  --chances-tv-color-surface-hover: #f3f4f6;
+  --chances-tv-color-text: #222222;
+  --chances-tv-color-text-muted: #667085;
+  --chances-tv-color-border: #d0d5dd;
+  --chances-tv-color-focus: #1677ff;
+  --chances-tv-focus-scale: 1;
+  --chances-tv-focus-ring: inset 0 0 0 3px var(--chances-tv-color-focus);
+  --chances-tv-focus-transition: transform 0.15s ease;
+}
+
+html,
+body,
+.tv-app {
+  background-color: #ffffff;
+  color: #222222;
+}
+
+.tv-focusable {
+  transition: var(--chances-tv-focus-transition);
+  outline: none;
+}
+.tv-focusable.is-focused {
+  transform: scale(var(--chances-tv-focus-scale));
+  outline: none;
+  box-shadow: var(--chances-tv-focus-ring);
+}
+
+.tv-app .e-button--secondary {
+  background: #ffffff;
+  color: #222222;
+  box-shadow: inset 0 0 0 1px #d0d5dd;
+}
+.tv-app .e-button--primary {
+  background: var(--chances-tv-color-focus);
+  color: #ffffff;
+}
+.tv-app .e-button.tv-focusable.is-focused {
+  box-shadow: var(--chances-tv-focus-ring);
+}
+.tv-app .e-card.tv-focusable.is-focused,
+.tv-app .e-image.tv-focusable.is-focused {
+  box-shadow: none;
+}
+
+.tv-focus-effect-none .tv-focusable.is-focused {
+  transform: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.my-gold.is-focused {
+  outline: none;
+  box-shadow: inset 0 0 0 3px #c8a012;
+}

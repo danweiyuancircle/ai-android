@@ -37,7 +37,7 @@ Workflow 文件：`.github/workflows/cli-release.yml`。
 ## 本地发布检查（可选）
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android/cli
+cd /Users/chances/workspace/eng_prod/ai-android/cli
 npm test
 npm pack --dry-run
 ```
@@ -45,7 +45,7 @@ npm pack --dry-run
 ## 发布流程（OIDC）
 
 ```bash
-cd /Users/chances/StudioProjects/ai-android
+cd /Users/chances/workspace/eng_prod/ai-android
 cd cli
 npm version patch
 git add package.json package-lock.json CHANGELOG.md README.md

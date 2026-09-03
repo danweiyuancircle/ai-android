@@ -33,7 +33,7 @@ const noop = () => {}
 
 <style scoped>
 .cardwall { height: 100%; }
-.cardwall__title { font-size: 28px; color: #fff; margin-bottom: 24px; }
+.cardwall__title { font-size: 28px; color: #222; margin-bottom: 24px; }
 .cardwall__grid {
   display: flex;
   flex-wrap: wrap;

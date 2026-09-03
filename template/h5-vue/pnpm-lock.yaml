@@ -58,12 +58,6 @@ importers:
       '@shell/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@shell/feature-aichat':
-        specifier: workspace:*
-        version: link:../../packages/features/aichat
-      '@shell/feature-shared':
-        specifier: workspace:*
-        version: link:../../packages/features/shared
       pinia:
         specifier: 'catalog:'
         version: 2.3.1(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3))
@@ -143,30 +137,6 @@ importers:
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.35(typescript@5.9.3))
-
-  packages/features/aichat:
-    dependencies:
-      '@chancestv/tv-ui':
-        specifier: 'catalog:'
-        version: 0.4.2(@chancestv/tv-focus@0.4.2(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
-      '@shell/core':
-        specifier: workspace:*
-        version: link:../../core
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.35(typescript@5.9.3)
-      vue-router:
-        specifier: 'catalog:'
-        version: 4.6.4(vue@3.5.35(typescript@5.9.3))
-
-  packages/features/shared:
-    dependencies:
-      '@chancestv/tv-ui':
-        specifier: 'catalog:'
-        version: 0.4.2(@chancestv/tv-focus@0.4.2(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.35(typescript@5.9.3)
 
 packages:
 

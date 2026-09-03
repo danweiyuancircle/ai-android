@@ -2,8 +2,6 @@
   "extends": "../../tsconfig.base.json",
   "include": [
     "src",
-    "../../packages/core/src",
-    "../../packages/features/shared/src",
-    "../../packages/features/aichat/src"
+    "../../packages/core/src"
   ]
 }

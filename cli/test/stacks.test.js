@@ -8,4 +8,6 @@ test('默认技术栈 android-support-vue 存在且字段完整', () => {
   assert.strictEqual(s.shell, 'android-shell');
   assert.strictEqual(s.h5, 'h5-vue');
   assert.ok(Array.isArray(s.rules) && s.rules.length > 0);
+  assert.ok(s.rules.includes('vue-tv-ui.md'));
+  assert.ok(s.skill.includes('tv-ui-page-author'));
 });

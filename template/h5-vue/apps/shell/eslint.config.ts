@@ -42,13 +42,17 @@ export default defineConfig([
         {
           paths: [
             {
+              name: "@chancestv/tv-focus",
+              message: "业务层禁止直连 @chancestv/tv-focus，请用 @chancestv/tv-ui 的 EPage/ERow/EButton/EInput/EDialog/EFocusable；初始化用 setupTvFocus。",
+            },
+            {
               name: "@shell/core/focus",
-              message: "业务层禁止直接用焦点框架，请用 @shell/tv-ui 的 EPage/ERow/EColumn/EFocusGroup/EDialog/EFocusable；初始化用 setupTvFocus。",
+              message: "业务层禁止直接用焦点框架，请用 @chancestv/tv-ui 的 EPage/ERow/EColumn/EFocusGroup/EDialog/EFocusable；初始化用 setupTvFocus。",
             },
           ],
           patterns: [
             {
-              group: ["@shell/core/focus/*", "**/tv-ui/src/composables/*"],
+              group: ["@chancestv/tv-focus/*", "@shell/core/focus/*", "**/tv-ui/src/composables/*"],
               message: "焦点框架子路径与 tv-ui 内部 composables 不对业务层开放。",
             },
           ],
@@ -59,7 +63,7 @@ export default defineConfig([
         "error",
         {
           element: ["button", "a", "input", "select", "textarea"],
-          message: "可交互元素必须用 @shell/tv-ui 组件（EButton/EFocusable 等），禁裸标签——裸标签不进焦点系统。",
+          message: "可交互元素必须用 @chancestv/tv-ui 组件（EButton/EInput/EFocusable 等），禁裸标签——裸标签不进焦点系统。",
         },
       ],
       "vue/no-restricted-static-attribute": [

@@ -55,8 +55,6 @@ export default defineConfig(() => {
         "@": resolve(__dirname, "src"),
         // workspace 包以源码参与构建，统一走 app 的 legacy 降级链
         "@shell/core": resolve(__dirname, "../../packages/core/src"),
-        "@shell/feature-shared": resolve(__dirname, "../../packages/features/shared/src"),
-        "@shell/feature-aichat": resolve(__dirname, "../../packages/features/aichat/src"),
       },
     },
     server: {

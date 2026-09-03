@@ -25,7 +25,7 @@ const goBack = () => router.back()
 }
 .title {
   font-size: 40px;
-  color: #fff;
+  color: #222;
   margin-bottom: 40px;
 }
 </style>

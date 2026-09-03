@@ -1,5 +1,7 @@
 # TV-UI 基础组件库 + 焦点框架深度集成 实施计划
 
+> **已过期**：组件已迁到 `@chancestv/tv-ui` / chances-tv-kit。写 TV 页用现 skill `tv-ui-page-author`，不要按本文 `@dwy/*` 路径施工。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 在 `template/h5-vue/packages/tv-ui` 增补容器层（EPage/EFocusGroup/ERow/EColumn/EFocusable）与弹层（EDialog/EDrawer/EToast），把焦点框架封死在 tv-ui 内部，业务层只用 tv-ui 写 TV 页面，并配套 Claude Skill `tv-ui-page-author`。
@@ -8,7 +10,7 @@
 
 **Tech Stack:** Vue 3 `<script setup>` + Vite + pnpm workspace；`@dwy/focus-core`（fork js-spatial-navigation）；目标 WebView 基线 Chromium 53（CSS 用 `flex-start`/`flex-end`，不用裸 `start`/`end`）。
 
-**根目录约定：** 所有命令默认在 `/Users/chances/StudioProjects/ai-android/template/h5-vue/` 下执行。仓库唯一类型检查/lint 入口是该目录的 `pnpm typecheck`（= `apps/shell` 的 `vue-tsc --noEmit`）与 `pnpm lint`（= `apps/shell` 的 `eslint .`）。`vue-tsc` 只检查从 `apps/shell` 可达的文件，故新建 tv-ui 组件必须被 import 才会进入类型检查——阶段一用临时 `Playground.vue` 充当类型+目视验证脚手架。
+**根目录约定：** 所有命令默认在 `/Users/chances/workspace/eng_prod/ai-android/template/h5-vue/` 下执行。仓库唯一类型检查/lint 入口是该目录的 `pnpm typecheck`（= `apps/shell` 的 `vue-tsc --noEmit`）与 `pnpm lint`（= `apps/shell` 的 `eslint .`）。`vue-tsc` 只检查从 `apps/shell` 可达的文件，故新建 tv-ui 组件必须被 import 才会进入类型检查——阶段一用临时 `Playground.vue` 充当类型+目视验证脚手架。
 
 ---
 
