@@ -1,6 +1,6 @@
 {
   "name": "@chancestv/create-android-shell",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "脚手架：生成 Android WebView 套壳 + H5 模板工程",
   "bin": {
     "create-android-shell": "index.js"
@@ -10,6 +10,7 @@
     "index.js",
     "stacks.js",
     "lib/",
+    "boilerplate/",
     "template/",
     "rules/",
     "skills/",

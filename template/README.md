@@ -75,7 +75,7 @@ pnpm build
 
 ## rules / skill 绑定
 
-起项目时 CLI 从仓库 `claude/` 按技术栈默认勾选落地到目标工程（单一来源在 `claude/`，模板不冗余携带配方正文）：
+生成结果：`<parent>/android-app` + `<parent>/web`，工程根带 `AGENTS.md` / `CLAUDE.md`（给 AI 当工作区入口）。CLI 再按技术栈默认勾选，把 rules/skills 拷到 `.claude/` 与 `.agents/skills/`。仓库内模板源仍是 `template/android-shell` 与 `template/h5-vue`。
 
 | 模板 | rules | skill |
 | --- | --- | --- |

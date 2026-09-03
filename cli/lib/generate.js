@@ -24,7 +24,7 @@ const DEFAULTS = {
  *
  * applicationId / 应用名 / 图标均可选：缺省时分别用 [DEFAULTS.appId]、[DEFAULTS.appName]、保留模板占位图标。
  *
- * @param o.templateRoot 模板源根（含 android-shell / h5-vue）
+ * @param o.templateRoot 模板源根（含 android-shell / h5-vue；生成目录名为 destShell / destH5）
  * @param o.parentDir 目标父目录（工程根）
  * @param o.appId applicationId，缺省回退 com.chances.shell
  * @param o.appName 应用名，缺省回退 Shell Template
@@ -50,8 +50,8 @@ function generate(o) {
   }
   const def = o.registry[o.stack];
 
-  const shellDir = path.join(o.parentDir, def.shell);
-  const h5Dir = path.join(o.parentDir, def.h5);
+  const shellDir = path.join(o.parentDir, def.destShell || def.shell);
+  const h5Dir = path.join(o.parentDir, def.destH5 || def.h5);
   copyTree(path.join(o.templateRoot, def.shell), shellDir, DEFAULT_EXCLUDES);
   copyTree(path.join(o.templateRoot, def.h5), h5Dir, DEFAULT_EXCLUDES);
 
@@ -71,6 +71,12 @@ function generate(o) {
       fs.rmSync(path.join(mipmap, 'ic_launcher_shell.png'), { force: true });
     }
     fs.copyFileSync(iconPath, path.join(mipmap, `ic_launcher_${iconKey}.png`));
+  }
+
+  // 工程根 AI 入口：别人把 parent 当工作区即可写代码
+  const boilerplate = path.join(__dirname, '..', 'boilerplate');
+  for (const name of ['AGENTS.md', 'CLAUDE.md']) {
+    fs.copyFileSync(path.join(boilerplate, name), path.join(o.parentDir, name));
   }
 
   return { shellDir, h5Dir, iconKey };

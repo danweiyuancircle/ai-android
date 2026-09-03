@@ -62,8 +62,8 @@ test('applyConfig claude：.claude/rules/*.md 原样 + .claude/skills 无 .DS_St
     overwrite: true,
   });
   assert.ok(fs.existsSync(path.join(dir, '.claude/rules/android-webview-5.md')));
-  assert.ok(fs.existsSync(path.join(dir, '.claude/skills/chances-sdk/SKILL.md')));
-  assert.ok(!fs.existsSync(path.join(dir, '.claude/skills/chances-sdk/.DS_Store')));
+  assert.ok(fs.existsSync(path.join(dir, '.claude/skills/chances-sdk-v2/SKILL.md')));
+  assert.ok(!fs.existsSync(path.join(dir, '.claude/skills/chances-sdk-v2/.DS_Store')));
 });
 
 test('applyConfig cursor：.cursor/rules/*.mdc + .agents/skills', () => {
@@ -80,7 +80,7 @@ test('applyConfig cursor：.cursor/rules/*.mdc + .agents/skills', () => {
   const mdc = path.join(dir, '.cursor/rules/android-webview-5.mdc');
   assert.ok(fs.existsSync(mdc));
   assert.ok(fs.readFileSync(mdc, 'utf8').includes('alwaysApply: true'));
-  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk-v2/SKILL.md')));
 });
 
 test('applyConfig codex：根 AGENTS.md 拼接块 + .agents/skills', () => {
@@ -96,7 +96,7 @@ test('applyConfig codex：根 AGENTS.md 拼接块 + .agents/skills', () => {
   });
   const agents = fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf8');
   assert.ok(agents.includes('<!-- BEGIN rule: android-webview-5.md -->'));
-  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk-v2/SKILL.md')));
 });
 
 test('applyConfig claude+cursor：skills 两处各一份', () => {
@@ -110,8 +110,8 @@ test('applyConfig claude+cursor：skills 两处各一份', () => {
     skillsSrcDir: SKILLS_DIR,
     overwrite: true,
   });
-  assert.ok(fs.existsSync(path.join(dir, '.claude/skills/chances-sdk/SKILL.md')));
-  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(dir, '.claude/skills/chances-sdk-v2/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(dir, '.agents/skills/chances-sdk-v2/SKILL.md')));
 });
 
 test('applyConfig overwrite=false：跳过已存在文件', () => {

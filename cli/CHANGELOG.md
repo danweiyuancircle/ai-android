@@ -3,6 +3,15 @@
 本项目变更记录，遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased]
+
+## [0.7.0] - 2026-09-03
+
+### Changed
+- 生成目录改为 `android-app/` + `web/`（不再用 `android-shell` / `h5-vue`）。
+
+### Added
+- 工程根默认写入 `AGENTS.md` / `CLAUDE.md`，H5 带 `docs/tv-ui.md`；默认拷贝 `tv-ui-page-author` 等到 `.claude/skills` 与 `.agents/skills`，打开工程即可让 AI 写页。
+
 ## [0.6.2] - 2026-06-11
 
 ### Changed
@@ -72,7 +81,8 @@
 - 图标落 `mipmap-xxhdpi/ic_launcher_<appId末段>.png`（唯一名防盒子应用同步覆盖）。
 - 发布打包内置 template（prepack 拷入、postpack 清理），运行期优先用内置模板、本地开发回退 `../template`。
 
-[Unreleased]: https://github.com/danweiyuancircle/ai-android/compare/v0.6.2...HEAD
+[Unreleased]: https://github.com/danweiyuancircle/ai-android/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/danweiyuancircle/ai-android/compare/v0.6.0...v0.6.2
 [0.6.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/danweiyuancircle/ai-android/compare/v0.4.1...v0.5.0

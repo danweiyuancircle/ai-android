@@ -8,6 +8,7 @@
 - 根用 `<EPage id default-focus>`，确认用 `@enter`
 - 不要 `import '@chancestv/tv-focus'`，不要裸 `button` / `@click`
 - 焦点换肤改 `apps/shell/src/theme.css`，示例页 `pages/Theme.vue`
+- 组件用法：`docs/tv-ui.md`；写页 skill：`tv-ui-page-author`
 
 ## 样板
 

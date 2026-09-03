@@ -7,7 +7,7 @@ const stacks = require('./stacks');
 const { generate, DEFAULTS } = require('./lib/generate');
 const { PLATFORMS, setVoiceConfig } = require('./lib/voiceConfig');
 const { listRules, listSkills, RULES_DIR, SKILLS_DIR } = require('./lib/rulesCatalog');
-const { TARGETS, applyConfig } = require('./lib/configWrite');
+const { TARGETS, applyConfig, writeSkills } = require('./lib/configWrite');
 const prompt = require('./lib/prompt');
 
 // 发布到 npm 时模板随包内置在 ./template（见 package.json 的 prepack）；
@@ -307,6 +307,16 @@ async function main() {
       skillsSrcDir: SKILLS_DIR,
       overwrite: true,
     });
+    // Grok / Codex 读 .agents/skills；Claude 已写在 .claude/skills
+    if (skillNames.length && !targets.includes('cursor') && !targets.includes('codex')) {
+      writeSkills({
+        projectDir: path.resolve(parentName),
+        skillNames,
+        skillsSrcDir: SKILLS_DIR,
+        skillsDest: '.agents/skills',
+        overwrite: true,
+      });
+    }
   }
   if (s) {
     s.stop('工程已生成');
@@ -315,8 +325,8 @@ async function main() {
   stdout.write([
     '',
     `✓ 已生成：${path.resolve(parentName)}`,
-    `  壳：${res.shellDir}`,
-    `  H5：${res.h5Dir}`,
+    `  Android：${res.shellDir}`,
+    `  Web：${res.h5Dir}`,
     `  图标资源：ic_launcher_${res.iconKey}`,
     `  语音引擎：${voiceDesc}`,
     '',

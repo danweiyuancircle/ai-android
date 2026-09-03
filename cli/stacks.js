@@ -6,8 +6,12 @@
  */
 module.exports = {
   'android-support-vue': {
+    /** 仓库 template/ 下的源目录 */
     shell: 'android-shell',
     h5: 'h5-vue',
+    /** 生成到工程根下的目录名 */
+    destShell: 'android-app',
+    destH5: 'web',
     rules: [
       'android-dev-spec.md',
       'android-support-library-only.md',

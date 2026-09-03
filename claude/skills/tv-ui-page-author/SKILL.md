@@ -5,7 +5,7 @@ description: Use when 在 Vue/H5 写 TV/OTT 页面、弹框、抽屉、列表、
 
 # 写 TV 页面（@chancestv/tv-ui）
 
-业务层只用 `@chancestv/tv-ui`。不要直连 `@chancestv/tv-focus`，不要从本仓拷 `E*.vue`。组件实现在 [chances-tv-kit](https://github.com/danweiyuancircle/chances-tv-kit)。
+业务层只用 `@chancestv/tv-ui`。不要直连 `@chancestv/tv-focus`，不要从本仓拷 `E*.vue`。组件说明见工程内 `web/docs/tv-ui.md`。实现在 [chances-tv-kit](https://github.com/danweiyuancircle/chances-tv-kit)。
 
 ## 三句话
 
@@ -37,8 +37,11 @@ setupTvFocus(OTT_NATIVE_KEYDOWN_EVENT)
 
 `focus-key` 全局唯一，加页面前缀（如 `home-`）。section `id` 稳定，二次进页才记得上次焦点。
 
-## 样板（本模板）
+## 样板
 
-- 简单页：`template/h5-vue/apps/shell/src/pages/Home.vue`
-- 全组件 + 弹框 + 滚动：`template/h5-vue/apps/shell/src/pages/Gallery.vue`
-- 分类墙：`template/h5-vue/apps/shell/src/pages/scene/SceneView.vue`
+生成工程里路径如下（本仓库开发模板则在 `template/h5-vue/` 下同名文件）：
+
+- 简单页：`web/apps/shell/src/pages/Home.vue`
+- 全组件 + 弹框：`web/apps/shell/src/pages/Gallery.vue`
+- 分类墙：`web/apps/shell/src/pages/scene/SceneView.vue`
+- 换肤：`web/apps/shell/src/pages/Theme.vue`

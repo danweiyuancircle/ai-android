@@ -43,12 +43,16 @@ test('generate 生成壳+H5、改写 app 包/applicationId/名称/图标，保�
     registry: stacks,
   });
 
-  const shell = path.join(parent, 'android-shell');
+  const shell = path.join(parent, 'android-app');
   // 壳 + H5 都拷了
   assert.ok(fs.existsSync(path.join(shell, 'app/build.gradle')));
-  assert.ok(fs.existsSync(path.join(parent, 'h5-vue/package.json')));
+  assert.ok(fs.existsSync(path.join(parent, 'web/package.json')));
+  assert.ok(fs.existsSync(path.join(parent, 'AGENTS.md')));
+  assert.ok(fs.existsSync(path.join(parent, 'CLAUDE.md')));
+  assert.ok(fs.existsSync(path.join(parent, 'web/docs/tv-ui.md')));
+  assert.ok(fs.existsSync(path.join(parent, 'web/CLAUDE.md')));
   // 构建产物被排除
-  assert.ok(!fs.existsSync(path.join(parent, 'h5-vue/node_modules')));
+  assert.ok(!fs.existsSync(path.join(parent, 'web/node_modules')));
   assert.ok(!fs.existsSync(path.join(shell, 'app/build')));
   // app 模块包重写
   assert.ok(fs.existsSync(path.join(shell, 'app/src/main/java/com/chances/tour/OttApplication.kt')));
@@ -91,7 +95,7 @@ test('未给图标时保留模板内置占位图标 ic_launcher_shell，不创�
     registry: stacks,
   });
 
-  const shell = path.join(parent, 'android-shell');
+  const shell = path.join(parent, 'android-app');
   const mipmap = path.join(shell, 'app/src/main/res/mipmap-xxhdpi');
   const manifest = fs.readFileSync(path.join(shell, 'app/src/main/AndroidManifest.xml'), 'utf8');
   // 图标资源沿用占位名，占位 PNG 仍在，未生成 ic_launcher_tour.png
@@ -117,7 +121,7 @@ test('appId 缺省回退 com.chances.shell（包重写为同名，无残留 exam
     registry: stacks,
   });
 
-  const shell = path.join(parent, 'android-shell');
+  const shell = path.join(parent, 'android-app');
   const gradle = fs.readFileSync(path.join(shell, 'app/build.gradle'), 'utf8');
   assert.match(gradle, new RegExp(`applicationId '${DEFAULTS.appId.replace(/\./g, '\\.')}'`));
   // app 自有包仍在默认包路径
